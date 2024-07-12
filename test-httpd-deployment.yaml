@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: test-httpd
-          image: registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei/httpd:2.4.57
+          image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/httpd:2.4.57
           ports:
             - containerPort: 80
 
