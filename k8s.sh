@@ -75,9 +75,11 @@ ingress_nginx_version=1.10.0
 
 # ingress nginx 相关镜像（前缀）
 # 用于替换国内不可访问的 registry.k8s.io/ingress-nginx/controller 镜像
-ingress_nginx_controller_mirror=xuxiaoweicomcn/ingress-nginx-controller
+#ingress_nginx_controller_mirror=xuxiaoweicomcn/ingress-nginx-controller
+ingress_nginx_controller_mirror=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei/ingress-nginx/controller
 # 用于替换国内不可访问的 registry.k8s.io/ingress-nginx/kube-webhook-certgen
-ingress_nginx_kube_webhook_certgen_mirror=xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen
+#ingress_nginx_kube_webhook_certgen_mirror=xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen
+ingress_nginx_kube_webhook_certgen_mirror=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei/ingress-nginx/kube-webhook-certgen
 # hostNetwork 配置
 ingress_nginx_host_network=false
 
@@ -86,14 +88,14 @@ _check_kubernetes_version_range() {
   local version=$1
 
   # 检查版本号是否为数字
-  if ! [[ $version =~ ^[0-9.]+$ ]]; then
+  if ! [[ $version =~ ^v[0-9.]+$ ]]; then
     echo -e "${COLOR_RED}kubernetes 版本号 $version 不支持安装，（版本号只能包含：数字、小数点），退出程序${COLOR_RESET}"
     exit 1
   fi
 
   # 将版本号拆分成整数和小数部分
-  local major=$(echo "$version" | cut -d '.' -f 1)
-  local minor=$(echo "$version" | cut -d '.' -f 2)
+  local major=$(echo "$version" | sed "s#v##" | cut -d '.' -f 1)
+  local minor=$(echo "$version" | sed "s#v##" | cut -d '.' -f 2)
 
   echo -e "${COLOR_BLUE}kubernetes 指定主版本号：${COLOR_RESET}${COLOR_GREEN}${major}${COLOR_RESET}"
   echo -e "${COLOR_BLUE}kubernetes 指定次版本号：${COLOR_RESET}${COLOR_GREEN}${minor}${COLOR_RESET}"
@@ -660,10 +662,10 @@ _kubernetes_repo() {
       cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://mirrors.aliyun.com/kubernetes-new/core/stable/v$kubernetes_repo_new_version/rpm/
+baseurl=https://mirrors.aliyun.com/kubernetes-new/core/stable/$kubernetes_repo_new_version/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://mirrors.aliyun.com/kubernetes-new/core/stable/v$kubernetes_repo_new_version/rpm/repodata/repomd.xml.key
+gpgkey=https://mirrors.aliyun.com/kubernetes-new/core/stable/$kubernetes_repo_new_version/rpm/repodata/repomd.xml.key
 
 EOF
 
@@ -671,9 +673,9 @@ EOF
 
       sudo apt-get install -y apt-transport-https
 
-      curl -fsSL https://mirrors.aliyun.com/kubernetes-new/core/stable/v$kubernetes_repo_new_version/deb/Release.key |
+      curl -fsSL https://mirrors.aliyun.com/kubernetes-new/core/stable/$kubernetes_repo_new_version/deb/Release.key |
           gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-      echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://mirrors.aliyun.com/kubernetes-new/core/stable/v$kubernetes_repo_new_version/deb/ /" |
+      echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://mirrors.aliyun.com/kubernetes-new/core/stable/$kubernetes_repo_new_version/deb/ /" |
           tee /etc/apt/sources.list.d/kubernetes.list
 
       echo -e "${COLOR_BLUE}kubernetes 仓库 内容：${COLOR_RESET}${COLOR_GREEN}/etc/apt/sources.list.d/kubernetes.list${COLOR_RESET}" && cat /etc/apt/sources.list.d/kubernetes.list
@@ -818,11 +820,13 @@ _kubernetes_install() {
     # systemd 安装
     _systemd_install
 
+    install_kubernetes_version=$(echo $kubernetes_version | sed 's#v##')
+
     if [[ $ID == uos ]]; then
       # UOS 安装 kubernetes 失败时，重试一次
       if [ "$kubernetes_version" ]; then
         echo -e "${COLOR_BLUE}kubernetes 安装 ${COLOR_RESET}${COLOR_GREEN}${kubernetes_version}${COLOR_RESET}"
-        sudo yum install -y kubelet-"$kubernetes_version"-0 kubeadm-"$kubernetes_version"-0 kubectl-"$kubernetes_version"-0 --disableexcludes=kubernetes --nogpgcheck || sudo yum install -y kubelet-"$kubernetes_version"-0 kubeadm-"$kubernetes_version"-0 kubectl-"$kubernetes_version"-0 --disableexcludes=kubernetes --nogpgcheck
+        sudo yum install -y kubelet-"$install_kubernetes_version" kubeadm-"$install_kubernetes_version" kubectl-"$install_kubernetes_version" --disableexcludes=kubernetes --nogpgcheck || sudo yum install -y kubelet-"$install_kubernetes_version" kubeadm-"$install_kubernetes_version" kubectl-"$install_kubernetes_version" --disableexcludes=kubernetes --nogpgcheck
       else
         echo -e "${COLOR_BLUE}kubernetes 安装 ${COLOR_RESET}${COLOR_GREEN}最新版${COLOR_RESET}"
         sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes --nogpgcheck || sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes --nogpgcheck
@@ -830,7 +834,7 @@ _kubernetes_install() {
     elif [[ $ID == anolis || $ID == centos || $ID = openEuler ]]; then
       if [ "$kubernetes_version" ]; then
         echo -e "${COLOR_BLUE}kubernetes 安装 ${COLOR_RESET}${COLOR_GREEN}${kubernetes_version}${COLOR_RESET}"
-        sudo yum install -y kubelet-"$kubernetes_version"-0 kubeadm-"$kubernetes_version"-0 kubectl-"$kubernetes_version"-0 --disableexcludes=kubernetes --nogpgcheck
+        sudo yum install -y kubelet-"$install_kubernetes_version" kubeadm-"$install_kubernetes_version" kubectl-"$install_kubernetes_version" --disableexcludes=kubernetes --nogpgcheck
       else
         echo -e "${COLOR_BLUE}kubernetes 安装 ${COLOR_RESET}${COLOR_GREEN}最新版${COLOR_RESET}"
         sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes --nogpgcheck
@@ -839,7 +843,7 @@ _kubernetes_install() {
 
       if [ "$kubernetes_version" ]; then
         echo -e "${COLOR_BLUE}kubernetes 安装 ${COLOR_RESET}${COLOR_GREEN}${kubernetes_version}${COLOR_RESET}"
-        sudo apt-get install -y kubelet="$kubernetes_version"-00 kubeadm="$kubernetes_version"-00 kubectl="$kubernetes_version"-00
+        sudo apt-get install -y kubelet="$install_kubernetes_version" kubeadm="$install_kubernetes_version" kubectl="$install_kubernetes_version"
       else
         echo -e "${COLOR_BLUE}kubernetes 安装 ${COLOR_RESET}${COLOR_GREEN}最新版${COLOR_RESET}"
         sudo apt-get install -y kubelet kubeadm kubectl
@@ -857,8 +861,8 @@ _kubernetes_images_pull() {
   if [[ $kubernetes_images_pull == true ]]; then
     if [ "$kubernetes_version" ]; then
       echo -e "${COLOR_BLUE}kubernetes 拉取 ${COLOR_RESET}${COLOR_GREEN}${kubernetes_version}${COLOR_RESET}${COLOR_BLUE} 镜像开始${COLOR_RESET}"
-      kubeadm config images list --image-repository=registry.aliyuncs.com/google_containers --kubernetes-version=v"$kubernetes_version"
-      kubeadm config images pull --image-repository=registry.aliyuncs.com/google_containers --kubernetes-version=v"$kubernetes_version"
+      kubeadm config images list --image-repository=registry.aliyuncs.com/google_containers --kubernetes-version="$kubernetes_version"
+      kubeadm config images pull --image-repository=registry.aliyuncs.com/google_containers --kubernetes-version="$kubernetes_version"
       echo -e "${COLOR_BLUE}kubernetes 拉取 ${COLOR_RESET}${COLOR_GREEN}${kubernetes_version}${COLOR_RESET}${COLOR_BLUE} 镜像结束${COLOR_RESET}"
     else
       # https://cdn.dl.k8s.io/release/stable-1.txt
@@ -905,7 +909,7 @@ _kubernetes_init() {
       if [ "$kubernetes_version" ]; then
         echo -e "${COLOR_BLUE}kubernetes 高可用 VIP ${COLOR_RESET}${COLOR_GREEN}${availability_vip}${COLOR_RESET}${COLOR_BLUE} 初始化时使用的镜像版本 ${COLOR_RESET}${COLOR_GREEN}${kubernetes_version}${COLOR_RESET}"
         # 此处的 $init_ 开头的参数不能带引号
-        kubeadm init $init_v $init_api_address $init_api_port $init_node_name $init_service_cidr $init_pod_network_cidr --image-repository=registry.aliyuncs.com/google_containers --kubernetes-version=v"$kubernetes_version" --control-plane-endpoint "$availability_vip:9443" --upload-certs
+        kubeadm init $init_v $init_api_address $init_api_port $init_node_name $init_service_cidr $init_pod_network_cidr --image-repository=registry.aliyuncs.com/google_containers --kubernetes-version="$kubernetes_version" --control-plane-endpoint "$availability_vip:9443" --upload-certs
       else
         # https://cdn.dl.k8s.io/release/stable-1.txt
         echo -e "${COLOR_BLUE}kubernetes 高可用 VIP ${COLOR_RESET}${COLOR_GREEN}${availability_vip}${COLOR_RESET}${COLOR_BLUE} 初始化时使用当前次级版本最新镜像（自动联网获取版本号）${COLOR_RESET}"
@@ -916,7 +920,7 @@ _kubernetes_init() {
       if [ "$kubernetes_version" ]; then
         echo -e "${COLOR_BLUE}kubernetes 初始化时使用的镜像版本 ${COLOR_RESET}${COLOR_GREEN}${kubernetes_version}${COLOR_RESET}"
         # 此处的 $init_ 开头的参数不能带引号
-        kubeadm init $init_v $init_api_address $init_api_port $init_node_name $init_service_cidr $init_pod_network_cidr --image-repository=registry.aliyuncs.com/google_containers --kubernetes-version=v"$kubernetes_version"
+        kubeadm init $init_v $init_api_address $init_api_port $init_node_name $init_service_cidr $init_pod_network_cidr --image-repository=registry.aliyuncs.com/google_containers --kubernetes-version="$kubernetes_version"
       else
         # https://cdn.dl.k8s.io/release/stable-1.txt
         echo -e "${COLOR_BLUE}kubernetes 初始化时使用当前次级版本最新镜像（自动联网获取版本号）${COLOR_RESET}"
@@ -1019,7 +1023,7 @@ function _calico_init() {
       curl -o calico.yaml "$calico_manifests_mirror"
     else
       echo -e "${COLOR_BLUE}kubernetes 网络插件 calico 使用版本：${COLOR_RESET}${COLOR_GREEN}${calico_version}${COLOR_RESET}"
-      curl -o calico.yaml https://gitee.com/mirrors-github/calico/blob/v"$calico_version"/manifests/calico.yaml
+      curl -k -o calico.yaml https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/raw/"$calico_version"/manifests/calico.yaml
     fi
 
     # 网卡
@@ -1064,10 +1068,10 @@ _metrics_server_install() {
       # 自定义高可用
       if [ "$metrics_server_availability" == true ]; then
         echo -e "${COLOR_BLUE}Metrics Server 插件 下载 ${COLOR_RESET}${COLOR_GREEN}高可用${COLOR_RESET}${COLOR_BLUE} 配置文件${COLOR_RESET}"
-        curl -o components.yaml "https://github.com/kubernetes-sigs/metrics-server/releases/download/v$metrics_server_version/high-availability-1.21+.yaml"
+        curl -o components.yaml "https://github.com/kubernetes-sigs/metrics-server/releases/download/$metrics_server_version/high-availability-1.21+.yaml"
       else
         echo -e "${COLOR_BLUE}Metrics Server 插件 下载配置文件${COLOR_RESET}"
-        curl -o components.yaml "https://github.com/kubernetes-sigs/metrics-server/releases/download/v$metrics_server_version/components.yaml"
+        curl -o components.yaml "https://github.com/kubernetes-sigs/metrics-server/releases/download/$metrics_server_version/components.yaml"
       fi
 
     fi
@@ -1098,7 +1102,7 @@ _ingress_nginx_install() {
     echo -e "${COLOR_BLUE}Ingress Nginx 插件 安装开始${COLOR_RESET}"
 
     echo -e "${COLOR_BLUE}Ingress Nginx 插件 下载配置文件${COLOR_RESET}"
-    curl -o deploy.yaml https://gitee.com/mirrors-github/ingress-nginx/raw/controller-v$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml
+    curl -k -o deploy.yaml https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml
 
     echo -e "${COLOR_BLUE}Ingress Nginx 插件 修改镜像${COLOR_RESET}"
     sudo sed -i 's/@.*$//' deploy.yaml
@@ -1319,7 +1323,7 @@ while [[ $# -gt 0 ]]; do
   kubernetes-version=* | -kubernetes-version=* | --kubernetes-version=*)
     kubernetes_version="${1#*=}"
 
-    echo -e "${COLOR_BLUE}支持安装的 kubernetes 版本号：${COLOR_RESET}${COLOR_GREEN}${lower_major}.${lower_minor}~${upper_major}.${upper_minor}${COLOR_RESET}"
+    echo -e "${COLOR_BLUE}支持安装的 kubernetes 版本号：${COLOR_RESET}${COLOR_GREEN}v${lower_major}.${lower_minor}~v${upper_major}.${upper_minor}${COLOR_RESET}"
     echo -e "${COLOR_BLUE}kubernetes 指定版本号：${COLOR_RESET}${COLOR_GREEN}${kubernetes_version}${COLOR_RESET}"
 
     _check_kubernetes_version_range "$kubernetes_version"
