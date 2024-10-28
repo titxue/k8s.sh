@@ -1034,9 +1034,19 @@ function _calico_init() {
     sed -i '/k8s,bgp/a \            - name: IP_AUTODETECTION_METHOD\n              value: "interface=INTERFACE_NAME"' calico.yaml
     sed -i "s#INTERFACE_NAME#$interface_name#g" calico.yaml
 
-    if [ "$calico_mirrors" ]; then
-      echo -e "${COLOR_BLUE}接收到参数 calico-mirrors：${COLOR_RESET}${COLOR_GREEN}${calico_mirrors}${COLOR_RESET}"
-      sed -i "s#docker\.io#$calico_mirrors#g" calico.yaml
+    if [ "$calico_node_mirror" ]; then
+      echo -e "${COLOR_BLUE}接收到参数 calico-node-mirror：${COLOR_RESET}${COLOR_GREEN}${calico_node_mirror}${COLOR_RESET}"
+      sed -i "s#docker\.io/calico/node#$calico_node_mirror#g" calico.yaml
+    fi
+
+    if [ "$calico_cni_mirror" ]; then
+      echo -e "${COLOR_BLUE}接收到参数 calico-cni-mirror：${COLOR_RESET}${COLOR_GREEN}${calico_cni_mirror}${COLOR_RESET}"
+      sed -i "s#docker\.io/calico/cni#$calico_cni_mirror#g" calico.yaml
+    fi
+
+    if [ "$calico_kube_controllers_mirror" ]; then
+      echo -e "${COLOR_BLUE}接收到参数 calico-kube-controllers-mirror：${COLOR_RESET}${COLOR_GREEN}${calico_kube_controllers_mirror}${COLOR_RESET}"
+      sed -i "s#docker\.io/calico/kube-controllers#$calico_kube_controllers_mirror#g" calico.yaml
     fi
 
     kubectl apply -f calico.yaml
@@ -1504,8 +1514,16 @@ while [[ $# -gt 0 ]]; do
     _check_availability_vip_no "$availability_vip_no"
     ;;
 
-  calico-mirrors=* | -calico-mirrors=* | --calico-mirrors=*)
-    calico_mirrors="${1#*=}"
+  calico-node-mirror=* | -calico-node-mirror=* | --calico-node-mirror=*)
+    calico_node_mirror="${1#*=}"
+    ;;
+
+  calico-cni-mirror=* | -calico-cni-mirror=* | --calico-cni-mirror=*)
+    calico_cni_mirror="${1#*=}"
+    ;;
+
+  calico-kube-controllers-mirror=* | -calico-kube-controllers-mirror=* | --calico-kube-controllers-mirror=*)
+    calico_kube_controllers_mirror="${1#*=}"
     ;;
 
   keepalived-mirror=* | -keepalived-mirror=* | --keepalived-mirror=*)

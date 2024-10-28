@@ -145,12 +145,14 @@
 
 ## 参数说明
 
-| 镜像参数                  | 说明                                                                     | 原始镜像                                                                                        | 加速镜像使用示例                                                                     | 作者个人镜像                                                                                                                         |
-|-----------------------|------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
-| calico-mirrors        | calico 网络组件加速镜像（注意此处有 `s`，控制多个镜像，不控制镜像名称、不控制版本号），自定义版本见 calico-version | 包含 docker.io/calico/cni、docker.io/calico/kube-controllers、docker.io/calico/kube-controllers | calico-mirrors=hub-mirror.c.163.com                                          | calico-mirrors=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei                                      |
-| keepalived-mirror     | keepalived 镜像，只控制镜像名称、不控制版本号                                           | lettore/keepalived                                                                          | keepalived-mirror=hub-mirror.c.163.com/lettore/keepalived                    | keepalived-mirror=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei/lettore/keepalived                |
-| haproxy-mirror        | haproxy 镜像，只控制镜像名称、不控制版本号                                              | haproxytech/haproxy-debian                                                                  | haproxy-mirror=hub-mirror.c.163.com/haproxytech/haproxy-debian               | haproxy-mirror=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei/haproxytech/haproxy-debian           |
-| metrics-server-mirror | metrics-server 镜像，只控制镜像名称、不控制版本号，默认使用阿里云镜像                             | registry.k8s.io/metrics-server/metrics-server                                               | metrics-server-mirror=registry.aliyuncs.com/google_containers/metrics-server | metrics-server-mirror=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei/metrics-server/metrics-server |
+| 镜像参数                           | 说明                                                                     | 原始镜像                                          | 加速镜像使用示例                                                                     | 作者个人镜像                                                                                                                         |
+|--------------------------------|------------------------------------------------------------------------|-----------------------------------------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| calico-node-mirror             | calico 网络组件加速镜像，只控制镜像名称、不控制版本号，自定义版本见 calico-version                   | 包含 docker.io/calico/node                      | calico-node-mirror=hub-mirror.c.163.com/calico/node                          | calico-node-mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-node                                                 |
+| calico-cni-mirror              | calico 网络组件加速镜像，只控制镜像名称、不控制版本号，自定义版本见 calico-version                   | 包含 docker.io/calico/cni                       | calico-cni-mirror=hub-mirror.c.163.com/calico/cni                            | calico-cni-mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-cni                                                   |
+| calico-kube-controllers-mirror | calico 网络组件加速镜像，只控制镜像名称、不控制版本号，自定义版本见 calico-version                   | 包含 docker.io/calico/kube-controllers          | calico-kube-controllers-mirror=hub-mirror.c.163.com/calico/kube-controllers  | calico-kube-controllers-mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-kube-controllers                         |
+| keepalived-mirror              | keepalived 镜像，只控制镜像名称、不控制版本号                                           | lettore/keepalived                            | keepalived-mirror=hub-mirror.c.163.com/lettore/keepalived                    | keepalived-mirror=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei/lettore/keepalived                |
+| haproxy-mirror                 | haproxy 镜像，只控制镜像名称、不控制版本号                                              | haproxytech/haproxy-debian                    | haproxy-mirror=hub-mirror.c.163.com/haproxytech/haproxy-debian               | haproxy-mirror=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei/haproxytech/haproxy-debian           |
+| metrics-server-mirror          | metrics-server 镜像，只控制镜像名称、不控制版本号，默认使用阿里云镜像                             | registry.k8s.io/metrics-server/metrics-server | metrics-server-mirror=registry.aliyuncs.com/google_containers/metrics-server | metrics-server-mirror=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei/metrics-server/metrics-server |
 
 | 安装/配置参数                                   | 说明                                                                                                                                                                            | 默认值                                                                                                                                            | 使用示例                                                                                                                                                                  |
 |-------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -320,16 +322,20 @@
 7. k8s 单节点安装（只有一个主节点，无高可用，仅用于学习、测试），使用 calico 网络组件的加速镜像
 
     ```shell
-    # calico 网络组件：使用网易云 calico-mirrors=hub-mirror.c.163.com
-    # 如果自己有镜像，也可使用自己的镜像
-    # 作者个人镜像仓库：calico-mirrors=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei
+    # calico 网络组件 作者个人镜像仓库：
+    # calico-node-mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-node
+    # calico-cni-mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-cni
+    # calico-kube-controllers-mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-kube-controllers
     
     # 下载脚本，下载后的文件名为 k8s.sh
     curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
     # 授权
     chmod +x k8s.sh
     # 执行安装命令
-    sudo ./k8s.sh kubernetes-taint calico-mirrors=hub-mirror.c.163.com
+    sudo ./k8s.sh kubernetes-taint \
+      calico-node-mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-node \
+      calico-cni-mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-cni \
+      calico-kube-controllers-mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-kube-controllers
     ```
 
 8. k8s 单节点安装（只有一个主节点，无高可用，仅用于学习、测试），安装 Metrics Server 插件
