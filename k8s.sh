@@ -76,10 +76,10 @@ ingress_nginx_version=1.10.0
 # ingress nginx 相关镜像（前缀）
 # 用于替换国内不可访问的 registry.k8s.io/ingress-nginx/controller 镜像
 #ingress_nginx_controller_mirror=xuxiaoweicomcn/ingress-nginx-controller
-ingress_nginx_controller_mirror=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei/ingress-nginx/controller
+ingress_nginx_controller_mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-controller
 # 用于替换国内不可访问的 registry.k8s.io/ingress-nginx/kube-webhook-certgen
 #ingress_nginx_kube_webhook_certgen_mirror=xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen
-ingress_nginx_kube_webhook_certgen_mirror=registry.jihulab.com/xuxiaowei-jihu/xuxiaowei-cloud/spring-cloud-xuxiaowei/ingress-nginx/kube-webhook-certgen
+ingress_nginx_kube_webhook_certgen_mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen
 # hostNetwork 配置
 ingress_nginx_host_network=false
 
