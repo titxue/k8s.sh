@@ -242,7 +242,7 @@
 
     ```shell
     # 下载脚本，下载后的文件名为 k8s.sh
-    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
     # 授权
     chmod +x k8s.sh
     # 执行安装命令
@@ -256,7 +256,7 @@
 
     ```shell
     # 下载脚本，下载后的文件名为 k8s.sh
-    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
     # 授权
     chmod +x k8s.sh
     # 执行安装命令
@@ -273,7 +273,7 @@
 
     ```shell
     # 下载脚本，下载后的文件名为 k8s.sh
-    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
     # 授权
     chmod +x k8s.sh
     # 执行安装命令
@@ -287,7 +287,7 @@
 
     ```shell
     # 下载脚本，下载后的文件名为 k8s.sh
-    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
     # 授权
     chmod +x k8s.sh
     # 执行安装命令，仅安装，不进行初始化
@@ -298,7 +298,7 @@
 
     ```shell
     # 下载脚本，下载后的文件名为 k8s.sh
-    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
     # 授权
     chmod +x k8s.sh
     # 执行安装命令，仅安装、拉取镜像，不进行初始化
@@ -309,7 +309,7 @@
 
     ```shell
     # 下载脚本，下载后的文件名为 k8s.sh
-    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
     # 授权
     chmod +x k8s.sh
     # 执行安装命令
@@ -328,7 +328,7 @@
     # calico-kube-controllers-mirror=registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-kube-controllers
     
     # 下载脚本，下载后的文件名为 k8s.sh
-    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
     # 授权
     chmod +x k8s.sh
     # 执行安装命令
@@ -342,7 +342,7 @@
 
     ```shell
     # 下载脚本，下载后的文件名为 k8s.sh
-    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+    curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
     # 授权
     chmod +x k8s.sh
     # 执行安装命令
@@ -358,7 +358,7 @@
     # sudo ./k8s.sh kubernetes-taint metrics-server-install metrics-server-version=0.7.1 metrics-server-availability
     
     # 执行安装命令：自定义下载配置文件（优先级高于 metrics-server-version、metrics-server-availability，可指定高可用）
-    # sudo ./k8s.sh kubernetes-taint metrics-server-install metrics-server-manifests-mirror=https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/mirrors/kubernetes-sigs/metrics-server/v0.6.3/components.yaml
+    # sudo ./k8s.sh kubernetes-taint metrics-server-install metrics-server-manifests-mirror=https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/mirrors/kubernetes-sigs/metrics-server/v0.6.3/components.yaml
     ```
 
 9. k8s 集群（一主多从，无高可用，仅用于学习、测试）
@@ -367,7 +367,7 @@
 
         ```shell
         # 下载脚本，下载后的文件名为 k8s.sh
-        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
         # 授权
         chmod +x k8s.sh
         # 执行安装命令
@@ -390,7 +390,7 @@
 
         ```shell
         # 下载脚本，下载后的文件名为 k8s.sh
-        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
         # 授权
         chmod +x k8s.sh
         # 执行安装命令，仅安装、拉取镜像，不进行初始化
@@ -412,7 +412,7 @@
 
         ```shell
         # 下载脚本，下载后的文件名为 k8s.sh
-        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
         # 授权
         chmod +x k8s.sh
         
@@ -448,7 +448,7 @@
 
         ```shell
         # 下载脚本，下载后的文件名为 k8s.sh
-        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
         # 授权
         chmod +x k8s.sh
         
@@ -466,7 +466,7 @@
 
         ```shell
         # 下载脚本，下载后的文件名为 k8s.sh
-        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
         # 授权
         chmod +x k8s.sh
         
@@ -505,7 +505,7 @@
 
         ```shell
         # 下载脚本，下载后的文件名为 k8s.sh
-        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/0.4.0/k8s.sh
+        curl -o k8s.sh https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/1.0.0/k8s.sh
         # 授权
         chmod +x k8s.sh
         
