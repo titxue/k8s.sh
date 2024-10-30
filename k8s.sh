@@ -21,6 +21,13 @@ readonly COLOR_RED='\033[31m'
 readonly COLOR_RESET='\033[0m'
 readonly COLOR_YELLOW='\033[93m'
 
+echo ''
+echo ''
+echo -e "${COLOR_BLUE}kubernetes 一键安装交互式网站：${COLOR_RESET}"
+echo -e "${COLOR_BLUE}https://k8s-sh.xuxiaowei.com.cn${COLOR_RESET}"
+echo ''
+echo ''
+
 # systemd 最低目标版本
 readonly systemd_target_version=systemd-219-42.el7.x86_64
 
@@ -1675,3 +1682,10 @@ if [[ $kubernetes_init_skip != true ]]; then
   echo -e '\e[5;34mkubectl get pod --all-namespaces -o wide\e[0m'
   echo ""
 fi
+
+echo ''
+echo ''
+echo -e "${COLOR_BLUE}kubernetes 一键安装交互式网站：${COLOR_RESET}"
+echo -e "${COLOR_BLUE}https://k8s-sh.xuxiaowei.com.cn${COLOR_RESET}"
+echo ''
+echo ''
