@@ -1,11 +1,8 @@
 stages:
   # 准备系统环境
-  - anolisos-7.9:env
+  - env
   # 安装 k8s
-  - anolisos-7.9:install
-  # CentOS 自定义版本
-  - anolisos-7.9:env:custom-kubernetes-version
-  - anolisos-7.9:install:custom-kubernetes-version
+  - install
   # 代码同步
   - sync
 
@@ -43,7 +40,7 @@ stages:
   - sleep 30
 
 anolisos-7.9:env:
-  stage: anolisos-7.9:env
+  stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $ANOLISOS_7_9_QEMU_ID
@@ -67,9 +64,9 @@ anolisos-7.9:env:
     - g150s-docker
 
 anolisos-7.9:install:
-  stage: anolisos-7.9:install
+  stage: install
   needs:
-    - anolisos-7.9:env
+    - env
   hooks:
     pre_get_sources_script:
       - yum install -y git
@@ -92,7 +89,7 @@ anolisos-7.9:install:
     - GitLab-CICD-AnolisOS-7.9
 
 anolisos-7.9:env:custom-kubernetes-version:
-  stage: anolisos-7.9:env:custom-kubernetes-version
+  stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $ANOLISOS_7_9_QEMU_ID
@@ -116,7 +113,7 @@ anolisos-7.9:env:custom-kubernetes-version:
     - g150s-docker
 
 anolisos-7.9:install:custom-kubernetes-version:
-  stage: anolisos-7.9:install:custom-kubernetes-version
+  stage: install
   needs:
     - anolisos-7.9:env:custom-kubernetes-version
   variables:
