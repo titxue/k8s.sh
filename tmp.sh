@@ -228,6 +228,10 @@ while [[ $# -gt 0 ]]; do
     docker_repo=true
     ;;
 
+  containerd-install | -containerd-install | --containerd-install)
+    containerd_install=true
+    ;;
+
   docker-install | -docker-install | --docker-install)
     docker_install=true
     ;;
