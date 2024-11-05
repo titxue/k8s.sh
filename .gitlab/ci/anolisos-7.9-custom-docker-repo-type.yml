@@ -49,6 +49,7 @@ anolisos-7.9:env:custom-docker-repo-type:
   rules:
     - changes:
         paths:
+          - .gitlab/ci/*.yml
           - .gitlab-ci.yml
           - k8s.sh
           - tmp.sh
@@ -85,6 +86,7 @@ anolisos-7.9:install:custom-docker-repo-type:
   rules:
     - changes:
         paths:
+          - .gitlab/ci/*.yml
           - .gitlab-ci.yml
           - k8s.sh
           - tmp.sh

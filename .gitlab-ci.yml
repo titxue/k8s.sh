@@ -57,6 +57,7 @@ anolisos-7.9:env:
   rules:
     - changes:
         paths:
+          - .gitlab/ci/*.yml
           - .gitlab-ci.yml
           - k8s.sh
           - tmp.sh
@@ -82,6 +83,7 @@ anolisos-7.9:install:
   rules:
     - changes:
         paths:
+          - .gitlab/ci/*.yml
           - .gitlab-ci.yml
           - k8s.sh
           - tmp.sh
@@ -106,6 +108,7 @@ anolisos-7.9:env:custom-kubernetes-repo-type:
   rules:
     - changes:
         paths:
+          - .gitlab/ci/*.yml
           - .gitlab-ci.yml
           - k8s.sh
           - tmp.sh
@@ -142,6 +145,7 @@ anolisos-7.9:install:custom-kubernetes-repo-type:
   rules:
     - changes:
         paths:
+          - .gitlab/ci/*.yml
           - .gitlab-ci.yml
           - k8s.sh
           - tmp.sh
@@ -166,6 +170,7 @@ anolisos-7.9:env:custom-kubernetes-version:
   rules:
     - changes:
         paths:
+          - .gitlab/ci/*.yml
           - .gitlab-ci.yml
           - k8s.sh
           - tmp.sh
@@ -204,6 +209,7 @@ anolisos-7.9:install:custom-kubernetes-version:
   rules:
     - changes:
         paths:
+          - .gitlab/ci/*.yml
           - .gitlab-ci.yml
           - k8s.sh
           - tmp.sh
