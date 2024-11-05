@@ -77,4 +77,4 @@ ubuntu-22.04:install:
           - k8s.sh
           - tmp.sh
   tags:
-    - GitLab-CICD-Ubuntu-22-10
+    - GitLab-CICD-Ubuntu-22-04
