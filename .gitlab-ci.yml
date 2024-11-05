@@ -111,6 +111,7 @@ anolisos-7.9:env:custom-kubernetes-repo-type:
           - tmp.sh
   tags:
     - g150s-docker
+  when: manual
 
 anolisos-7.9:install:custom-kubernetes-repo-type:
   stage: install
