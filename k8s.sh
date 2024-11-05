@@ -850,7 +850,7 @@ _kubernetes_install() {
 
       if [ "$kubernetes_version" ]; then
         echo -e "${COLOR_BLUE}kubernetes 安装 ${COLOR_RESET}${COLOR_GREEN}${kubernetes_version}${COLOR_RESET}"
-        sudo apt-get install -y kubelet="$install_kubernetes_version" kubeadm="$install_kubernetes_version" kubectl="$install_kubernetes_version"
+        sudo apt-get install -y kubelet="$install_kubernetes_version"-1.1 kubeadm="$install_kubernetes_version"-1.1 kubectl="$install_kubernetes_version"-1.1
       else
         echo -e "${COLOR_BLUE}kubernetes 安装 ${COLOR_RESET}${COLOR_GREEN}最新版${COLOR_RESET}"
         sudo apt-get install -y kubelet kubeadm kubectl
