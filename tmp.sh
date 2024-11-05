@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# 一旦有命令返回非零值，立即退出脚本
+set -e
+
+# 颜色定义
+readonly COLOR_BLUE='\033[34m'
+readonly COLOR_GREEN='\033[92m'
+readonly COLOR_RED='\033[31m'
+readonly COLOR_RESET='\033[0m'
+readonly COLOR_YELLOW='\033[93m'
+
 # 当前系统类型，可能的值:
 # anolis
 # centos
@@ -41,6 +51,7 @@ case "$os_type" in
     ;;
   *)
 esac
+
 # 包管理类型
 package_type=
 case "$os_type" in
@@ -86,6 +97,11 @@ EOF
 
     sudo apt-get update
 
+  else
+
+    echo "不支持的发行版: $os_type 配置 Docker 源"
+    exit 1
+
   fi
 
 }
@@ -121,6 +137,29 @@ EOF
   fi
 }
 
-#_docker_repo
-#
-#_kubernetes_repo
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+
+  kubernetes-repo | -kubernetes-repo | --kubernetes-repo)
+    kubernetes_repo=true
+    ;;
+
+  docker-repo | -docker-repo | --docker-repo)
+    docker_repo=true
+    ;;
+
+  *)
+    echo -e "${COLOR_RED}无效参数: $1，退出程序${COLOR_RESET}"
+    exit 1
+    ;;
+  esac
+  shift
+done
+
+if [[ $kubernetes_repo == true ]]; then
+  _kubernetes_repo
+fi
+
+if [[ $docker_repo == true ]]; then
+  _docker_repo
+fi
