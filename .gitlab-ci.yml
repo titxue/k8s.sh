@@ -76,7 +76,8 @@ anolisos-7.9:install:
     - ip addr | grep 'inet '
   script:
     - chmod +x tmp.sh
-    - ./tmp.sh docker-repo kubernetes-repo
+    - ./tmp.sh docker-repo containerd-install
+    - ./tmp.sh docker-repo docker-install kubernetes-repo kubernetes-install
   rules:
     - changes:
         paths:

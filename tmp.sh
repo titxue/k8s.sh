@@ -106,6 +106,55 @@ EOF
 
 }
 
+_containerd_install() {
+  if [ $package_type == 'yum' ]; then
+
+    sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
+    sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+  elif [ $package_type == 'apt' ]; then
+
+    for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+  else
+
+    echo "不支持的发行版: $os_type 安装 Docker"
+    exit 1
+
+  fi
+
+  sudo systemctl start containerd
+  sudo systemctl enable containerd
+
+}
+
+_docker_install() {
+  if [ $package_type == 'yum' ]; then
+
+    sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
+    yum install -y containerd.io
+
+  elif [ $package_type == 'apt' ]; then
+
+    for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+    sudo apt-get install -y containerd.io
+
+  else
+
+    echo "不支持的发行版: $os_type 安装 Docker"
+    exit 1
+
+  fi
+
+  sudo systemctl start docker
+  sudo systemctl enable docker
+  sudo docker info
+  sudo docker ps
+  sudo docker images
+
+}
+
 _kubernetes_repo() {
   if [ $package_type == 'yum' ]; then
 
@@ -134,6 +183,33 @@ EOF
 
     sudo apt-get update
 
+  else
+
+    echo "不支持的发行版: $os_type 配置 Kubernetes 源"
+    exit 1
+
+  fi
+}
+
+_kubernetes_install() {
+
+  if [ $package_type == 'yum' ]; then
+    if [[ "$kubernetes_version" ]]; then
+      sudo yum install -y kubelet-"$kubernetes_version" kubeadm-"$kubernetes_version" kubectl-"$kubernetes_version"
+    else
+      sudo yum install -y kubelet kubeadm kubectl
+    fi
+  elif [ $package_type == 'apt' ]; then
+    if [[ "$kubernetes_version" ]]; then
+        sudo apt-get install -y kubelet="$install_kubernetes_version"-1.1 kubeadm="$install_kubernetes_version"-1.1 kubectl="$install_kubernetes_version"-1.1
+    else
+        sudo apt-get install -y kubelet kubeadm kubectl
+    fi
+  else
+
+    echo "不支持的发行版: $os_type 安装 Kubernetes"
+    exit 1
+
   fi
 }
 
@@ -144,8 +220,16 @@ while [[ $# -gt 0 ]]; do
     kubernetes_repo=true
     ;;
 
+  kubernetes-install | -kubernetes-install | --kubernetes-install)
+    kubernetes_install=true
+    ;;
+
   docker-repo | -docker-repo | --docker-repo)
     docker_repo=true
+    ;;
+
+  docker-install | -docker-install | --docker-install)
+    docker_install=true
     ;;
 
   *)
@@ -160,6 +244,18 @@ if [[ $kubernetes_repo == true ]]; then
   _kubernetes_repo
 fi
 
+if [[ $kubernetes_install == true ]]; then
+  _kubernetes_install
+fi
+
 if [[ $docker_repo == true ]]; then
   _docker_repo
+fi
+
+if [[ $containerd_install == true ]]; then
+  _containerd_install
+fi
+
+if [[ $docker_install == true ]]; then
+  _docker_install
 fi
