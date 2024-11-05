@@ -77,7 +77,8 @@ anolisos-7.9:install:
   script:
     - chmod +x tmp.sh
     - ./tmp.sh docker-repo containerd-install
-    - ./tmp.sh docker-repo docker-install kubernetes-repo kubernetes-install
+    - ./tmp.sh docker-repo docker-install
+    - ./tmp.sh kubernetes-repo kubernetes-install
   rules:
     - changes:
         paths:

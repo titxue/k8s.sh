@@ -193,15 +193,23 @@ EOF
 
 _kubernetes_install() {
 
+  version=
+
   if [ $package_type == 'yum' ]; then
     if [[ "$kubernetes_version" ]]; then
-      sudo yum install -y kubelet-"$kubernetes_version" kubeadm-"$kubernetes_version" kubectl-"$kubernetes_version"
+      if [[ ${kubernetes_version:0:1} == "v" ]]; then
+        version=${kubernetes_version:1}
+      fi
+      sudo yum install -y kubelet-"$version" kubeadm-"$version" kubectl-"$version"
     else
       sudo yum install -y kubelet kubeadm kubectl
     fi
   elif [ $package_type == 'apt' ]; then
     if [[ "$kubernetes_version" ]]; then
-        sudo apt-get install -y kubelet="$install_kubernetes_version"-1.1 kubeadm="$install_kubernetes_version"-1.1 kubectl="$install_kubernetes_version"-1.1
+      if [[ ${kubernetes_version:0:1} == "v" ]]; then
+        version=${kubernetes_version:1}
+      fi
+      sudo apt-get install -y kubelet="$version"-1.1 kubeadm="$version"-1.1 kubectl="$version"-1.1
     else
         sudo apt-get install -y kubelet kubeadm kubectl
     fi
