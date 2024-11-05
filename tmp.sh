@@ -198,9 +198,6 @@ _kubernetes_install() {
   version=${kubernetes_version:1}
 
   if [ $package_type == 'yum' ]; then
-    if [[ ${kubernetes_version:0:1} == "v" ]]; then
-      version=${kubernetes_version:1}
-    fi
     sudo yum install -y kubelet-"$version" kubeadm-"$version" kubectl-"$version"
   elif [ $package_type == 'apt' ]; then
     sudo apt-get install -y kubelet="$version"-$kubernetes_version_suffix kubeadm="$version"-$kubernetes_version_suffix kubectl="$version"-$kubernetes_version_suffix
@@ -225,6 +222,7 @@ while [[ $# -gt 0 ]]; do
 
   kubernetes-version=* | -kubernetes-version=* | --kubernetes-version=*)
     kubernetes_version="${1#*=}"
+    _kubernetes_repo
     ;;
 
   kubernetes-version-suffix=* | -kubernetes-version-suffix=* | --kubernetes-version-suffix=*)
