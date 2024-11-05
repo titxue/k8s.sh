@@ -88,6 +88,58 @@ anolisos-7.9:install:
   tags:
     - GitLab-CICD-AnolisOS-7.9
 
+anolisos-7.9:env:custom-kubernetes-repo-type:
+  stage: env
+  image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
+  variables:
+    QEMU_ID: $ANOLISOS_7_9_QEMU_ID
+    SNAPSHOT: $ANOLISOS_7_9_SNAPSHOT
+  before_script:
+    - echo $PVE_ADDRESS
+    - echo $ANOLISOS_7_9_QEMU_ID
+    - echo $QEMU_ID
+    - echo $ANOLISOS_7_9_SNAPSHOT
+    - echo $SNAPSHOT
+  script:
+    - *env
+  timeout: 120s
+  rules:
+    - changes:
+        paths:
+          - .gitlab-ci.yml
+          - k8s.sh
+          - tmp.sh
+  tags:
+    - g150s-docker
+
+anolisos-7.9:install:custom-kubernetes-repo-type:
+  stage: install
+  needs:
+    - anolisos-7.9:env:custom-kubernetes-repo-type
+  variables:
+    KUBERNETES_REPO_TYPE: kubernetes
+  hooks:
+    pre_get_sources_script:
+      - yum install -y git
+      - git config --global http.sslVerify false
+  before_script:
+    - cat /etc/os-release
+    - ip addr | grep 'inet '
+    - echo $KUBERNETES_REPO_TYPE
+  script:
+    - chmod +x tmp.sh
+    - ./tmp.sh docker-repo containerd-install
+    - ./tmp.sh docker-repo docker-install
+    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-repo-type=$KUBERNETES_REPO_TYPE
+  rules:
+    - changes:
+        paths:
+          - .gitlab-ci.yml
+          - k8s.sh
+          - tmp.sh
+  tags:
+    - GitLab-CICD-AnolisOS-7.9
+
 anolisos-7.9:env:custom-kubernetes-version:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq

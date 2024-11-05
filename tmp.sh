@@ -220,6 +220,22 @@ while [[ $# -gt 0 ]]; do
     kubernetes_repo=true
     ;;
 
+  kubernetes-repo-type=* | -kubernetes-repo-type=* | --kubernetes-repo-type=*)
+    kubernetes_repo_type="${1#*=}"
+    case "$kubernetes_repo_type" in
+      aliyun)
+        kubernetes_baseurl=${kubernetes_mirrors[0]}
+        ;;
+      kubernetes)
+        kubernetes_baseurl=${kubernetes_mirrors[1]}
+        ;;
+      *)
+        echo "不支持自定义 Kubernetes 仓库类型: $kubernetes_repo_type"
+        exit 1
+        ;;
+    esac
+    ;;
+
   kubernetes-install | -kubernetes-install | --kubernetes-install)
     kubernetes_install=true
     ;;
