@@ -7,7 +7,7 @@ stages:
   - sync
 
 # 创建环境
-env: &env
+.env: &env
   # 获取凭证
   - |
     response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/access/ticket" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "username=$PVE_USERNAME" --data-urlencode "password=$PVE_PASSWORD" --data-urlencode 'realm=pam' --data-urlencode 'new-format=1')
