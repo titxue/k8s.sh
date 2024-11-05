@@ -51,7 +51,6 @@ anolisos-7.9:env:
           - tmp.sh
   tags:
     - g150s-docker
-  when: "$ANOLISOS_7_9_WHEN"
 
 anolisos-7.9:install:
   stage: install
