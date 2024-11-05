@@ -34,8 +34,6 @@ echo "系统版本: $os_version"
 kubernetes_version=v1.31.1
 # Kubernetes 具体版本后缀
 kubernetes_version_suffix=1.1
-# Kubernetes 仓库版本号，包含: 主版本号、次版本号
-kubernetes_repo_version=$(echo $kubernetes_version | cut -d. -f1-2)
 # Kubernetes 仓库
 kubernetes_mirrors=("https://mirrors.aliyun.com/kubernetes-new/core/stable" "https://mirrors.cloud.tencent.com/kubernetes" "https://pkgs.k8s.io/core:/stable:")
 # Kubernetes 仓库: 默认仓库，取第一个
@@ -158,6 +156,10 @@ _docker_install() {
 }
 
 _kubernetes_repo() {
+
+  # Kubernetes 仓库版本号，包含: 主版本号、次版本号
+  kubernetes_repo_version=$(echo $kubernetes_version | cut -d. -f1-2)
+
   if [ $package_type == 'yum' ]; then
 
     sudo tee /etc/yum.repos.d/kubernetes.repo <<EOF
