@@ -1,14 +1,14 @@
-ubuntu-22.10:env:
+ubuntu-22.04:env:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
-    QEMU_ID: $UBUNTU_22_10_QEMU_ID
-    SNAPSHOT: $UBUNTU_22_10_SNAPSHOT
+    QEMU_ID: $UBUNTU_22_04_QEMU_ID
+    SNAPSHOT: $UBUNTU_22_04_SNAPSHOT
   before_script:
     - echo $PVE_ADDRESS
-    - echo $UBUNTU_22_10_QEMU_ID
+    - echo $UBUNTU_22_04_QEMU_ID
     - echo $QEMU_ID
-    - echo $UBUNTU_22_10_SNAPSHOT
+    - echo $UBUNTU_22_04_SNAPSHOT
     - echo $SNAPSHOT
   script:
     # 获取凭证
@@ -52,10 +52,10 @@ ubuntu-22.10:env:
   tags:
     - g150s-docker
 
-ubuntu-22.10:install:
+ubuntu-22.04:install:
   stage: install
   needs:
-    - ubuntu-22.10:env
+    - ubuntu-22.04:env
   hooks:
     pre_get_sources_script:
       - sudo apt-get update
