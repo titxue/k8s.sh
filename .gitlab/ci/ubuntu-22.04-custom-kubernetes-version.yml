@@ -51,6 +51,7 @@ ubuntu-22.04:env:custom-kubernetes-version:
           - tmp.sh
   tags:
     - g150s-docker
+  when: manual
 
 ubuntu-22.04:install:custom-kubernetes-version:
   stage: install

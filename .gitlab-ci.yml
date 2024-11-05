@@ -6,6 +6,9 @@ stages:
   # 代码同步
   - sync
 
+variables:
+  NEEDRESTART: n
+
 # 嵌入
 include:
   - .gitlab/ci/anolisos-7.9.yml
