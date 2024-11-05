@@ -49,7 +49,7 @@ anolisos-7.9:env:
     - echo $PVE_ADDRESS
     - echo $ANOLISOS_7_9_QEMU_ID
     - echo $QEMU_ID
-    - echho $ANOLISOS_7_9_SNAPSHOT
+    - echo $ANOLISOS_7_9_SNAPSHOT
     - echo $SNAPSHOT
   script:
     - *env
