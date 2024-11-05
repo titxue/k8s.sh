@@ -111,6 +111,7 @@ anolisos-7.9:env:custom-kubernetes-version:
           - tmp.sh
   tags:
     - g150s-docker
+  when: manual
 
 anolisos-7.9:install:custom-kubernetes-version:
   stage: install
@@ -148,6 +149,7 @@ anolisos-7.9:install:custom-kubernetes-version:
           - tmp.sh
   tags:
     - GitLab-CICD-AnolisOS-7.9
+  when: manual
 
 # 嵌入
 include:
