@@ -212,5 +212,6 @@ anolisos-7.9:install:custom-kubernetes-version:
 
 # 嵌入
 include:
+  - .gitlab/ci/anolisos-7.9-custom-docker-repo-type.yml
   # 同步代码
   - /sync.yml

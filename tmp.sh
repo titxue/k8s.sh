@@ -252,6 +252,25 @@ while [[ $# -gt 0 ]]; do
     docker_repo=true
     ;;
 
+  docker-repo-type=* | -docker-repo-type=* | --docker-repo-type=*)
+    docker_repo_type="${1#*=}"
+    case "$docker_repo_type" in
+      aliyun)
+        docker_baseurl=${docker_mirrors[0]}
+        ;;
+      tencent)
+        docker_baseurl=${docker_mirrors[1]}
+        ;;
+      docker)
+        docker_baseurl=${docker_mirrors[2]}
+        ;;
+      *)
+        echo "不支持自定义 Docker 仓库类型: $docker_repo_type"
+        exit 1
+        ;;
+    esac
+    ;;
+
   containerd-install | -containerd-install | --containerd-install)
     containerd_install=true
     ;;
