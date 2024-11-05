@@ -132,6 +132,13 @@ anolisos-7.9:install:custom-kubernetes-repo-type:
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo docker-install
     - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-repo-type=$KUBERNETES_REPO_TYPE
+    - |
+      if grep -q "pkgs.k8s.io" "/etc/yum.repos.d/kubernetes.repo"; then
+          echo "使用了自定义仓库";
+      else
+          echo "未使用自定义仓库";
+          exit 1;
+      fi
   rules:
     - changes:
         paths:
