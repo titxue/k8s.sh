@@ -44,10 +44,10 @@ docker_mirrors=("https://mirrors.aliyun.com/docker-ce/linux" "https://mirrors.cl
 # Docker 仓库: 默认仓库，取第一个
 docker_baseurl=${docker_mirrors[0]}
 # Docker 仓库类型
-docker_repo_type=$os_type
+docker_repo_name=$os_type
 case "$os_type" in
   anolis)
-    docker_repo_type='centos'
+    docker_repo_name='centos'
     ;;
   *)
 esac
@@ -74,10 +74,10 @@ _docker_repo() {
     sudo tee /etc/yum.repos.d/docker-ce.repo <<EOF
 [docker-ce-stable]
 name=Docker CE Stable - \$basearch
-baseurl=$docker_baseurl/$docker_repo_type/\$releasever/\$basearch/stable
+baseurl=$docker_baseurl/$docker_repo_name/\$releasever/\$basearch/stable
 enabled=1
 gpgcheck=1
-gpgkey=$docker_baseurl/centos/gpg
+gpgkey=$docker_baseurl/$docker_repo_name/gpg
 
 EOF
 
@@ -87,11 +87,11 @@ EOF
     sudo apt-get install -y ca-certificates curl
 
     sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL $docker_baseurl/$docker_repo_type/gpg -o /etc/apt/keyrings/docker.asc
+    sudo curl -fsSL $docker_baseurl/$docker_repo_name/gpg -o /etc/apt/keyrings/docker.asc
     sudo chmod a+r /etc/apt/keyrings/docker.asc
 
     echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $docker_baseurl/$docker_repo_type \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $docker_baseurl/$docker_repo_name \
       $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
