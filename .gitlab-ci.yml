@@ -1,8 +1,11 @@
 stages:
   # 准备系统环境
-  - env
+  - anolisos-7.9:env
   # 安装 k8s
-  - install
+  - anolisos-7.9:install
+  # CentOS 自定义版本
+  - anolisos-7.9:env:custom-kubernetes-version
+  - anolisos-7.9:install:custom-kubernetes-version
   # 代码同步
   - sync
 
@@ -40,7 +43,7 @@ stages:
   - sleep 30
 
 anolisos-7.9:env:
-  stage: env
+  stage: anolisos-7.9:env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $ANOLISOS_7_9_QEMU_ID
@@ -64,7 +67,7 @@ anolisos-7.9:env:
     - g150s-docker
 
 anolisos-7.9:install:
-  stage: install
+  stage: anolisos-7.9:install
   needs:
     - anolisos-7.9:env
   hooks:
@@ -79,6 +82,67 @@ anolisos-7.9:install:
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo docker-install
     - ./tmp.sh kubernetes-repo kubernetes-install
+  rules:
+    - changes:
+        paths:
+          - .gitlab-ci.yml
+          - k8s.sh
+          - tmp.sh
+  tags:
+    - GitLab-CICD-AnolisOS-7.9
+
+anolisos-7.9:env:custom-kubernetes-version:
+  stage: anolisos-7.9:env:custom-kubernetes-version
+  image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
+  variables:
+    QEMU_ID: $ANOLISOS_7_9_QEMU_ID
+    SNAPSHOT: $ANOLISOS_7_9_SNAPSHOT
+  before_script:
+    - echo $PVE_ADDRESS
+    - echo $ANOLISOS_7_9_QEMU_ID
+    - echo $QEMU_ID
+    - echo $ANOLISOS_7_9_SNAPSHOT
+    - echo $SNAPSHOT
+  script:
+    - *env
+  timeout: 120s
+  rules:
+    - changes:
+        paths:
+          - .gitlab-ci.yml
+          - k8s.sh
+          - tmp.sh
+  tags:
+    - g150s-docker
+
+anolisos-7.9:install:custom-kubernetes-version:
+  stage: anolisos-7.9:install:custom-kubernetes-version
+  needs:
+    - anolisos-7.9:env:custom-kubernetes-version
+  variables:
+    KUBERNETES_VERSION: v1.30.6
+  hooks:
+    pre_get_sources_script:
+      - yum install -y git
+      - git config --global http.sslVerify false
+  before_script:
+    - cat /etc/os-release
+    - ip addr | grep 'inet '
+    - echo $KUBERNETES_VERSION
+  script:
+    - echo $
+    - chmod +x tmp.sh
+    - ./tmp.sh docker-repo containerd-install
+    - ./tmp.sh docker-repo docker-install
+    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION
+    - version=$(kubelet --version | awk '{print $2}')
+    - echo $version
+    - |
+      if [ "$version" == "$KUBERNETES_VERSION" ]; then
+          echo "版本正确";
+      else
+          echo "版本不匹配" && exit 1;
+      fi
   rules:
     - changes:
         paths:

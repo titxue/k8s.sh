@@ -195,26 +195,15 @@ EOF
 
 _kubernetes_install() {
 
-  version=
+  version=${kubernetes_version:1}
 
   if [ $package_type == 'yum' ]; then
-    if [[ "$kubernetes_version" ]]; then
-      if [[ ${kubernetes_version:0:1} == "v" ]]; then
-        version=${kubernetes_version:1}
-      fi
-      sudo yum install -y kubelet-"$version" kubeadm-"$version" kubectl-"$version"
-    else
-      sudo yum install -y kubelet kubeadm kubectl
+    if [[ ${kubernetes_version:0:1} == "v" ]]; then
+      version=${kubernetes_version:1}
     fi
+    sudo yum install -y kubelet-"$version" kubeadm-"$version" kubectl-"$version"
   elif [ $package_type == 'apt' ]; then
-    if [[ "$kubernetes_version" ]]; then
-      if [[ ${kubernetes_version:0:1} == "v" ]]; then
-        version=${kubernetes_version:1}
-      fi
-      sudo apt-get install -y kubelet="$version"-$kubernetes_version_suffix kubeadm="$version"-$kubernetes_version_suffix kubectl="$version"-$kubernetes_version_suffix
-    else
-      sudo apt-get install -y kubelet kubeadm kubectl
-    fi
+    sudo apt-get install -y kubelet="$version"-$kubernetes_version_suffix kubeadm="$version"-$kubernetes_version_suffix kubectl="$version"-$kubernetes_version_suffix
   else
 
     echo "不支持的发行版: $os_type 安装 Kubernetes"
@@ -232,6 +221,10 @@ while [[ $# -gt 0 ]]; do
 
   kubernetes-install | -kubernetes-install | --kubernetes-install)
     kubernetes_install=true
+    ;;
+
+  kubernetes-version=* | -kubernetes-version=* | --kubernetes-version=*)
+    kubernetes_version="${1#*=}"
     ;;
 
   kubernetes-version-suffix=* | -kubernetes-version-suffix=* | --kubernetes-version-suffix=*)
