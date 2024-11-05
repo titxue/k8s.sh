@@ -125,6 +125,7 @@ _containerd_install() {
   fi
 
   sudo systemctl start containerd
+  sudo systemctl status containerd -l --no-pager
   sudo systemctl enable containerd
 
 }
@@ -148,6 +149,7 @@ _docker_install() {
   fi
 
   sudo systemctl start docker
+  sudo systemctl status docker -l --no-pager
   sudo systemctl enable docker
   sudo docker info
   sudo docker ps
