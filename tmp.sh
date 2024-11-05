@@ -226,7 +226,6 @@ while [[ $# -gt 0 ]]; do
 
   kubernetes-version=* | -kubernetes-version=* | --kubernetes-version=*)
     kubernetes_version="${1#*=}"
-    _kubernetes_repo
     ;;
 
   kubernetes-version-suffix=* | -kubernetes-version-suffix=* | --kubernetes-version-suffix=*)
