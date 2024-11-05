@@ -32,6 +32,8 @@ echo "系统版本: $os_version"
 
 # Kubernetes 具体版本，包含: 主版本号、次版本号、修正版本号
 kubernetes_version=v1.31.1
+# Kubernetes 具体版本后缀
+kubernetes_version_suffix=1.1
 # Kubernetes 仓库版本号，包含: 主版本号、次版本号
 kubernetes_repo_version=$(echo $kubernetes_version | cut -d. -f1-2)
 # Kubernetes 仓库
@@ -209,9 +211,9 @@ _kubernetes_install() {
       if [[ ${kubernetes_version:0:1} == "v" ]]; then
         version=${kubernetes_version:1}
       fi
-      sudo apt-get install -y kubelet="$version"-1.1 kubeadm="$version"-1.1 kubectl="$version"-1.1
+      sudo apt-get install -y kubelet="$version"-$kubernetes_version_suffix kubeadm="$version"-$kubernetes_version_suffix kubectl="$version"-$kubernetes_version_suffix
     else
-        sudo apt-get install -y kubelet kubeadm kubectl
+      sudo apt-get install -y kubelet kubeadm kubectl
     fi
   else
 
@@ -230,6 +232,10 @@ while [[ $# -gt 0 ]]; do
 
   kubernetes-install | -kubernetes-install | --kubernetes-install)
     kubernetes_install=true
+    ;;
+
+  kubernetes-version-suffix=* | -kubernetes-version-suffix=* | --kubernetes-version-suffix=*)
+    kubernetes_version_suffix="${1#*=}"
     ;;
 
   docker-repo | -docker-repo | --docker-repo)
