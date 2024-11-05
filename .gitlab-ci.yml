@@ -66,7 +66,7 @@ anolisos-7.9:env:
 anolisos-7.9:install:
   stage: install
   needs:
-    - env
+    - anolisos-7.9:env
   hooks:
     pre_get_sources_script:
       - yum install -y git
