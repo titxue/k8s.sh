@@ -1,4 +1,4 @@
-anolisos-7.9:env:custom-docker-repo-type:
+anolisos-7.9:env:custom-kubernetes-version:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
@@ -53,12 +53,12 @@ anolisos-7.9:env:custom-docker-repo-type:
     - g150s-docker
   when: manual
 
-anolisos-7.9:install:custom-docker-repo-type:
+anolisos-7.9:install:custom-kubernetes-version:
   stage: install
   needs:
-    - anolisos-7.9:env:custom-docker-repo-type
+    - anolisos-7.9:env:custom-kubernetes-version
   variables:
-    DOCKER_REPO_TYPE: tencent
+    KUBERNETES_VERSION: v1.30.6
   hooks:
     pre_get_sources_script:
       - yum install -y git
@@ -66,17 +66,19 @@ anolisos-7.9:install:custom-docker-repo-type:
   before_script:
     - cat /etc/os-release
     - ip addr | grep 'inet '
-    - echo $DOCKER_REPO_TYPE
+    - echo $KUBERNETES_VERSION
   script:
     - chmod +x tmp.sh
-    - ./tmp.sh docker-repo containerd-install docker-repo-type=$DOCKER_REPO_TYPE
-    - ./tmp.sh docker-repo docker-install docker-repo-type=$DOCKER_REPO_TYPE
-    - ./tmp.sh kubernetes-repo kubernetes-install
+    - ./tmp.sh docker-repo containerd-install
+    - ./tmp.sh docker-repo docker-install
+    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION
+    - version=$(kubelet --version | awk '{print $2}')
+    - echo $version
     - |
-      if grep -q "mirrors.cloud.tencent.com" "/etc/yum.repos.d/docker-ce.repo"; then
-          echo "使用了自定义仓库";
+      if [ "$version" == "$KUBERNETES_VERSION" ]; then
+          echo "版本正确";
       else
-          echo "未使用自定义仓库";
+          echo "版本不匹配";
           exit 1;
       fi
   rules:
