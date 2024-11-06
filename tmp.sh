@@ -217,6 +217,15 @@ EOF
   fi
 }
 
+_swap_off() {
+  free -h
+  sudo swapoff -a
+  free -h
+  cat /etc/fstab
+  sudo sed -i 's/.*swap.*/#&/' /etc/fstab
+  cat /etc/fstab
+}
+
 _kubernetes_install() {
 
   version=${kubernetes_version:1}
@@ -320,6 +329,10 @@ while [[ $# -gt 0 ]]; do
     esac
     ;;
 
+  swap-off | -swap-off | --swap-off)
+    swap_off=true
+    ;;
+
   kubernetes-install | -kubernetes-install | --kubernetes-install)
     kubernetes_install=true
     ;;
@@ -393,6 +406,10 @@ fi
 
 if [[ $kubernetes_repo == true ]]; then
   _kubernetes_repo
+fi
+
+if [[ $swap_off == true ]]; then
+  _swap_off
 fi
 
 if [[ $kubernetes_install == true ]]; then

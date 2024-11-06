@@ -65,6 +65,16 @@ anolisos-7.9:install:
     - ip addr | grep 'inet '
   script:
     - chmod +x tmp.sh
+    - ./tmp.sh swap-off
+    - free -h
+    - used_swap=$(free -m | grep Swap | awk '{print $3}')
+    - |
+      if [ $used_swap -eq 0 ]; then
+        echo "交换空间已关闭";
+      else
+        echo "交换空间未关闭";
+        exit 1;
+      fi
     - ./tmp.sh firewalld-stop
     - active_status=$(systemctl is-active firewalld || true)
     - echo $active_status
