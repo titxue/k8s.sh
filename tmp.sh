@@ -38,6 +38,12 @@ kubernetes_version_suffix=1.1
 kubernetes_mirrors=("https://mirrors.aliyun.com/kubernetes-new/core/stable" "https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:" "https://pkgs.k8s.io/core:/stable:")
 # Kubernetes 仓库: 默认仓库，取第一个
 kubernetes_baseurl=${kubernetes_mirrors[0]}
+# Kubernetes 镜像仓库
+kubernetes_images_mirrors=("registry.aliyuncs.com/google_containers", "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn", "registry.k8s.io")
+# Kubernetes 镜像仓库: 默认仓库，取第一个
+kubernetes_images=${kubernetes_images_mirrors[0]}
+# pause 镜像
+pause_image=${kubernetes_images_mirrors[0]}/pause
 
 # Docker 仓库
 docker_mirrors=("https://mirrors.aliyun.com/docker-ce/linux" "https://mirrors.cloud.tencent.com/docker-ce/linux" "https://download.docker.com/linux")
@@ -130,6 +136,17 @@ _containerd_install() {
 
 }
 
+_containerd_config() {
+  sudo cp /etc/containerd/config.toml /etc/containerd/config.toml.$(date +%Y%m%d%H%M%S)
+  sudo containerd config default | sudo tee /etc/containerd/config.toml
+  sudo sed -i "s#registry.k8s.io/pause#$pause_image#g" /etc/containerd/config.toml
+  sudo sed -i "s#SystemdCgroup = false#SystemdCgroup = true#g" /etc/containerd/config.toml
+
+  sudo systemctl restart containerd
+  sudo systemctl status containerd -l --no-pager
+  sudo systemctl enable containerd
+}
+
 _docker_install() {
   if [[ $package_type == 'yum' ]]; then
 
@@ -148,9 +165,12 @@ _docker_install() {
 
   fi
 
-  sudo systemctl start docker
-  sudo systemctl status docker -l --no-pager
-  sudo systemctl enable docker
+  sudo systemctl start docker.socket
+  sudo systemctl start docker.service
+  sudo systemctl status docker.socket -l --no-pager
+  sudo systemctl status docker.service -l --no-pager
+  sudo systemctl enable docker.socket
+  sudo systemctl enable docker.service
   sudo docker info
   sudo docker ps
   sudo docker images
@@ -313,6 +333,10 @@ while [[ $# -gt 0 ]]; do
 
   containerd-install | -containerd-install | --containerd-install)
     containerd_install=true
+    ;;
+
+  containerd-config | -containerd-config | --containerd-config)
+    containerd_config=true
     ;;
 
   docker-install | -docker-install | --docker-install)

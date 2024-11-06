@@ -68,6 +68,7 @@ ubuntu-22.04:install:
     - chmod +x tmp.sh
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo docker-install
+    - ./tmp.sh docker-repo containerd-config
     - ./tmp.sh kubernetes-repo kubernetes-install
   rules:
     - changes:
