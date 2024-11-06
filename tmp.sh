@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# 作者：徐晓伟 xuxiaowei@xuxiaowei.com.cn
+# 微信群：https://work.weixin.qq.com/gm/75cfc47d6a341047e4b6aca7389bdfa8
+#
+# 如果发现脚本不能正常运行，可尝试执行：sed -i 's/\r$//' k8s.sh
+#
+# 代码格式使用：https://github.com/mvdan/sh
+# 代码格式化命令：
+# shfmt -l -w -i 2 k8s.sh
+
 # 一旦有命令返回非零值，立即退出脚本
 set -e
 
@@ -52,25 +61,25 @@ docker_baseurl=${docker_mirrors[0]}
 # Docker 仓库类型
 docker_repo_name=$os_type
 case "$os_type" in
-  anolis)
-    docker_repo_name='centos'
-    ;;
-  *)
+anolis)
+  docker_repo_name='centos'
+  ;;
+*) ;;
 esac
 
 # 包管理类型
 package_type=
 case "$os_type" in
-  ubuntu|debian)
-    package_type=apt
-    ;;
-  centos|anolis)
-    package_type=yum
-    ;;
-  *)
-    echo "不支持的发行版: $os_type"
-    exit 1
-    ;;
+ubuntu | debian)
+  package_type=apt
+  ;;
+centos | anolis)
+  package_type=yum
+  ;;
+*)
+  echo "不支持的发行版: $os_type"
+  exit 1
+  ;;
 esac
 
 _docker_repo() {
@@ -98,8 +107,8 @@ EOF
 
     echo \
       "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] $docker_baseurl/$docker_repo_name \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
+      sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
     sudo apt-get update
 
@@ -204,8 +213,8 @@ EOF
     sudo chmod a+r /etc/apt/keyrings/kubernetes.asc
 
     echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/kubernetes.asc] $kubernetes_baseurl/$kubernetes_repo_version/deb/ /" | \
-      sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/kubernetes.asc] $kubernetes_baseurl/$kubernetes_repo_version/deb/ /" |
+      sudo tee /etc/apt/sources.list.d/kubernetes.list >/dev/null
 
     sudo apt-get update
 
@@ -313,38 +322,38 @@ while [[ $# -gt 0 ]]; do
   kubernetes-repo-type=* | -kubernetes-repo-type=* | --kubernetes-repo-type=*)
     kubernetes_repo_type="${1#*=}"
     case "$kubernetes_repo_type" in
-      aliyun)
-        kubernetes_baseurl=${kubernetes_mirrors[0]}
-        ;;
-      tsinghua)
-        kubernetes_baseurl=${kubernetes_mirrors[1]}
-        ;;
-      kubernetes)
-        kubernetes_baseurl=${kubernetes_mirrors[-1]}
-        ;;
-      *)
-        echo "不支持自定义 Kubernetes 仓库类型: $kubernetes_repo_type"
-        exit 1
-        ;;
+    aliyun)
+      kubernetes_baseurl=${kubernetes_mirrors[0]}
+      ;;
+    tsinghua)
+      kubernetes_baseurl=${kubernetes_mirrors[1]}
+      ;;
+    kubernetes)
+      kubernetes_baseurl=${kubernetes_mirrors[-1]}
+      ;;
+    *)
+      echo "不支持自定义 Kubernetes 仓库类型: $kubernetes_repo_type"
+      exit 1
+      ;;
     esac
     ;;
 
   kubernetes-images=* | -kubernetes-images=* | --kubernetes-images=*)
     kubernetes_images="${1#*=}"
     case "$kubernetes_images" in
-      aliyun)
-        kubernetes_images=${kubernetes_images_mirrors[0]}
-        ;;
-      xuxiaoweicomcn)
-        kubernetes_images=${kubernetes_images_mirrors[1]}
-        ;;
-      kubernetes)
-        kubernetes_images=${kubernetes_images_mirrors[-1]}
-        ;;
-      *)
-        echo "不支持自定义 Kubernetes 镜像仓库: $kubernetes_images"
-        exit 1
-        ;;
+    aliyun)
+      kubernetes_images=${kubernetes_images_mirrors[0]}
+      ;;
+    xuxiaoweicomcn)
+      kubernetes_images=${kubernetes_images_mirrors[1]}
+      ;;
+    kubernetes)
+      kubernetes_images=${kubernetes_images_mirrors[-1]}
+      ;;
+    *)
+      echo "不支持自定义 Kubernetes 镜像仓库: $kubernetes_images"
+      exit 1
+      ;;
     esac
     ;;
 
@@ -379,19 +388,19 @@ while [[ $# -gt 0 ]]; do
   docker-repo-type=* | -docker-repo-type=* | --docker-repo-type=*)
     docker_repo_type="${1#*=}"
     case "$docker_repo_type" in
-      aliyun)
-        docker_baseurl=${docker_mirrors[0]}
-        ;;
-      tencent)
-        docker_baseurl=${docker_mirrors[1]}
-        ;;
-      docker)
-        docker_baseurl=${docker_mirrors[-1]}
-        ;;
-      *)
-        echo "不支持自定义 Docker 仓库类型: $docker_repo_type"
-        exit 1
-        ;;
+    aliyun)
+      docker_baseurl=${docker_mirrors[0]}
+      ;;
+    tencent)
+      docker_baseurl=${docker_mirrors[1]}
+      ;;
+    docker)
+      docker_baseurl=${docker_mirrors[-1]}
+      ;;
+    *)
+      echo "不支持自定义 Docker 仓库类型: $docker_repo_type"
+      exit 1
+      ;;
     esac
     ;;
 
@@ -424,7 +433,7 @@ if [[ $selinux_disabled == true ]]; then
 fi
 
 if [[ $bash_completion == true ]]; then
-    _bash_completion
+  _bash_completion
 fi
 
 if [[ $kubernetes_repo == true ]]; then
