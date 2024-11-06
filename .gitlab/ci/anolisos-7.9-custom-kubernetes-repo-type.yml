@@ -73,7 +73,7 @@ anolisos-7.9:install:custom-kubernetes-repo-type:
     - chmod +x tmp.sh
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo docker-install
-    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-repo-type=$KUBERNETES_REPO_TYPE
+    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION kubernetes-repo-type=$KUBERNETES_REPO_TYPE
     - |
       if grep -q "mirrors.tuna.tsinghua.edu.cn" "/etc/yum.repos.d/kubernetes.repo"; then
           echo "使用了自定义仓库";
