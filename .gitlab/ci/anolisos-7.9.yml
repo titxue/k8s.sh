@@ -65,6 +65,25 @@ anolisos-7.9:install:
     - ip addr | grep 'inet '
   script:
     - chmod +x tmp.sh
+    - ./tmp.sh firewalld-stop
+    - active_status=$(systemctl is-active firewalld)
+    - echo $active_status
+    - |
+      if [[ $active_status == "active" ]]; then
+        echo '防火墙未关闭';
+        exit 1;
+      else
+        echo '防火墙未开启'
+      fi
+    - enabled_status=$(systemctl is-enabled firewalld)
+    - echo $enabled_status
+    - |
+      if [[ $enabled_status == "enabled" ]]; then
+        echo '防火墙开机自启未关闭';
+        exit 1;
+      else
+        echo '防火墙开机自启未开启'
+      fi
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo docker-install
     - ./tmp.sh kubernetes-repo kubernetes-install

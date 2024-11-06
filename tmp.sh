@@ -213,8 +213,19 @@ _kubernetes_install() {
   fi
 }
 
+_firewalld_stop() {
+  if [ $package_type == 'yum' ]; then
+    sudo systemctl stop firewalld.service
+    sudo systemctl disable firewalld.service
+  fi
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
+
+  firewalld-stop | -firewalld-stop | --firewalld-stop)
+    firewalld_stop=true
+    ;;
 
   kubernetes-repo | -kubernetes-repo | --kubernetes-repo)
     kubernetes_repo=true
@@ -289,6 +300,10 @@ while [[ $# -gt 0 ]]; do
   esac
   shift
 done
+
+if [[ $firewalld_stop == true ]]; then
+  _firewalld_stop
+fi
 
 if [[ $kubernetes_repo == true ]]; then
   _kubernetes_repo
