@@ -160,7 +160,7 @@ anolisos-7.9:install:
     - kubectl get node -o wide
     - kubectl get svc -o wide
     - kubectl get pod -A -o wide
-    - ./tmp.sh calico_install
+    - ./tmp.sh calico-install
     - kubectl get node -o wide
     - kubectl get svc -o wide
     - kubectl get pod -A -o wide
