@@ -419,6 +419,10 @@ while [[ $# -gt 0 ]]; do
     containerd_install=true
     ;;
 
+  pause-image=* | -pause-image=* | --pause-image=*)
+    pause_image="${1#*=}"
+    ;;
+
   containerd-config | -containerd-config | --containerd-config)
     containerd_config=true
     ;;
