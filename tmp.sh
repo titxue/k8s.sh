@@ -39,7 +39,7 @@ kubernetes_mirrors=("https://mirrors.aliyun.com/kubernetes-new/core/stable" "htt
 # Kubernetes 仓库: 默认仓库，取第一个
 kubernetes_baseurl=${kubernetes_mirrors[0]}
 # Kubernetes 镜像仓库
-kubernetes_images_mirrors=("registry.aliyuncs.com/google_containers", "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn", "registry.k8s.io")
+kubernetes_images_mirrors=("registry.aliyuncs.com/google_containers" "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn" "registry.k8s.io")
 # Kubernetes 镜像仓库: 默认仓库，取第一个
 kubernetes_images=${kubernetes_images_mirrors[0]}
 # pause 镜像
