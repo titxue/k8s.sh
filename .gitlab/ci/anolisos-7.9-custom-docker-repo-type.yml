@@ -86,10 +86,10 @@ anolisos-7.9:install:custom-docker-repo-type:
     - ./tmp.sh kubernetes-repo kubernetes-install
     - |
       if grep -q "mirrors.cloud.tencent.com" "/etc/yum.repos.d/docker-ce.repo"; then
-          echo "使用了自定义仓库";
+        echo "使用了自定义仓库";
       else
-          echo "未使用自定义仓库";
-          exit 1;
+        echo "未使用自定义仓库";
+        exit 1;
       fi
   rules:
     - changes:

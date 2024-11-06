@@ -83,17 +83,17 @@ ubuntu-22.04:install:custom-kubernetes-type-private:
     - echo $version
     - |
       if [ "$version" == "$KUBERNETES_VERSION" ]; then
-          echo "版本正确";
+        echo "版本正确";
       else
-          echo "版本不匹配";
-          exit 1;
+        echo "版本不匹配";
+        exit 1;
       fi
     - |
       if grep -q "$KUBERNETES_REPO_TYPE" "/etc/apt/sources.list.d/kubernetes.list"; then
-          echo "使用了自定义仓库";
+        echo "使用了自定义仓库";
       else
-          echo "未使用自定义仓库";
-          exit 1;
+        echo "未使用自定义仓库";
+        exit 1;
       fi
   rules:
     - changes:

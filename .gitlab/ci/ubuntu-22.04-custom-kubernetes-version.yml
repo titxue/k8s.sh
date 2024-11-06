@@ -81,10 +81,10 @@ ubuntu-22.04:install:custom-kubernetes-version:
     - echo $version
     - |
       if [ "$version" == "$KUBERNETES_VERSION" ]; then
-          echo "版本正确";
+        echo "版本正确";
       else
-          echo "版本不匹配";
-          exit 1;
+        echo "版本不匹配";
+        exit 1;
       fi
   rules:
     - changes:

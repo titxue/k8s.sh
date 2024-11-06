@@ -121,17 +121,17 @@ anolisos-7.9:install:
     - ./tmp.sh docker-repo containerd-config
     - |
       if grep -q "SystemdCgroup = true" "/etc/containerd/config.toml"; then
-          echo "配置了 containerd SystemdCgroup = true";
+        echo "配置了 containerd SystemdCgroup = true";
       else
-          echo "未配置 containerd SystemdCgroup = true";
-          exit 1;
+        echo "未配置 containerd SystemdCgroup = true";
+        exit 1;
       fi
     - |
       if grep -q "registry.k8s.io/pause" "/etc/containerd/config.toml"; then
-          echo "未配置 containerd registry.k8s.io/pause 镜像";
-          exit 1;
+        echo "未配置 containerd registry.k8s.io/pause 镜像";
+        exit 1;
       else
-          echo "配置了 containerd registry.k8s.io/pause 镜像";
+        echo "配置了 containerd registry.k8s.io/pause 镜像";
       fi
     - ./tmp.sh docker-repo docker-install
     - ./tmp.sh kubernetes-repo kubernetes-install
@@ -140,9 +140,20 @@ anolisos-7.9:install:
     - output=$(ctr -n=k8s.io i ls | awk '{print $1}' | grep -v 'sha256')
     - |
       if echo "$output" | grep -q "kube-apiserver"; then
-          echo "找到名称带有 kube-apiserver 的镜像"
+        echo "找到名称带有 kube-apiserver 的镜像";
       else
-          echo "未找到名称带有 kube-apiserver 的镜像"
+        echo "未找到名称带有 kube-apiserver 的镜像";
+        exit 1;
+      fi
+    - ./tmp.sh kubernetes-config
+    - sysctl net.ipv4.ip_forward
+    - output=$(sysctl net.ipv4.ip_forward)
+    - |
+      if [[ $output == 'net.ipv4.ip_forward = 1' ]]; then
+        echo "已启用 net.ipv4.ip_forward";
+      else
+        echo "未启用 net.ipv4.ip_forward";
+        exit 1;
       fi
   rules:
     - changes:

@@ -77,10 +77,10 @@ ubuntu-22.04:install:custom-docker-repo-type-private:
     - ./tmp.sh docker-repo docker-install docker-repo-type=$DOCKER_REPO_TYPE
     - |
       if grep -q "$DOCKER_REPO_TYPE" "/etc/apt/sources.list.d/docker.list"; then
-          echo "使用了自定义 docker 源";
+        echo "使用了自定义 docker 源";
       else
-          echo "未使用自定义 docker 源";
-          exit 1;
+        echo "未使用自定义 docker 源";
+        exit 1;
       fi
   rules:
     - changes:

@@ -302,6 +302,24 @@ _kubernetes_images_pull() {
   kubeadm config images pull --image-repository="$kubernetes_images" --kubernetes-version="$kubernetes_version"
 }
 
+# https://kubernetes.io/zh-cn/docs/setup/production-environment/container-runtimes/
+# https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/
+_enable_ipv4_packet_forwarding() {
+  # 设置所需的 sysctl 参数，参数在重新启动后保持不变
+  cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.ipv4.ip_forward = 1
+EOF
+
+  # 应用 sysctl 参数而不重新启动
+  sudo sysctl --system
+}
+
+_kubernetes_config() {
+
+  _enable_ipv4_packet_forwarding
+
+}
+
 _firewalld_stop() {
   if [[ $package_type == 'yum' ]]; then
     sudo systemctl stop firewalld.service
@@ -400,6 +418,10 @@ while [[ $# -gt 0 ]]; do
     kubernetes_images_pull=true
     ;;
 
+  kubernetes-config | -kubernetes-config | --kubernetes-config)
+    kubernetes_config=true
+    ;;
+
   kubernetes-version=* | -kubernetes-version=* | --kubernetes-version=*)
     kubernetes_version="${1#*=}"
     ;;
@@ -485,6 +507,10 @@ fi
 
 if [[ $kubernetes_images_pull == true ]]; then
   _kubernetes_images_pull
+fi
+
+if [[ $kubernetes_config == true ]]; then
+  _kubernetes_config
 fi
 
 if [[ $docker_repo == true ]]; then
