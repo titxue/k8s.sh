@@ -332,8 +332,8 @@ while [[ $# -gt 0 ]]; do
       kubernetes_baseurl=${kubernetes_mirrors[-1]}
       ;;
     *)
-      echo "不支持自定义 Kubernetes 仓库类型: $kubernetes_repo_type"
-      exit 1
+      echo "使用自定义 Kubernetes 仓库地址: $kubernetes_repo_type"
+      kubernetes_baseurl=$kubernetes_repo_type
       ;;
     esac
     ;;

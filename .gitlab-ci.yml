@@ -17,8 +17,10 @@ include:
   - .gitlab/ci/anolisos-7.9-custom-docker-repo-type.yml
   - .gitlab/ci/anolisos-7.9-custom-kubernetes-images.yml
   - .gitlab/ci/anolisos-7.9-custom-kubernetes-repo-type.yml
+  - .gitlab/ci/anolisos-7.9-custom-kubernetes-repo-type-private.yml
   - .gitlab/ci/anolisos-7.9-custom-kubernetes-version.yml
   - .gitlab/ci/ubuntu-22.04.yml
+  - .gitlab/ci/ubuntu-22.04-custom-kubernetes-type-private.yml
   - .gitlab/ci/ubuntu-22.04-custom-kubernetes-version.yml
   - .gitlab/ci/ubuntu-22.04-custom-kubernetes-version-suffix.yml
   # 同步代码
