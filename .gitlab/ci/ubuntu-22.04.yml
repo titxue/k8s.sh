@@ -60,7 +60,7 @@ ubuntu-22.04:install:
     pre_get_sources_script:
       - echo $UBUNTU_URL
       - cat /etc/apt/sources.list
-      - sed -i 's#http://cn.archive.ubuntu.com/ubuntu#$UBUNTU_URL#' /etc/apt/sources.list
+      - sed -i "s#http://cn.archive.ubuntu.com/ubuntu#$UBUNTU_URL#" /etc/apt/sources.list
       - cat /etc/apt/sources.list
       - sudo apt-get update
       - sudo apt-get install -y git
