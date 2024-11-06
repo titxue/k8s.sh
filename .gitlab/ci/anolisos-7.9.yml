@@ -84,6 +84,15 @@ anolisos-7.9:install:
       else
         echo '防火墙开机自启未开启'
       fi
+    - ./tmp.sh selinux-disabled
+    - sestatus=$(getenforce)
+    - |
+      if [[ $sestatus == "Enforcing" ]]; then
+        echo 'SELINUX 未关闭';
+        exit 1;
+      else
+        echo 'SELINUX 未开启'
+      fi
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo docker-install
     - ./tmp.sh kubernetes-repo kubernetes-install

@@ -220,11 +220,24 @@ _firewalld_stop() {
   fi
 }
 
+_selinux_disabled() {
+  getenforce
+  sudo setenforce 0
+  sudo getenforce
+  cat /etc/selinux/config
+  sudo sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
+  cat /etc/selinux/config
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
 
   firewalld-stop | -firewalld-stop | --firewalld-stop)
     firewalld_stop=true
+    ;;
+
+  selinux-disabled | -selinux-disabled | --selinux-disabled)
+    selinux_disabled=true
     ;;
 
   kubernetes-repo | -kubernetes-repo | --kubernetes-repo)
@@ -303,6 +316,10 @@ done
 
 if [[ $firewalld_stop == true ]]; then
   _firewalld_stop
+fi
+
+if [[ $selinux_disabled == true ]]; then
+  _selinux_disabled
 fi
 
 if [[ $kubernetes_repo == true ]]; then
