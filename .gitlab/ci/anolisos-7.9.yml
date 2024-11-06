@@ -96,6 +96,20 @@ anolisos-7.9:install:
     - ./tmp.sh bash-completion
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo containerd-config
+    - |
+      if grep -q "SystemdCgroup = true" "/etc/containerd/config.toml"; then
+          echo "配置了 containerd SystemdCgroup = true";
+      else
+          echo "未配置 containerd SystemdCgroup = true";
+          exit 1;
+      fi
+    - |
+      if grep -q "registry.k8s.io/pause" "/etc/containerd/config.toml"; then
+          echo "未配置 containerd registry.k8s.io/pause 镜像";
+          exit 1;
+      else
+          echo "配置了 containerd registry.k8s.io/pause 镜像";
+      fi
     - ./tmp.sh docker-repo docker-install
     - ./tmp.sh kubernetes-repo kubernetes-install
   rules:
