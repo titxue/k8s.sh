@@ -301,6 +301,25 @@ while [[ $# -gt 0 ]]; do
     esac
     ;;
 
+  kubernetes-images=* | -kubernetes-images=* | --kubernetes-images=*)
+    kubernetes_images="${1#*=}"
+    case "$kubernetes_images" in
+      aliyun)
+        kubernetes_images=${kubernetes_images_mirrors[0]}
+        ;;
+      xuxiaoweicomcn)
+        kubernetes_images=${kubernetes_images_mirrors[1]}
+        ;;
+      kubernetes)
+        kubernetes_images=${kubernetes_images_mirrors[-1]}
+        ;;
+      *)
+        echo "不支持自定义 Kubernetes 镜像仓库: $kubernetes_images"
+        exit 1
+        ;;
+    esac
+    ;;
+
   kubernetes-install | -kubernetes-install | --kubernetes-install)
     kubernetes_install=true
     ;;

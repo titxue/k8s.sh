@@ -13,6 +13,7 @@ variables:
 include:
   - .gitlab/ci/anolisos-7.9.yml
   - .gitlab/ci/anolisos-7.9-custom-docker-repo-type.yml
+  - .gitlab/ci/anolisos-7.9-custom-kubernetes-images.yml
   - .gitlab/ci/anolisos-7.9-custom-kubernetes-repo-type.yml
   - .gitlab/ci/anolisos-7.9-custom-kubernetes-version.yml
   - .gitlab/ci/ubuntu-22.04.yml
