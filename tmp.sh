@@ -379,6 +379,10 @@ if [[ $containerd_install == true ]]; then
   _containerd_install
 fi
 
+if [[ $containerd_config == true ]]; then
+  _containerd_config
+fi
+
 if [[ $docker_install == true ]]; then
   _docker_install
 fi
