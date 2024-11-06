@@ -86,12 +86,20 @@ _docker_repo() {
 
   if [[ $package_type == 'yum' ]]; then
 
+    docker_gpgcheck=0
+    case "$kubernetes_repo_type" in
+    "" | aliyun | tencent | docker)
+      docker_gpgcheck=1
+      ;;
+    *) ;;
+    esac
+
     sudo tee /etc/yum.repos.d/docker-ce.repo <<EOF
 [docker-ce-stable]
 name=Docker CE Stable - \$basearch
 baseurl=$docker_baseurl/$docker_repo_name/\$releasever/\$basearch/stable
 enabled=1
-gpgcheck=1
+gpgcheck=$docker_gpgcheck
 gpgkey=$docker_baseurl/$docker_repo_name/gpg
 
 EOF
@@ -193,12 +201,20 @@ _kubernetes_repo() {
 
   if [[ $package_type == 'yum' ]]; then
 
+    kubernetes_gpgcheck=0
+    case "$kubernetes_repo_type" in
+    "" | aliyun | tsinghua | kubernetes)
+      kubernetes_gpgcheck=1
+      ;;
+    *) ;;
+    esac
+
     sudo tee /etc/yum.repos.d/kubernetes.repo <<EOF
 [kubernetes]
 name=Kubernetes
 baseurl=$kubernetes_baseurl/$kubernetes_repo_version/rpm/
 enabled=1
-gpgcheck=1
+gpgcheck=$kubernetes_gpgcheck
 gpgkey=$kubernetes_baseurl/$kubernetes_repo_version/rpm/repodata/repomd.xml.key
 
 EOF
@@ -409,8 +425,8 @@ while [[ $# -gt 0 ]]; do
       docker_baseurl=${docker_mirrors[-1]}
       ;;
     *)
-      echo "不支持自定义 Docker 仓库类型: $docker_repo_type"
-      exit 1
+      echo "使用自定义 Docker 仓库地址: $docker_repo_type"
+      docker_baseurl=$docker_repo_type
       ;;
     esac
     ;;

@@ -1,0 +1,100 @@
+anolisos-7.9:env:docker-repo-type-private:
+  stage: env
+  image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
+  variables:
+    QEMU_ID: $ANOLISOS_7_9_QEMU_ID
+    SNAPSHOT: $ANOLISOS_7_9_SNAPSHOT
+  before_script:
+    - echo $PVE_ADDRESS
+    - echo $ANOLISOS_7_9_QEMU_ID
+    - echo $QEMU_ID
+    - echo $ANOLISOS_7_9_SNAPSHOT
+    - echo $SNAPSHOT
+  script:
+    # 获取凭证
+    - |
+      response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/access/ticket" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "username=$PVE_USERNAME" --data-urlencode "password=$PVE_PASSWORD" --data-urlencode 'realm=pam' --data-urlencode 'new-format=1')
+    - echo $response | jq -r '.success'
+    # 解析凭证
+    - token=$(echo $response | jq -r '.data.CSRFPreventionToken')
+    - ticket=$(echo $response | jq -r '.data.ticket')
+    # 还原服务器快照
+    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/snapshot/$SNAPSHOT/rollback" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+    - echo $response | jq -r '.success'
+    # 休眠一段时间，等待服务器还原快照
+    - sleep 30
+    # 开机
+    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/status/start" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+    - echo $response | jq -r '.success'
+    - |
+      while true; do
+        # 查看状态
+        response=$(curl -k --request GET --url "$PVE_ADDRESS/api2/json/nodes/pve/qemu/$QEMU_ID/status/current" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+        status=$(echo "$response" | jq -r '.data.status')
+        if [ "$status" = "running" ]; then
+          echo "服务器已运行";
+          break
+        else
+          echo '等待服务器运行';
+          sleep 1;
+        fi
+      done
+    - echo '等待一段时间，待服务器完全启动'
+    - sleep 30
+  timeout: 120s
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/*.yml
+          - .gitlab-ci.yml
+          - k8s.sh
+          - tmp.sh
+  tags:
+    - g150s-docker
+  when: manual
+
+anolisos-7.9:install:docker-repo-type-private:
+  stage: install
+  needs:
+    - anolisos-7.9:env:docker-repo-type-private
+  variables:
+    DOCKER_REPO_TYPE: http://172.25.25.14:48081/repository/docker-yum
+  hooks:
+    pre_get_sources_script:
+      - echo $ANOLIS_URL
+      - cat /etc/yum.repos.d/AnolisOS-os.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-os.repo
+      - cat /etc/yum.repos.d/AnolisOS-os.repo
+      - cat /etc/yum.repos.d/AnolisOS-extras.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-extras.repo
+      - cat /etc/yum.repos.d/AnolisOS-extras.repo
+      - cat /etc/yum.repos.d/AnolisOS-updates.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-updates.repo
+      - cat /etc/yum.repos.d/AnolisOS-updates.repo
+      - yum clean all
+      - yum makecache all
+      - yum install -y git
+      - git config --global http.sslVerify false
+  before_script:
+    - cat /etc/os-release
+    - ip addr | grep 'inet '
+    - echo $DOCKER_REPO_TYPE
+  script:
+    - chmod +x tmp.sh
+    - ./tmp.sh docker-repo docker-install docker-repo-type=$DOCKER_REPO_TYPE
+    - |
+      if grep -q "$DOCKER_REPO_TYPE" "/etc/yum.repos.d/docker-ce.repo"; then
+          echo "使用了自定义 docker 源";
+      else
+          echo "未使用自定义 docker 源";
+          exit 1;
+      fi
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/*.yml
+          - .gitlab-ci.yml
+          - k8s.sh
+          - tmp.sh
+  tags:
+    - GitLab-CICD-AnolisOS-7.9
