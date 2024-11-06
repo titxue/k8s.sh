@@ -205,16 +205,27 @@ EOF
 
   elif [[ $package_type == 'apt' ]]; then
 
-    sudo apt-get update
-    sudo apt-get install -y ca-certificates curl
+    case "$kubernetes_repo_type" in
+    aliyun | tsinghua | kubernetes)
 
-    sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL $kubernetes_baseurl/$kubernetes_repo_version/deb/Release.key -o /etc/apt/keyrings/kubernetes.asc
-    sudo chmod a+r /etc/apt/keyrings/kubernetes.asc
+      sudo apt-get update
+      sudo apt-get install -y ca-certificates curl
 
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/kubernetes.asc] $kubernetes_baseurl/$kubernetes_repo_version/deb/ /" |
-      sudo tee /etc/apt/sources.list.d/kubernetes.list >/dev/null
+      sudo install -m 0755 -d /etc/apt/keyrings
+      sudo curl -fsSL $kubernetes_baseurl/$kubernetes_repo_version/deb/Release.key -o /etc/apt/keyrings/kubernetes.asc
+      sudo chmod a+r /etc/apt/keyrings/kubernetes.asc
+
+      echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/kubernetes.asc] $kubernetes_baseurl/$kubernetes_repo_version/deb/ /" |
+        sudo tee /etc/apt/sources.list.d/kubernetes.list >/dev/null
+      ;;
+    *)
+      echo \
+        "deb [arch=$(dpkg --print-architecture) trusted=yes] $kubernetes_baseurl/$kubernetes_repo_version/deb/ /" |
+        sudo tee /etc/apt/sources.list.d/kubernetes.list >/dev/null
+      ;;
+
+    esac
 
     sudo apt-get update
 
