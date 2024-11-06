@@ -35,7 +35,7 @@ kubernetes_version=v1.31.1
 # Kubernetes 具体版本后缀
 kubernetes_version_suffix=1.1
 # Kubernetes 仓库
-kubernetes_mirrors=("https://mirrors.aliyun.com/kubernetes-new/core/stable" "https://pkgs.k8s.io/core:/stable:")
+kubernetes_mirrors=("https://mirrors.aliyun.com/kubernetes-new/core/stable" "https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:/" "https://pkgs.k8s.io/core:/stable:")
 # Kubernetes 仓库: 默认仓库，取第一个
 kubernetes_baseurl=${kubernetes_mirrors[0]}
 
@@ -226,8 +226,11 @@ while [[ $# -gt 0 ]]; do
       aliyun)
         kubernetes_baseurl=${kubernetes_mirrors[0]}
         ;;
-      kubernetes)
+      tsinghua)
         kubernetes_baseurl=${kubernetes_mirrors[1]}
+        ;;
+      kubernetes)
+        kubernetes_baseurl=${kubernetes_mirrors[-1]}
         ;;
       *)
         echo "不支持自定义 Kubernetes 仓库类型: $kubernetes_repo_type"
@@ -262,7 +265,7 @@ while [[ $# -gt 0 ]]; do
         docker_baseurl=${docker_mirrors[1]}
         ;;
       docker)
-        docker_baseurl=${docker_mirrors[2]}
+        docker_baseurl=${docker_mirrors[-1]}
         ;;
       *)
         echo "不支持自定义 Docker 仓库类型: $docker_repo_type"

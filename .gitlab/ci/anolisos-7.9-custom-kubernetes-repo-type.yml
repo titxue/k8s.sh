@@ -58,7 +58,7 @@ anolisos-7.9:install:custom-kubernetes-repo-type:
   needs:
     - anolisos-7.9:env:custom-kubernetes-repo-type
   variables:
-    KUBERNETES_REPO_TYPE: kubernetes
+    KUBERNETES_REPO_TYPE: tsinghua
   hooks:
     pre_get_sources_script:
       - yum install -y git
