@@ -261,7 +261,7 @@ _kubernetes_install() {
   if [[ $package_type == 'yum' ]]; then
     sudo yum install -y kubelet-"$version" kubeadm-"$version" kubectl-"$version"
   elif [[ $package_type == 'apt' ]]; then
-    sudo apt-get install -y --allow-downgrades kubelet="$version"-$kubernetes_version_suffix kubeadm="$version"-$kubernetes_version_suffix kubectl="$version"-$kubernetes_version_suffix
+    sudo apt-get install -y kubelet="$version"-$kubernetes_version_suffix kubeadm="$version"-$kubernetes_version_suffix kubectl="$version"-$kubernetes_version_suffix
   else
 
     echo "不支持的发行版: $os_type 安装 Kubernetes"
