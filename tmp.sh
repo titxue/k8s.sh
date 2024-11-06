@@ -226,6 +226,25 @@ _swap_off() {
   cat /etc/fstab
 }
 
+_ca_certificates() {
+
+  if [[ $package_type == 'yum' ]]; then
+
+    sudo yum -y install ca-certificates
+
+  elif [[ $package_type == 'apt' ]]; then
+
+    sudo apt-get update
+    sudo apt-get -y install ca-certificates
+
+  else
+
+    echo "不支持的发行版: $os_type 安装 ca-certificates"
+    exit 1
+
+  fi
+}
+
 _kubernetes_install() {
 
   version=${kubernetes_version:1}
@@ -333,6 +352,10 @@ while [[ $# -gt 0 ]]; do
     swap_off=true
     ;;
 
+  ca-certificates | -ca-certificates | --ca-certificates)
+    ca_certificates=true
+    ;;
+
   kubernetes-install | -kubernetes-install | --kubernetes-install)
     kubernetes_install=true
     ;;
@@ -410,6 +433,10 @@ fi
 
 if [[ $swap_off == true ]]; then
   _swap_off
+fi
+
+if [[ $ca_certificates == true ]]; then
+  _ca_certificates
 fi
 
 if [[ $kubernetes_install == true ]]; then

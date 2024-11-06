@@ -76,6 +76,7 @@ ubuntu-22.04:install:
         echo "交换空间未关闭";
         exit 1;
       fi
+    - ./tmp.sh ca-certificates
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo docker-install
     - ./tmp.sh docker-repo containerd-config

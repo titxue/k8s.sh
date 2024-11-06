@@ -75,6 +75,7 @@ anolisos-7.9:install:
         echo "交换空间未关闭";
         exit 1;
       fi
+    - ./tmp.sh ca-certificates
     - ./tmp.sh firewalld-stop
     - active_status=$(systemctl is-active firewalld || true)
     - echo $active_status
