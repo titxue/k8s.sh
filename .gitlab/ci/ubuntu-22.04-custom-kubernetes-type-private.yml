@@ -78,7 +78,7 @@ ubuntu-22.04:install:custom-kubernetes-type-private:
     - chmod +x tmp.sh
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo docker-install
-    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION
+    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION kubernetes-repo-type=$KUBERNETES_REPO_TYPE
     - version=$(kubelet --version | awk '{print $2}')
     - echo $version
     - |
