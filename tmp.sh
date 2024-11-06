@@ -67,6 +67,16 @@ anolis)
 *) ;;
 esac
 
+calico_manifests_mirrors=("https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/raw" "https://raw.githubusercontent.com/projectcalico/calico/refs/tags")
+calico_manifests_mirror=${calico_manifests_mirrors[0]}
+calico_version=v3.29.0
+calico_node_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-node" "docker.io/calico/node")
+calico_node_image=${calico_node_images[0]}
+calico_cni_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-cni" "docker.io/calico/cni")
+calico_cni_image=${calico_cni_images[0]}
+calico_kube_controllers_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-kube-controllers" "docker.io/calico/kube-controllers")
+calico_kube_controllers_image=${calico_kube_controllers_images[0]}
+
 # 包管理类型
 package_type=
 case "$os_type" in
@@ -334,6 +344,39 @@ _kubernetes_init() {
   kubectl get pod -A -o wide
 }
 
+_interface_name() {
+  if ! [[ $interface_name ]]; then
+    interface_name=$(ip route get 223.5.5.5 | grep -oP '(?<=dev\s)\w+' | head -n 1)
+    if [[ "$interface_name" ]]; then
+      echo -e "${COLOR_BLUE}上网网卡是 ${COLOR_RESET}${COLOR_GREEN}${interface_name}${COLOR_RESET}"
+    else
+      echo -e "${COLOR_RED}未找到上网网卡，停止安装${COLOR_RESET}"
+      exit 1
+    fi
+  fi
+}
+
+_calico_install() {
+  if ! [[ $calico_url ]]; then
+    calico_url="$calico_manifests_mirror"/"$calico_version"/manifests/calico.yaml
+  fi
+  echo "calico manifests url: $calico_url"
+  curl -k -o calico.yaml $calico_url
+
+  _interface_name
+
+  sed -i '/k8s,bgp/a \            - name: IP_AUTODETECTION_METHOD\n              value: "interface=INTERFACE_NAME"' calico.yaml
+  sed -i "s#INTERFACE_NAME#$interface_name#g" calico.yaml
+
+  sed -i "s#${calico_node_images[-1]}#$calico_node_image#g" calico.yaml
+  sed -i "s#${calico_cni_images[-1]}#$calico_cni_image#g" calico.yaml
+  sed -i "s#${calico_kube_controllers_images[-1]}#$calico_kube_controllers_image#g" calico.yaml
+
+  kubectl apply -f calico.yaml
+  kubectl get pod -A -o wide
+  kubectl wait --for=condition=Ready --all pods -A --timeout=300s || true
+}
+
 _firewalld_stop() {
   if [[ $package_type == 'yum' ]]; then
     sudo systemctl stop firewalld.service
@@ -487,6 +530,34 @@ while [[ $# -gt 0 ]]; do
     docker_install=true
     ;;
 
+  calico-install | -calico-install | --calico-install)
+    calico_install=true
+    ;;
+
+  calico-url=* | -calico-url=* | --calico-url=*)
+    calico_url="${1#*=}"
+    ;;
+
+  calico-manifests-mirror=* | -calico-manifests-mirror=* | --calico-manifests-mirror=*)
+    calico_manifests_mirror="${1#*=}"
+    ;;
+
+  calico-version=* | -calico-version=* | --calico-version=*)
+    calico_version="${1#*=}"
+    ;;
+
+  calico-node-image=* | -calico-node-image=* | --calico-node-image=*)
+    calico_node_image="${1#*=}"
+    ;;
+
+  calico-cni-image=* | -calico-cni-image=* | --calico-cni-image=*)
+    calico_cni_image="${1#*=}"
+    ;;
+
+  calico-kube-controllers-image=* | -calico-kube-controllers-image=* | --calico-kube-controllers-image=*)
+    calico_kube_controllers_image="${1#*=}"
+    ;;
+
   *)
     echo -e "${COLOR_RED}无效参数: $1，退出程序${COLOR_RESET}"
     exit 1
@@ -549,4 +620,8 @@ fi
 
 if [[ $docker_install == true ]]; then
   _docker_install
+fi
+
+if [[ $calico_install == true ]]; then
+  _calico_install
 fi
