@@ -112,6 +112,15 @@ anolisos-7.9:install:
       fi
     - ./tmp.sh docker-repo docker-install
     - ./tmp.sh kubernetes-repo kubernetes-install
+    - ./tmp.sh kubernetes-repo kubernetes-images-pull
+    - ctr -n=k8s.io i ls | awk '{print $1}' | grep -v 'sha256'
+    - output=$(ctr -n=k8s.io i ls | awk '{print $1}' | grep -v 'sha256')
+    - |
+      if echo "$output" | grep -q "kube-apiserver"; then
+          echo "找到名称带有 kube-apiserver 的镜像"
+      else
+          echo "未找到名称带有 kube-apiserver 的镜像"
+      fi
   rules:
     - changes:
         paths:

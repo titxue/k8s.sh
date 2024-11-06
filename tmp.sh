@@ -233,6 +233,11 @@ _kubernetes_install() {
   fi
 }
 
+_kubernetes_images_pull() {
+  kubeadm config images list --image-repository="$kubernetes_images" --kubernetes-version="$kubernetes_version"
+  kubeadm config images pull --image-repository="$kubernetes_images" --kubernetes-version="$kubernetes_version"
+}
+
 _firewalld_stop() {
   if [[ $package_type == 'yum' ]]; then
     sudo systemctl stop firewalld.service
@@ -298,6 +303,10 @@ while [[ $# -gt 0 ]]; do
 
   kubernetes-install | -kubernetes-install | --kubernetes-install)
     kubernetes_install=true
+    ;;
+
+  kubernetes-images-pull | -kubernetes-images-pull | --kubernetes-images-pull)
+    kubernetes_images_pull=true
     ;;
 
   kubernetes-version=* | -kubernetes-version=* | --kubernetes-version=*)
@@ -369,6 +378,10 @@ fi
 
 if [[ $kubernetes_install == true ]]; then
   _kubernetes_install
+fi
+
+if [[ $kubernetes_images_pull == true ]]; then
+  _kubernetes_images_pull
 fi
 
 if [[ $docker_repo == true ]]; then
