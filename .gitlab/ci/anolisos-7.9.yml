@@ -93,6 +93,7 @@ anolisos-7.9:install:
       else
         echo 'SELINUX 未开启'
       fi
+    - ./tmp.sh bash-completion
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo docker-install
     - ./tmp.sh kubernetes-repo kubernetes-install

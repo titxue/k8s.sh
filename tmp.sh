@@ -221,12 +221,21 @@ _firewalld_stop() {
 }
 
 _selinux_disabled() {
-  getenforce
-  sudo setenforce 0 || true
-  sudo getenforce
-  cat /etc/selinux/config
-  sudo sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
-  cat /etc/selinux/config
+  if [ $package_type == 'yum' ]; then
+    getenforce
+    sudo setenforce 0 || true
+    sudo getenforce
+    cat /etc/selinux/config
+    sudo sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
+    cat /etc/selinux/config
+  }
+}
+
+_bash_completion() {
+  if [ $package_type == 'yum' ]; then
+    sudo yum -y install bash-completion
+    source /etc/profile
+  fi
 }
 
 while [[ $# -gt 0 ]]; do
@@ -238,6 +247,10 @@ while [[ $# -gt 0 ]]; do
 
   selinux-disabled | -selinux-disabled | --selinux-disabled)
     selinux_disabled=true
+    ;;
+
+  bash-completion | -bash-completion | --bash-completion)
+    bash_completion=true
     ;;
 
   kubernetes-repo | -kubernetes-repo | --kubernetes-repo)
@@ -320,6 +333,10 @@ fi
 
 if [[ $selinux_disabled == true ]]; then
   _selinux_disabled
+fi
+
+if [[ $bash_completion == true ]]; then
+    _bash_completion
 fi
 
 if [[ $kubernetes_repo == true ]]; then
