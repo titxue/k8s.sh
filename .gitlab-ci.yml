@@ -8,6 +8,7 @@ stages:
 
 variables:
   NEEDRESTART: n
+  ANOLIS_URL: http://172.25.25.14:48081/repository/anolis
 
 # 嵌入
 include:

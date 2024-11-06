@@ -62,6 +62,18 @@ anolisos-7.9:install:custom-kubernetes-repo-type:
     KUBERNETES_REPO_TYPE: tsinghua
   hooks:
     pre_get_sources_script:
+      - echo $ANOLIS_URL
+      - cat /etc/yum.repos.d/AnolisOS-os.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-os.repo
+      - cat /etc/yum.repos.d/AnolisOS-os.repo
+      - cat /etc/yum.repos.d/AnolisOS-extras.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-extras.repo
+      - cat /etc/yum.repos.d/AnolisOS-extras.repo
+      - cat /etc/yum.repos.d/AnolisOS-updates.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-updates.repo
+      - cat /etc/yum.repos.d/AnolisOS-updates.repo
+      - yum clean all
+      - yum makecache all
       - yum install -y git
       - git config --global http.sslVerify false
   before_script:
