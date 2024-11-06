@@ -206,7 +206,7 @@ EOF
   elif [[ $package_type == 'apt' ]]; then
 
     case "$kubernetes_repo_type" in
-    aliyun | tsinghua | kubernetes)
+    "" | aliyun | tsinghua | kubernetes)
 
       sudo apt-get update
       sudo apt-get install -y ca-certificates curl
