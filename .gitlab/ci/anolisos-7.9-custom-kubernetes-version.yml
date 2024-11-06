@@ -70,6 +70,21 @@ anolisos-7.9:install:custom-kubernetes-version:
   script:
     - chmod +x tmp.sh
     - ./tmp.sh docker-repo containerd-install
+    - ./tmp.sh docker-repo containerd-config
+    - |
+      if grep -q "SystemdCgroup = true" "/etc/containerd/config.toml"; then
+          echo "配置了 containerd SystemdCgroup = true";
+      else
+          echo "未配置 containerd SystemdCgroup = true";
+          exit 1;
+      fi
+    - |
+      if grep -q "registry.k8s.io/pause" "/etc/containerd/config.toml"; then
+          echo "未配置 containerd registry.k8s.io/pause 镜像";
+          exit 1;
+      else
+          echo "配置了 containerd registry.k8s.io/pause 镜像";
+      fi
     - ./tmp.sh docker-repo docker-install
     - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION
     - version=$(kubelet --version | awk '{print $2}')
@@ -80,6 +95,21 @@ anolisos-7.9:install:custom-kubernetes-version:
       else
           echo "版本不匹配";
           exit 1;
+      fi
+    - ./tmp.sh kubernetes-repo kubernetes-images-pull kubernetes-version=$KUBERNETES_VERSION
+    - ctr -n=k8s.io i ls | awk '{print $1}' | grep -v 'sha256'
+    - output=$(ctr -n=k8s.io i ls | awk '{print $1}' | grep -v 'sha256')
+    - |
+      if echo "$output" | grep -q "kube-apiserver"; then
+          echo "找到名称带有 kube-apiserver 的镜像"
+      else
+          echo "未找到名称带有 kube-apiserver 的镜像"
+      fi
+    - |
+      if echo "$output" | grep -q "$KUBERNETES_VERSION"; then
+          echo "找到版本带有 $KUBERNETES_VERSION 的镜像"
+      else
+          echo "未找到版本带有 $KUBERNETES_VERSION 的镜像"
       fi
   rules:
     - changes:
