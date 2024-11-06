@@ -69,7 +69,7 @@ esac
 
 _docker_repo() {
 
-  if [ $package_type == 'yum' ]; then
+  if [[ $package_type == 'yum' ]]; then
 
     sudo tee /etc/yum.repos.d/docker-ce.repo <<EOF
 [docker-ce-stable]
@@ -81,7 +81,7 @@ gpgkey=$docker_baseurl/$docker_repo_name/gpg
 
 EOF
 
-  elif [ $package_type == 'apt' ]; then
+  elif [[ $package_type == 'apt' ]]; then
 
     sudo apt-get update
     sudo apt-get install -y ca-certificates curl
@@ -107,12 +107,12 @@ EOF
 }
 
 _containerd_install() {
-  if [ $package_type == 'yum' ]; then
+  if [[ $package_type == 'yum' ]]; then
 
     sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
     sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-  elif [ $package_type == 'apt' ]; then
+  elif [[ $package_type == 'apt' ]]; then
 
     for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
@@ -131,12 +131,12 @@ _containerd_install() {
 }
 
 _docker_install() {
-  if [ $package_type == 'yum' ]; then
+  if [[ $package_type == 'yum' ]]; then
 
     sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
     yum install -y containerd.io
 
-  elif [ $package_type == 'apt' ]; then
+  elif [[ $package_type == 'apt' ]]; then
 
     for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
     sudo apt-get install -y containerd.io
@@ -162,7 +162,7 @@ _kubernetes_repo() {
   # Kubernetes 仓库版本号，包含: 主版本号、次版本号
   kubernetes_repo_version=$(echo $kubernetes_version | cut -d. -f1-2)
 
-  if [ $package_type == 'yum' ]; then
+  if [[ $package_type == 'yum' ]]; then
 
     sudo tee /etc/yum.repos.d/kubernetes.repo <<EOF
 [kubernetes]
@@ -174,7 +174,7 @@ gpgkey=$kubernetes_baseurl/$kubernetes_repo_version/rpm/repodata/repomd.xml.key
 
 EOF
 
-  elif [ $package_type == 'apt' ]; then
+  elif [[ $package_type == 'apt' ]]; then
 
     sudo apt-get update
     sudo apt-get install -y ca-certificates curl
@@ -201,9 +201,9 @@ _kubernetes_install() {
 
   version=${kubernetes_version:1}
 
-  if [ $package_type == 'yum' ]; then
+  if [[ $package_type == 'yum' ]]; then
     sudo yum install -y kubelet-"$version" kubeadm-"$version" kubectl-"$version"
-  elif [ $package_type == 'apt' ]; then
+  elif [[ $package_type == 'apt' ]]; then
     sudo apt-get install -y --allow-downgrades kubelet="$version"-$kubernetes_version_suffix kubeadm="$version"-$kubernetes_version_suffix kubectl="$version"-$kubernetes_version_suffix
   else
 
@@ -214,25 +214,25 @@ _kubernetes_install() {
 }
 
 _firewalld_stop() {
-  if [ $package_type == 'yum' ]; then
+  if [[ $package_type == 'yum' ]]; then
     sudo systemctl stop firewalld.service
     sudo systemctl disable firewalld.service
   fi
 }
 
 _selinux_disabled() {
-  if [ $package_type == 'yum' ]; then
+  if [[ $package_type == 'yum' ]]; then
     getenforce
     sudo setenforce 0 || true
     sudo getenforce
     cat /etc/selinux/config
     sudo sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
     cat /etc/selinux/config
-  }
+  fi
 }
 
 _bash_completion() {
-  if [ $package_type == 'yum' ]; then
+  if [[ $package_type == 'yum' ]]; then
     sudo yum -y install bash-completion
     source /etc/profile
   fi
