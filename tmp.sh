@@ -35,7 +35,7 @@ kubernetes_version=v1.31.1
 # Kubernetes 具体版本后缀
 kubernetes_version_suffix=1.1
 # Kubernetes 仓库
-kubernetes_mirrors=("https://mirrors.aliyun.com/kubernetes-new/core/stable" "https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:/" "https://pkgs.k8s.io/core:/stable:")
+kubernetes_mirrors=("https://mirrors.aliyun.com/kubernetes-new/core/stable" "https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:" "https://pkgs.k8s.io/core:/stable:")
 # Kubernetes 仓库: 默认仓库，取第一个
 kubernetes_baseurl=${kubernetes_mirrors[0]}
 
