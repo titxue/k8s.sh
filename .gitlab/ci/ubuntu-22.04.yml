@@ -119,6 +119,11 @@ ubuntu-22.04:install:
         echo "未启用 net.ipv4.ip_forward";
         exit 1;
       fi
+    - ./tmp.sh kubernetes-init
+    - KUBECONFIG=/etc/kubernetes/admin.conf
+    - kubectl get node -o wide
+    - kubectl get svc -o wide
+    - kubectl get pod -A -o wide
   rules:
     - changes:
         paths:

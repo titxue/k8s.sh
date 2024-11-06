@@ -153,6 +153,8 @@ _containerd_install() {
 
 }
 
+# https://kubernetes.io/zh-cn/docs/setup/production-environment/container-runtimes/
+# https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/
 _containerd_config() {
   sudo cp /etc/containerd/config.toml /etc/containerd/config.toml.$(date +%Y%m%d%H%M%S)
   sudo containerd config default | sudo tee /etc/containerd/config.toml
@@ -302,6 +304,7 @@ _kubernetes_images_pull() {
   kubeadm config images pull --image-repository="$kubernetes_images" --kubernetes-version="$kubernetes_version"
 }
 
+# 启用 IPv4 数据包转发
 # https://kubernetes.io/zh-cn/docs/setup/production-environment/container-runtimes/
 # https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/
 _enable_ipv4_packet_forwarding() {
@@ -318,6 +321,17 @@ _kubernetes_config() {
 
   _enable_ipv4_packet_forwarding
 
+  systemctl enable kubelet.service
+
+}
+
+_kubernetes_init() {
+  kubeadm init --image-repository="$kubernetes_images" --kubernetes-version="$kubernetes_version"
+  echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> /etc/profile
+  source /etc/profile
+  kubectl get node -o wide
+  kubectl get svc -o wide
+  kubectl get pod -A -o wide
 }
 
 _firewalld_stop() {
@@ -422,6 +436,10 @@ while [[ $# -gt 0 ]]; do
     kubernetes_config=true
     ;;
 
+  kubernetes-init | -kubernetes-init | --kubernetes-init)
+    kubernetes_init=true
+    ;;
+
   kubernetes-version=* | -kubernetes-version=* | --kubernetes-version=*)
     kubernetes_version="${1#*=}"
     ;;
@@ -511,6 +529,10 @@ fi
 
 if [[ $kubernetes_config == true ]]; then
   _kubernetes_config
+fi
+
+if [[ $kubernetes_init == true ]]; then
+  _kubernetes_init
 fi
 
 if [[ $docker_repo == true ]]; then
