@@ -222,7 +222,7 @@ _firewalld_stop() {
 
 _selinux_disabled() {
   getenforce
-  sudo setenforce 0
+  sudo setenforce 0 || true
   sudo getenforce
   cat /etc/selinux/config
   sudo sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
