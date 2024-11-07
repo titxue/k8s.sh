@@ -1,11 +1,24 @@
 #!/bin/bash
 
 # 作者：徐晓伟 xuxiaowei@xuxiaowei.com.cn
-# 微信群：https://work.weixin.qq.com/gm/75cfc47d6a341047e4b6aca7389bdfa8
+# 微信群：
+# https://work.weixin.qq.com/gm/75cfc47d6a341047e4b6aca7389bdfa8
+#
+# 一键安装交互式页面：
+# https://k8s-sh.xuxiaowei.com.cn
+#
+# 仓库：
+# https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh
+# https://gitee.com/xuxiaowei-com-cn/k8s.sh
+# https://github.com/xuxiaowei-com-cn/k8s.sh
+#
+# 自动化测试流水线：
+# https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/pipelines
 #
 # 如果发现脚本不能正常运行，可尝试执行：sed -i 's/\r$//' k8s.sh
 #
-# 代码格式使用：https://github.com/mvdan/sh
+# 代码格式使用：
+# https://github.com/mvdan/sh
 # 代码格式化命令：
 # shfmt -l -w -i 2 k8s.sh
 
@@ -76,6 +89,14 @@ calico_cni_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-cni" 
 calico_cni_image=${calico_cni_images[0]}
 calico_kube_controllers_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-kube-controllers" "docker.io/calico/kube-controllers")
 calico_kube_controllers_image=${calico_kube_controllers_images[0]}
+
+ingress_nginx_manifests_mirrors=("https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw" "https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/tags")
+ingress_nginx_manifests_mirror=${ingress_nginx_manifests_mirrors[0]}
+ingress_nginx_version=v1.11.3
+ingress_nginx_controller_mirrors=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-controller" "registry.k8s.io/ingress-nginx/controller")
+ingress_nginx_controller_mirror=${ingress_nginx_controller_mirrors[0]}
+ingress_nginx_kube_webhook_certgen_mirrors=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen" "registry.k8s.io/ingress-nginx/kube-webhook-certgen")
+ingress_nginx_kube_webhook_certgen_mirror=${ingress_nginx_kube_webhook_certgen_mirrors[0]}
 
 # 包管理类型
 package_type=
@@ -337,10 +358,20 @@ _kubernetes_config() {
 
 _kubernetes_init() {
   kubeadm init --image-repository="$kubernetes_images" --kubernetes-version="$kubernetes_version"
-  echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> /etc/profile
+  echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >>/etc/profile
   source /etc/profile
   kubectl get node -o wide
   kubectl get svc -o wide
+  kubectl get pod -A -o wide
+}
+
+_kubernetes_taint() {
+  kubectl get nodes -o wide
+  kubectl get pod -A -o wide
+  kubectl get node -o yaml | grep taint -A 10
+  kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+  kubectl get node -o yaml | grep taint -A 10
+  kubectl get nodes -o wide
   kubectl get pod -A -o wide
 }
 
@@ -375,6 +406,25 @@ _calico_install() {
   kubectl apply -f calico.yaml
   kubectl get pod -A -o wide
   kubectl wait --for=condition=Ready --all pods -A --timeout=300s || true
+}
+
+_ingress_nginx_install() {
+  if ! [[ $ingress_nginx_url ]]; then
+    ingress_nginx_url="$ingress_nginx_manifests_mirror"/controller-"$ingress_nginx_version"/deploy/static/provider/cloud/deploy.yaml
+  fi
+  echo "ingress nginx manifests url: $ingress_nginx_url"
+  curl -k -o deploy.yaml $ingress_nginx_url
+
+  sudo sed -i 's/@.*$//' deploy.yaml
+  sudo sed -i "s#${ingress_nginx_controller_mirrors[-1]}#$ingress_nginx_controller_mirror#g" deploy.yaml
+  sudo sed -i "s#${ingress_nginx_kube_webhook_certgen_mirrors[-1]}#$ingress_nginx_kube_webhook_certgen_mirror#g" deploy.yaml
+
+  kubectl apply -f deploy.yaml
+  kubectl get pod -A -o wide
+}
+
+_ingress_nginx_host_network() {
+  kubectl -n ingress-nginx patch deployment ingress-nginx-controller --patch '{"spec": {"template": {"spec": {"hostNetwork": true}}}}'
 }
 
 _firewalld_stop() {
@@ -483,6 +533,10 @@ while [[ $# -gt 0 ]]; do
     kubernetes_init=true
     ;;
 
+  kubernetes-taint | -kubernetes-taint | --kubernetes-taint)
+    kubernetes_taint=true
+    ;;
+
   kubernetes-version=* | -kubernetes-version=* | --kubernetes-version=*)
     kubernetes_version="${1#*=}"
     ;;
@@ -558,6 +612,34 @@ while [[ $# -gt 0 ]]; do
     calico_kube_controllers_image="${1#*=}"
     ;;
 
+  ingress-nginx-install | -ingress-nginx-install | --ingress-nginx-install)
+    ingress_nginx_install=true
+    ;;
+
+  ingress-nginx-host-network | -ingress-nginx-host-network | --ingress-nginx-host-network)
+    ingress_nginx_host_network=true
+    ;;
+
+  ingress-nginx-url=* | -ingress-nginx-url=* | --ingress-nginx-url=*)
+    ingress_nginx_url="${1#*=}"
+    ;;
+
+  ingress-nginx-manifests-mirror=* | -ingress-nginx-manifests-mirror=* | --ingress-nginx-manifests-mirror=*)
+    ingress_nginx_manifests_mirror="${1#*=}"
+    ;;
+
+  ingress-nginx-version=* | -ingress-nginx-version=* | --ingress-nginx-version=*)
+    ingress_nginx_version="${1#*=}"
+    ;;
+
+  ingress-nginx-controller-image=* | -ingress-nginx-controller-image=* | --ingress-nginx-controller-image=*)
+    ingress_nginx_controller_mirror="${1#*=}"
+    ;;
+
+  ingress-nginx-kube-webhook-certgen-image=* | -ingress-nginx-kube-webhook-certgen-image=* | --ingress-nginx-kube-webhook-certgen-image=*)
+    ingress_nginx_kube_webhook_certgen_mirror="${1#*=}"
+    ;;
+
   *)
     echo -e "${COLOR_RED}无效参数: $1，退出程序${COLOR_RESET}"
     exit 1
@@ -606,6 +688,10 @@ if [[ $kubernetes_init == true ]]; then
   _kubernetes_init
 fi
 
+if [[ $kubernetes_taint == true ]]; then
+  _kubernetes_taint
+fi
+
 if [[ $docker_repo == true ]]; then
   _docker_repo
 fi
@@ -624,4 +710,12 @@ fi
 
 if [[ $calico_install == true ]]; then
   _calico_install
+fi
+
+if [[ $ingress_nginx_install == true ]]; then
+  _ingress_nginx_install
+fi
+
+if [[ $ingress_nginx_host_network == true ]]; then
+  _ingress_nginx_host_network
 fi
