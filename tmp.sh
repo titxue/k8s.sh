@@ -684,10 +684,6 @@ if [[ $containerd_config == true ]]; then
   _containerd_config
 fi
 
-if [[ $calico_install == true ]]; then
-  _calico_install
-fi
-
 if [[ $kubernetes_repo == true ]]; then
   _kubernetes_repo
 fi
@@ -706,6 +702,10 @@ fi
 
 if [[ $kubernetes_init == true ]]; then
   _kubernetes_init
+fi
+
+if [[ $calico_install == true ]]; then
+  _calico_install
 fi
 
 if [[ $kubernetes_taint == true ]]; then
