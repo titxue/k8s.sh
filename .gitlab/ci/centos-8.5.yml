@@ -81,7 +81,7 @@ centos-8.5:install:
       - sed -i "s#http://mirror.centos.org/\$contentdir/\$releasever#$CENTOS_VAULT_URL\/8.5.2111#" /etc/yum.repos.d/CentOS-Linux-Extras.repo
       - cat /etc/yum.repos.d/CentOS-Linux-Extras.repo
       - yum clean all
-      - yum makecache all
+      - yum makecache
       - yum install -y git
       - git config --global http.sslVerify false
   before_script:
