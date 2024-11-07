@@ -173,7 +173,7 @@ _containerd_install() {
 
   else
 
-    echo "不支持的发行版: $os_type 安装 Docker"
+    echo "不支持的发行版: $os_type 安装 Containerd"
     exit 1
 
   fi
@@ -215,8 +215,8 @@ _docker_install() {
 
   fi
 
-  sudo systemctl start docker.socket
-  sudo systemctl start docker.service
+  sudo systemctl restart docker.socket
+  sudo systemctl restart docker.service
   sudo systemctl status docker.socket -l --no-pager
   sudo systemctl status docker.service -l --no-pager
   sudo systemctl enable docker.socket
@@ -648,6 +648,14 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
+if [[ $swap_off == true ]]; then
+  _swap_off
+fi
+
+if [[ $ca_certificates == true ]]; then
+  _ca_certificates
+fi
+
 if [[ $firewalld_stop == true ]]; then
   _firewalld_stop
 fi
@@ -660,16 +668,28 @@ if [[ $bash_completion == true ]]; then
   _bash_completion
 fi
 
+if [[ $docker_repo == true ]]; then
+  _docker_repo
+fi
+
+if [[ $docker_install == true ]]; then
+  _docker_install
+fi
+
+if [[ $containerd_install == true ]]; then
+  _containerd_install
+fi
+
+if [[ $containerd_config == true ]]; then
+  _containerd_config
+fi
+
+if [[ $calico_install == true ]]; then
+  _calico_install
+fi
+
 if [[ $kubernetes_repo == true ]]; then
   _kubernetes_repo
-fi
-
-if [[ $swap_off == true ]]; then
-  _swap_off
-fi
-
-if [[ $ca_certificates == true ]]; then
-  _ca_certificates
 fi
 
 if [[ $kubernetes_install == true ]]; then
@@ -690,26 +710,6 @@ fi
 
 if [[ $kubernetes_taint == true ]]; then
   _kubernetes_taint
-fi
-
-if [[ $docker_repo == true ]]; then
-  _docker_repo
-fi
-
-if [[ $containerd_install == true ]]; then
-  _containerd_install
-fi
-
-if [[ $containerd_config == true ]]; then
-  _containerd_config
-fi
-
-if [[ $docker_install == true ]]; then
-  _docker_install
-fi
-
-if [[ $calico_install == true ]]; then
-  _calico_install
 fi
 
 if [[ $ingress_nginx_install == true ]]; then
