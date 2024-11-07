@@ -205,7 +205,19 @@ _docker_install() {
 
   elif [[ $package_type == 'apt' ]]; then
 
-    for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+    case "$os_type" in
+    ubuntu)
+      for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+      ;;
+    debian)
+      for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
+      ;;
+    *)
+      echo "不支持的发行版: $os_type 卸载旧版 Docker"
+      exit 1
+      ;;
+    esac
+
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
   else
