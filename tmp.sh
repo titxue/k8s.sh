@@ -295,6 +295,25 @@ _swap_off() {
   cat /etc/fstab
 }
 
+_curl() {
+
+  if [[ $package_type == 'yum' ]]; then
+
+    sudo yum -y install curl
+
+  elif [[ $package_type == 'apt' ]]; then
+
+    sudo apt-get update
+    sudo apt-get -y install curl
+
+  else
+
+    echo "不支持的发行版: $os_type 安装 curl"
+    exit 1
+
+  fi
+}
+
 _ca_certificates() {
 
   if [[ $package_type == 'yum' ]]; then
@@ -513,6 +532,10 @@ while [[ $# -gt 0 ]]; do
     swap_off=true
     ;;
 
+  curl | -curl | --curl)
+    curl=true
+    ;;
+
   ca-certificates | -ca-certificates | --ca-certificates)
     ca_certificates=true
     ;;
@@ -650,6 +673,10 @@ done
 
 if [[ $swap_off == true ]]; then
   _swap_off
+fi
+
+if [[ $curl == true ]]; then
+  _curl
 fi
 
 if [[ $ca_certificates == true ]]; then
