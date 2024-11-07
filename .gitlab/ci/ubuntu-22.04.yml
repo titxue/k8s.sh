@@ -133,7 +133,6 @@ ubuntu-22.04:install:
     - kubectl get svc -o wide
     - kubectl get pod -A -o wide
     - ./tmp.sh kubernetes-taint ingress-nginx-install ingress-nginx-host-network
-    - kubectl wait --for=condition=Ready --all pods -A --timeout=300s
     - kubectl get node -o wide
     - kubectl get svc -o wide
     - kubectl get pod -A -o wide
