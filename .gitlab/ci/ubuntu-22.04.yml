@@ -70,7 +70,7 @@ ubuntu-22.04:install:
     - ip addr | grep 'inet '
   script:
     - chmod +x tmp.sh
-    - ./tmp.sh swap-off ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo docker-install containerd-config kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network
+    - ./tmp.sh swap-off ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo docker-install containerd-config kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -o wide
@@ -83,6 +83,9 @@ ubuntu-22.04:install:
     - kubectl apply -f https://gitee.com/xuxiaowei-com-cn/java/raw/main/deploy/deploy-service-ingress.yaml
     - kubectl wait --for=condition=Ready --all pods -A --timeout=300s
     - sleep 30
+    - kubectl get node -o wide
+    - kubectl get svc -o wide
+    - kubectl get pod -A -o wide
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me
   rules:
     - changes:
