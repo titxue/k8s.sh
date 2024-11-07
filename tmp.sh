@@ -370,7 +370,7 @@ _kubernetes_taint() {
   kubectl get pod -A -o wide
   kubectl get node -o yaml | grep taint -A 10
   kubectl taint nodes --all node-role.kubernetes.io/control-plane-
-  kubectl get node -o yaml | grep taint -A 10
+  kubectl get node -o yaml | grep taint -A 10 | true
   kubectl get nodes -o wide
   kubectl get pod -A -o wide
 }
