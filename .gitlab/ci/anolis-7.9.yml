@@ -86,7 +86,7 @@ anolis-7.9:install:
       while true; do
         pod_status=$(kubectl get pods --all-namespaces -o jsonpath="{range .items[*]}{.status.phase}{'\n'}{end}" | sort | uniq);
         echo $pod_status
-        if echo "$pod_status" | grep -qv "Pending"; then
+        if echo "$pod_status" | grep -q "Pending"; then
           echo '等待 pod 运行';
           sleep 5;
         else
@@ -95,8 +95,17 @@ anolis-7.9:install:
       done
     - sleep 30
     - kubectl apply -f https://gitee.com/xuxiaowei-com-cn/java/raw/main/deploy/deploy-service-ingress.yaml
-    - pod_status=$(kubectl get pods --all-namespaces -o jsonpath="{range .items[*]}{.status.phase}{'\n'}{end}" | sort | uniq)
-    - echo "$pod_status"
+    - |
+      while true; do
+        pod_status=$(kubectl get pods --all-namespaces -o jsonpath="{range .items[*]}{.status.phase}{'\n'}{end}" | sort | uniq);
+        echo $pod_status
+        if echo "$pod_status" | grep -q "Pending"; then
+          echo '等待 pod 运行';
+          sleep 5;
+        else
+          break;
+        fi
+      done
     - sleep 30
     - kubectl get node -o wide
     - kubectl get svc -o wide
