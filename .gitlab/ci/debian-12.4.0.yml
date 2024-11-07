@@ -67,7 +67,8 @@ debian-12.4.0:install:
       - echo 'deb http://172.25.25.14:48081/repository/debian/ bookworm-backports main non-free contrib' >> /etc/apt/sources.list
       - cat /etc/apt/sources.list
       - apt-get update
-      - sudo apt-get install -y git sudo
+      - apt-get install -y sudo
+      - sudo apt-get install -y git
       - git config --global http.sslVerify false
   before_script:
     - cat /etc/os-release
