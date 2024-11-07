@@ -1,4 +1,4 @@
-ubuntu-22.04:env:custom-kubernetes-type-private:
+ubuntu-22.04:env:custom-k8s-version-suffix:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
@@ -53,13 +53,13 @@ ubuntu-22.04:env:custom-kubernetes-type-private:
     - g150s-docker
   when: manual
 
-ubuntu-22.04:install:custom-kubernetes-type-private:
+ubuntu-22.04:install:custom-k8s-version-suffix:
   stage: install
   needs:
-    - ubuntu-22.04:env:custom-kubernetes-type-private
+    - ubuntu-22.04:env:custom-k8s-version-suffix
   variables:
-    KUBERNETES_VERSION: v1.29.3
-    KUBERNETES_REPO_TYPE: http://172.25.25.14:48081/repository/kubernetes-new-apt
+    KUBERNETES_VERSION: v1.29.4
+    KUBERNETES_VERSION_SUFFIX: 2.1
   hooks:
     pre_get_sources_script:
       - echo $UBUNTU_URL
@@ -73,12 +73,12 @@ ubuntu-22.04:install:custom-kubernetes-type-private:
     - cat /etc/os-release
     - ip addr | grep 'inet '
     - echo $KUBERNETES_VERSION
-    - echo $KUBERNETES_REPO_TYPE
+    - echo $KUBERNETES_VERSION_SUFFIX
   script:
     - chmod +x tmp.sh
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo docker-install
-    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION kubernetes-repo-type=$KUBERNETES_REPO_TYPE
+    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION kubernetes-version-suffix=$KUBERNETES_VERSION_SUFFIX
     - version=$(kubelet --version | awk '{print $2}')
     - echo $version
     - |
@@ -86,13 +86,6 @@ ubuntu-22.04:install:custom-kubernetes-type-private:
         echo "版本正确";
       else
         echo "版本不匹配";
-        exit 1;
-      fi
-    - |
-      if grep -q "$KUBERNETES_REPO_TYPE" "/etc/apt/sources.list.d/kubernetes.list"; then
-        echo "使用了自定义仓库";
-      else
-        echo "未使用自定义仓库";
         exit 1;
       fi
   rules:

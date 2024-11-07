@@ -1,14 +1,14 @@
-anolisos-7.9:env:custom-kubernetes-repo-type-private:
+ubuntu-22.04:env:custom-k8s-type-private:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
-    QEMU_ID: $ANOLISOS_7_9_QEMU_ID
-    SNAPSHOT: $ANOLISOS_7_9_SNAPSHOT
+    QEMU_ID: $UBUNTU_22_04_QEMU_ID
+    SNAPSHOT: $UBUNTU_22_04_SNAPSHOT
   before_script:
     - echo $PVE_ADDRESS
-    - echo $ANOLISOS_7_9_QEMU_ID
+    - echo $UBUNTU_22_04_QEMU_ID
     - echo $QEMU_ID
-    - echo $ANOLISOS_7_9_SNAPSHOT
+    - echo $UBUNTU_22_04_SNAPSHOT
     - echo $SNAPSHOT
   script:
     # 获取凭证
@@ -53,28 +53,21 @@ anolisos-7.9:env:custom-kubernetes-repo-type-private:
     - g150s-docker
   when: manual
 
-anolisos-7.9:install:custom-kubernetes-repo-type-private:
+ubuntu-22.04:install:custom-k8s-type-private:
   stage: install
   needs:
-    - anolisos-7.9:env:custom-kubernetes-repo-type-private
+    - ubuntu-22.04:env:custom-k8s-type-private
   variables:
-    KUBERNETES_VERSION: v1.26.12
-    KUBERNETES_REPO_TYPE: http://172.25.25.14:48081/repository/kubernetes-new-yum
+    KUBERNETES_VERSION: v1.29.3
+    KUBERNETES_REPO_TYPE: http://172.25.25.14:48081/repository/kubernetes-new-apt
   hooks:
     pre_get_sources_script:
-      - echo $ANOLIS_URL
-      - cat /etc/yum.repos.d/AnolisOS-os.repo
-      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-os.repo
-      - cat /etc/yum.repos.d/AnolisOS-os.repo
-      - cat /etc/yum.repos.d/AnolisOS-extras.repo
-      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-extras.repo
-      - cat /etc/yum.repos.d/AnolisOS-extras.repo
-      - cat /etc/yum.repos.d/AnolisOS-updates.repo
-      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-updates.repo
-      - cat /etc/yum.repos.d/AnolisOS-updates.repo
-      - yum clean all
-      - yum makecache all
-      - yum install -y git
+      - echo $UBUNTU_URL
+      - cat /etc/apt/sources.list
+      - sed -i "s#http://cn.archive.ubuntu.com/ubuntu#$UBUNTU_URL#" /etc/apt/sources.list
+      - cat /etc/apt/sources.list
+      - sudo apt-get update
+      - sudo apt-get install -y git
       - git config --global http.sslVerify false
   before_script:
     - cat /etc/os-release
@@ -86,8 +79,17 @@ anolisos-7.9:install:custom-kubernetes-repo-type-private:
     - ./tmp.sh docker-repo containerd-install
     - ./tmp.sh docker-repo docker-install
     - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION kubernetes-repo-type=$KUBERNETES_REPO_TYPE
+    - version=$(kubelet --version | awk '{print $2}')
+    - echo $version
     - |
-      if grep -q "$KUBERNETES_REPO_TYPE" "/etc/yum.repos.d/kubernetes.repo"; then
+      if [ "$version" == "$KUBERNETES_VERSION" ]; then
+        echo "版本正确";
+      else
+        echo "版本不匹配";
+        exit 1;
+      fi
+    - |
+      if grep -q "$KUBERNETES_REPO_TYPE" "/etc/apt/sources.list.d/kubernetes.list"; then
         echo "使用了自定义仓库";
       else
         echo "未使用自定义仓库";
@@ -101,4 +103,4 @@ anolisos-7.9:install:custom-kubernetes-repo-type-private:
           - k8s.sh
           - tmp.sh
   tags:
-    - GitLab-CICD-AnolisOS-7.9
+    - GitLab-CICD-Ubuntu-22-04

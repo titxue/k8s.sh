@@ -1,4 +1,4 @@
-anolisos-7.9:env:custom-pause-image:
+anolis-7.9:env:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
@@ -51,14 +51,11 @@ anolisos-7.9:env:custom-pause-image:
           - tmp.sh
   tags:
     - g150s-docker
-  when: manual
 
-anolisos-7.9:install:custom-pause-image:
+anolis-7.9:install:
   stage: install
   needs:
-    - anolisos-7.9:env:custom-pause-image
-  variables:
-    PAUSE_IMAGE: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/pause
+    - anolis-7.9:env
   hooks:
     pre_get_sources_script:
       - echo $ANOLIS_URL
@@ -78,17 +75,99 @@ anolisos-7.9:install:custom-pause-image:
   before_script:
     - cat /etc/os-release
     - ip addr | grep 'inet '
-    - echo $PAUSE_IMAGE
   script:
     - chmod +x tmp.sh
-    - ./tmp.sh docker-repo containerd-install pause-image=$PAUSE_IMAGE containerd-config
+    - ./tmp.sh swap-off
+    - free -h
+    - used_swap=$(free -m | grep Swap | awk '{print $3}')
     - |
-      if grep -q "$PAUSE_IMAGE" "/etc/containerd/config.toml"; then
-        echo "使用了自定义 pause 镜像";
+      if [ $used_swap -eq 0 ]; then
+        echo "交换空间已关闭";
       else
-        echo "未使用自定义 pause 镜像";
+        echo "交换空间未关闭";
         exit 1;
       fi
+    - ./tmp.sh ca-certificates
+    - ./tmp.sh firewalld-stop
+    - active_status=$(systemctl is-active firewalld || true)
+    - echo $active_status
+    - |
+      if [[ $active_status == "active" ]]; then
+        echo '防火墙未关闭';
+        exit 1;
+      else
+        echo '防火墙未开启'
+      fi
+    - enabled_status=$(systemctl is-enabled firewalld || true)
+    - echo $enabled_status
+    - |
+      if [[ $enabled_status == "enabled" ]]; then
+        echo '防火墙开机自启未关闭';
+        exit 1;
+      else
+        echo '防火墙开机自启未开启'
+      fi
+    - ./tmp.sh selinux-disabled
+    - sestatus=$(getenforce)
+    - |
+      if [[ $sestatus == "Enforcing" ]]; then
+        echo 'SELINUX 未关闭';
+        exit 1;
+      else
+        echo 'SELINUX 未开启'
+      fi
+    - ./tmp.sh bash-completion
+    - ./tmp.sh docker-repo containerd-install
+    - ./tmp.sh docker-repo containerd-config
+    - |
+      if grep -q "SystemdCgroup = true" "/etc/containerd/config.toml"; then
+        echo "配置了 containerd SystemdCgroup = true";
+      else
+        echo "未配置 containerd SystemdCgroup = true";
+        exit 1;
+      fi
+    - |
+      if grep -q "registry.k8s.io/pause" "/etc/containerd/config.toml"; then
+        echo "未配置 containerd registry.k8s.io/pause 镜像";
+        exit 1;
+      else
+        echo "配置了 containerd registry.k8s.io/pause 镜像";
+      fi
+    - ./tmp.sh docker-repo docker-install
+    - ./tmp.sh kubernetes-repo kubernetes-install
+    - ./tmp.sh kubernetes-repo kubernetes-images-pull
+    - ctr -n=k8s.io i ls | awk '{print $1}' | grep -v 'sha256'
+    - output=$(ctr -n=k8s.io i ls | awk '{print $1}' | grep -v 'sha256')
+    - |
+      if echo "$output" | grep -q "kube-apiserver"; then
+        echo "找到名称带有 kube-apiserver 的镜像";
+      else
+        echo "未找到名称带有 kube-apiserver 的镜像";
+        exit 1;
+      fi
+    - ./tmp.sh kubernetes-config
+    - sysctl net.ipv4.ip_forward
+    - output=$(sysctl net.ipv4.ip_forward)
+    - |
+      if [[ $output == 'net.ipv4.ip_forward = 1' ]]; then
+        echo "已启用 net.ipv4.ip_forward";
+      else
+        echo "未启用 net.ipv4.ip_forward";
+        exit 1;
+      fi
+    - ./tmp.sh kubernetes-init
+    - export KUBECONFIG=/etc/kubernetes/admin.conf
+    - kubectl get node -o wide
+    - kubectl get svc -o wide
+    - kubectl get pod -A -o wide
+    - ./tmp.sh calico-install
+    - kubectl get node -o wide
+    - kubectl get svc -o wide
+    - kubectl get pod -A -o wide
+    - kubectl wait --for=condition=Ready --all pods -A --timeout=300s
+    - kubectl get node -o wide
+    - kubectl get svc -o wide
+    - kubectl get pod -A -o wide
   rules:
     - changes:
         paths:

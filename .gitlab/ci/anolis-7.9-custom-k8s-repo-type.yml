@@ -1,4 +1,4 @@
-anolisos-7.9:env:docker-repo-type-private:
+anolis-7.9:env:custom-k8s-repo-type:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
@@ -53,12 +53,13 @@ anolisos-7.9:env:docker-repo-type-private:
     - g150s-docker
   when: manual
 
-anolisos-7.9:install:docker-repo-type-private:
+anolis-7.9:install:custom-k8s-repo-type:
   stage: install
   needs:
-    - anolisos-7.9:env:docker-repo-type-private
+    - anolis-7.9:env:custom-k8s-repo-type
   variables:
-    DOCKER_REPO_TYPE: http://172.25.25.14:48081/repository/docker-yum
+    KUBERNETES_VERSION: v1.26.12
+    KUBERNETES_REPO_TYPE: tsinghua
   hooks:
     pre_get_sources_script:
       - echo $ANOLIS_URL
@@ -78,15 +79,18 @@ anolisos-7.9:install:docker-repo-type-private:
   before_script:
     - cat /etc/os-release
     - ip addr | grep 'inet '
-    - echo $DOCKER_REPO_TYPE
+    - echo $KUBERNETES_VERSION
+    - echo $KUBERNETES_REPO_TYPE
   script:
     - chmod +x tmp.sh
-    - ./tmp.sh docker-repo docker-install docker-repo-type=$DOCKER_REPO_TYPE
+    - ./tmp.sh docker-repo containerd-install
+    - ./tmp.sh docker-repo docker-install
+    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION kubernetes-repo-type=$KUBERNETES_REPO_TYPE
     - |
-      if grep -q "$DOCKER_REPO_TYPE" "/etc/yum.repos.d/docker-ce.repo"; then
-        echo "使用了自定义 docker 源";
+      if grep -q "mirrors.tuna.tsinghua.edu.cn" "/etc/yum.repos.d/kubernetes.repo"; then
+        echo "使用了自定义仓库";
       else
-        echo "未使用自定义 docker 源";
+        echo "未使用自定义仓库";
         exit 1;
       fi
   rules:

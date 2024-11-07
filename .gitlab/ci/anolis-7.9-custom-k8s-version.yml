@@ -1,4 +1,4 @@
-anolisos-7.9:env:custom-docker-repo-type:
+anolis-7.9:env:custom-k8s-version:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
@@ -53,12 +53,12 @@ anolisos-7.9:env:custom-docker-repo-type:
     - g150s-docker
   when: manual
 
-anolisos-7.9:install:custom-docker-repo-type:
+anolis-7.9:install:custom-k8s-version:
   stage: install
   needs:
-    - anolisos-7.9:env:custom-docker-repo-type
+    - anolis-7.9:env:custom-k8s-version
   variables:
-    DOCKER_REPO_TYPE: tencent
+    KUBERNETES_VERSION: v1.30.6
   hooks:
     pre_get_sources_script:
       - echo $ANOLIS_URL
@@ -78,17 +78,51 @@ anolisos-7.9:install:custom-docker-repo-type:
   before_script:
     - cat /etc/os-release
     - ip addr | grep 'inet '
-    - echo $DOCKER_REPO_TYPE
+    - echo $KUBERNETES_VERSION
   script:
     - chmod +x tmp.sh
-    - ./tmp.sh docker-repo containerd-install docker-repo-type=$DOCKER_REPO_TYPE
-    - ./tmp.sh docker-repo docker-install docker-repo-type=$DOCKER_REPO_TYPE
-    - ./tmp.sh kubernetes-repo kubernetes-install
+    - ./tmp.sh docker-repo containerd-install
+    - ./tmp.sh docker-repo containerd-config
     - |
-      if grep -q "mirrors.cloud.tencent.com" "/etc/yum.repos.d/docker-ce.repo"; then
-        echo "使用了自定义仓库";
+      if grep -q "SystemdCgroup = true" "/etc/containerd/config.toml"; then
+        echo "配置了 containerd SystemdCgroup = true";
       else
-        echo "未使用自定义仓库";
+        echo "未配置 containerd SystemdCgroup = true";
+        exit 1;
+      fi
+    - |
+      if grep -q "registry.k8s.io/pause" "/etc/containerd/config.toml"; then
+        echo "未配置 containerd registry.k8s.io/pause 镜像";
+        exit 1;
+      else
+        echo "配置了 containerd registry.k8s.io/pause 镜像";
+      fi
+    - ./tmp.sh docker-repo docker-install
+    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION
+    - version=$(kubelet --version | awk '{print $2}')
+    - echo $version
+    - |
+      if [ "$version" == "$KUBERNETES_VERSION" ]; then
+        echo "版本正确";
+      else
+        echo "版本不匹配";
+        exit 1;
+      fi
+    - ./tmp.sh kubernetes-repo kubernetes-images-pull kubernetes-version=$KUBERNETES_VERSION
+    - ctr -n=k8s.io i ls | awk '{print $1}' | grep -v 'sha256'
+    - output=$(ctr -n=k8s.io i ls | awk '{print $1}' | grep -v 'sha256')
+    - |
+      if echo "$output" | grep -q "kube-apiserver"; then
+        echo "找到名称带有 kube-apiserver 的镜像";
+      else
+        echo "未找到名称带有 kube-apiserver 的镜像";
+        exit 1;
+      fi
+    - |
+      if echo "$output" | grep -q "$KUBERNETES_VERSION"; then
+        echo "找到版本带有 $KUBERNETES_VERSION 的镜像";
+      else
+        echo "未找到版本带有 $KUBERNETES_VERSION 的镜像";
         exit 1;
       fi
   rules:

@@ -13,19 +13,19 @@ variables:
 
 # 嵌入
 include:
-  - .gitlab/ci/anolisos-7.9.yml
-  - .gitlab/ci/anolisos-7.9-custom-docker-repo-type.yml
-  - .gitlab/ci/anolisos-7.9-custom-docker-repo-type-private.yml
-  - .gitlab/ci/anolisos-7.9-custom-kubernetes-images.yml
-  - .gitlab/ci/anolisos-7.9-custom-kubernetes-repo-type.yml
-  - .gitlab/ci/anolisos-7.9-custom-kubernetes-repo-type-private.yml
-  - .gitlab/ci/anolisos-7.9-custom-kubernetes-version.yml
-  - .gitlab/ci/anolisos-7.9-custom-pause-image.yml
+  - .gitlab/ci/anolis-7.9.yml
+  - .gitlab/ci/anolis-7.9-custom-docker-repo-type.yml
+  - .gitlab/ci/anolis-7.9-custom-docker-repo-type-private.yml
+  - .gitlab/ci/anolis-7.9-custom-k8s-images.yml
+  - .gitlab/ci/anolis-7.9-custom-k8s-repo-type.yml
+  - .gitlab/ci/anolis-7.9-custom-k8s-repo-type-private.yml
+  - .gitlab/ci/anolis-7.9-custom-k8s-version.yml
+  - .gitlab/ci/anolis-7.9-custom-pause-image.yml
   - .gitlab/ci/ubuntu-22.04.yml
   - .gitlab/ci/ubuntu-22.04-custom-docker-repo-type-private.yml
-  - .gitlab/ci/ubuntu-22.04-custom-kubernetes-type-private.yml
-  - .gitlab/ci/ubuntu-22.04-custom-kubernetes-version.yml
-  - .gitlab/ci/ubuntu-22.04-custom-kubernetes-version-suffix.yml
+  - .gitlab/ci/ubuntu-22.04-custom-k8s-type-private.yml
+  - .gitlab/ci/ubuntu-22.04-custom-k8s-version.yml
+  - .gitlab/ci/ubuntu-22.04-custom-k8s-version-suffix.yml
   - .gitlab/ci/ubuntu-22.04-custom-pause-image.yml
   # 同步代码
   - /sync.yml

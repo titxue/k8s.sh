@@ -1,14 +1,14 @@
-ubuntu-22.04:env:custom-kubernetes-version:
+anolis-7.9:env:custom-pause-image:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
-    QEMU_ID: $UBUNTU_22_04_QEMU_ID
-    SNAPSHOT: $UBUNTU_22_04_SNAPSHOT
+    QEMU_ID: $ANOLISOS_7_9_QEMU_ID
+    SNAPSHOT: $ANOLISOS_7_9_SNAPSHOT
   before_script:
     - echo $PVE_ADDRESS
-    - echo $UBUNTU_22_04_QEMU_ID
+    - echo $ANOLISOS_7_9_QEMU_ID
     - echo $QEMU_ID
-    - echo $UBUNTU_22_04_SNAPSHOT
+    - echo $ANOLISOS_7_9_SNAPSHOT
     - echo $SNAPSHOT
   script:
     # 获取凭证
@@ -53,37 +53,40 @@ ubuntu-22.04:env:custom-kubernetes-version:
     - g150s-docker
   when: manual
 
-ubuntu-22.04:install:custom-kubernetes-version:
+anolis-7.9:install:custom-pause-image:
   stage: install
   needs:
-    - ubuntu-22.04:env:custom-kubernetes-version
+    - anolis-7.9:env:custom-pause-image
   variables:
-    KUBERNETES_VERSION: v1.29.3
+    PAUSE_IMAGE: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/pause
   hooks:
     pre_get_sources_script:
-      - echo $UBUNTU_URL
-      - cat /etc/apt/sources.list
-      - sed -i "s#http://cn.archive.ubuntu.com/ubuntu#$UBUNTU_URL#" /etc/apt/sources.list
-      - cat /etc/apt/sources.list
-      - sudo apt-get update
-      - sudo apt-get install -y git
+      - echo $ANOLIS_URL
+      - cat /etc/yum.repos.d/AnolisOS-os.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-os.repo
+      - cat /etc/yum.repos.d/AnolisOS-os.repo
+      - cat /etc/yum.repos.d/AnolisOS-extras.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-extras.repo
+      - cat /etc/yum.repos.d/AnolisOS-extras.repo
+      - cat /etc/yum.repos.d/AnolisOS-updates.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-updates.repo
+      - cat /etc/yum.repos.d/AnolisOS-updates.repo
+      - yum clean all
+      - yum makecache all
+      - yum install -y git
       - git config --global http.sslVerify false
   before_script:
     - cat /etc/os-release
     - ip addr | grep 'inet '
-    - echo $KUBERNETES_VERSION
+    - echo $PAUSE_IMAGE
   script:
     - chmod +x tmp.sh
-    - ./tmp.sh docker-repo containerd-install
-    - ./tmp.sh docker-repo docker-install
-    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION
-    - version=$(kubelet --version | awk '{print $2}')
-    - echo $version
+    - ./tmp.sh docker-repo containerd-install pause-image=$PAUSE_IMAGE containerd-config
     - |
-      if [ "$version" == "$KUBERNETES_VERSION" ]; then
-        echo "版本正确";
+      if grep -q "$PAUSE_IMAGE" "/etc/containerd/config.toml"; then
+        echo "使用了自定义 pause 镜像";
       else
-        echo "版本不匹配";
+        echo "未使用自定义 pause 镜像";
         exit 1;
       fi
   rules:
@@ -94,4 +97,4 @@ ubuntu-22.04:install:custom-kubernetes-version:
           - k8s.sh
           - tmp.sh
   tags:
-    - GitLab-CICD-Ubuntu-22-04
+    - GitLab-CICD-AnolisOS-7.9
