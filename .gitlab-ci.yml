@@ -26,6 +26,7 @@ include:
   - .gitlab/ci/centos-7.9.yml
   - .gitlab/ci/centos-8.5.yml
   - .gitlab/ci/debian-12.4.0.yml
+  - .gitlab/ci/ubuntu-20.04.yml
   - .gitlab/ci/ubuntu-22.04.yml
   - .gitlab/ci/ubuntu-22.04-custom-docker-repo-type-private.yml
   - .gitlab/ci/ubuntu-22.04-custom-k8s-type-private.yml
