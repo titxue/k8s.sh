@@ -166,7 +166,9 @@ EOF
 _remove_apt_ord_docker() {
   case "$os_type" in
   ubuntu)
-    if [[ $os_version == '20.04' ]]; then
+    if [[ $os_version == '18.04' ]]; then
+      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get remove $pkg; done
+    elif [[ $os_version == '20.04' ]]; then
       for pkg in docker.io docker-doc docker-compose docker-compose-v2 containerd runc; do sudo apt-get remove $pkg; done
     else
       for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
