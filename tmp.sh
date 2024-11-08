@@ -254,6 +254,24 @@ _docker_install() {
 
 }
 
+_socat() {
+  if [[ $package_type == 'yum' ]]; then
+
+    sudo yum -y install socat
+
+  elif [[ $package_type == 'apt' ]]; then
+
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y socat
+
+  else
+
+    echo "不支持的发行版: $os_type 安装 socat"
+    exit 1
+
+  fi
+}
+
 _kubernetes_repo() {
 
   # Kubernetes 仓库版本号，包含: 主版本号、次版本号
@@ -671,6 +689,10 @@ while [[ $# -gt 0 ]]; do
     docker_install=true
     ;;
 
+  socat | -socat | --socat)
+    socat=true
+    ;;
+
   calico-install | -calico-install | --calico-install)
     calico_install=true
     ;;
@@ -773,6 +795,10 @@ fi
 
 if [[ $containerd_config == true ]]; then
   _containerd_config
+fi
+
+if [[ $socat == true ]]; then
+  _socat
 fi
 
 if [[ $kubernetes_repo == true ]]; then
