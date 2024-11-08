@@ -77,7 +77,7 @@ anolis-7.9:install:
     - ip addr | grep 'inet '
   script:
     - chmod +x tmp.sh
-    - ./tmp.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo docker-install containerd-config kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network
+    - ./tmp.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo docker-install containerd-config kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network enable-shell-autocompletion
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -o wide

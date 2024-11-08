@@ -406,6 +406,32 @@ _kubernetes_taint() {
   kubectl get pod -A -o wide
 }
 
+# https://kubernetes.io/zh-cn/docs/tasks/tools/install-kubectl-linux/#optional-kubectl-configurations
+# https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/tasks/tools/install-kubectl-linux/#optional-kubectl-configurations
+_enable_shell_autocompletion() {
+
+  if [[ $package_type == 'yum' ]]; then
+
+    kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+    sudo chmod a+r /etc/bash_completion.d/kubectl
+    source /etc/bash_completion.d/kubectl
+
+  elif [[ $package_type == 'apt' ]]; then
+
+    sudo mkdir -p /etc/bash_completion.d
+    kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl >/dev/null
+    sudo chmod a+r /etc/bash_completion.d/kubectl
+    source /etc/bash_completion.d/kubectl
+
+  else
+
+    echo "不支持的发行版: $os_type 启用 shell 自动补全功能"
+    exit 1
+
+  fi
+
+}
+
 _interface_name() {
   if ! [[ $interface_name ]]; then
     interface_name=$(ip route get 223.5.5.5 | grep -oP '(?<=dev\s)\w+' | head -n 1)
@@ -583,6 +609,10 @@ while [[ $# -gt 0 ]]; do
     kubernetes_version_suffix="${1#*=}"
     ;;
 
+  enable-shell-autocompletion | -enable-shell-autocompletion | --enable-shell-autocompletion)
+    enable_shell_autocompletion=true
+    ;;
+
   docker-repo | -docker-repo | --docker-repo)
     docker_repo=true
     ;;
@@ -752,6 +782,10 @@ fi
 
 if [[ $kubernetes_taint == true ]]; then
   _kubernetes_taint
+fi
+
+if [[ $enable_shell_autocompletion == true ]]; then
+  _enable_shell_autocompletion
 fi
 
 if [[ $ingress_nginx_install == true ]]; then
