@@ -480,6 +480,9 @@ _bash_completion() {
   if [[ $package_type == 'yum' ]]; then
     sudo yum -y install bash-completion
     source /etc/profile
+  elif [[ $package_type == 'apt' ]]; then
+    sudo apt-get -y install bash-completion
+    source /etc/profile
   fi
 }
 
