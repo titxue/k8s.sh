@@ -101,7 +101,7 @@ ingress_nginx_kube_webhook_certgen_mirror=${ingress_nginx_kube_webhook_certgen_m
 # 包管理类型
 package_type=
 case "$os_type" in
-ubuntu | debian)
+ubuntu | debian | kylin)
   package_type=apt
   ;;
 centos | anolis)
