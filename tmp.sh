@@ -418,6 +418,14 @@ _kubernetes_config() {
 
   systemctl enable kubelet.service
 
+  if [[ $package_type == 'yum' ]]; then
+    if [[ $os_type == 'centos' ]]; then
+      if grep -q "8.5" "/etc/redhat-release"; then
+        sudo yum install -y iproute-tc
+      fi
+    fi
+  fi
+
 }
 
 _kubernetes_init() {
@@ -445,7 +453,7 @@ _enable_shell_autocompletion() {
 
   if [[ $package_type == 'yum' ]]; then
 
-    kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+    kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl >/dev/null
     sudo chmod a+r /etc/bash_completion.d/kubectl
     source /etc/bash_completion.d/kubectl
 
