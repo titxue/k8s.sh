@@ -77,6 +77,9 @@ case "$os_type" in
 anolis)
   docker_repo_name='centos'
   ;;
+kylin)
+  docker_repo_name='debian'
+  ;;
 *) ;;
 esac
 
