@@ -163,6 +163,25 @@ EOF
 
 }
 
+_remove_apt_ord_docker() {
+  case "$os_type" in
+  ubuntu)
+    if [[ $os_version == '20.04' ]]; then
+      for pkg in docker.io docker-doc docker-compose docker-compose-v2 containerd runc; do sudo apt-get remove $pkg; done
+    else
+      for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+    fi
+    ;;
+  debian)
+    for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
+    ;;
+  *)
+    echo "不支持的发行版: $os_type 卸载旧版 Docker"
+    exit 1
+    ;;
+  esac
+}
+
 _containerd_install() {
   if [[ $package_type == 'yum' ]]; then
 
@@ -171,7 +190,7 @@ _containerd_install() {
 
   elif [[ $package_type == 'apt' ]]; then
 
-    for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+    _remove_apt_ord_docker
     sudo apt-get install -y containerd.io
 
   else
@@ -208,19 +227,7 @@ _docker_install() {
 
   elif [[ $package_type == 'apt' ]]; then
 
-    case "$os_type" in
-    ubuntu)
-      for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
-      ;;
-    debian)
-      for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
-      ;;
-    *)
-      echo "不支持的发行版: $os_type 卸载旧版 Docker"
-      exit 1
-      ;;
-    esac
-
+    _remove_apt_ord_docker
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
   else
