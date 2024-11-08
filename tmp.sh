@@ -121,7 +121,7 @@ _docker_repo() {
   if [[ $package_type == 'yum' ]]; then
 
     docker_gpgcheck=0
-    case "$kubernetes_repo_type" in
+    case "$docker_repo_type" in
     "" | aliyun | tencent | docker)
       docker_gpgcheck=1
       ;;
