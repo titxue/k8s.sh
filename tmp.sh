@@ -52,6 +52,9 @@ echo "系统类型: $os_type"
 readonly os_version=$(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"')
 echo "系统版本: $os_version"
 
+# apt 锁超时时间
+dpkg_lock_timeout=120
+
 # Kubernetes 具体版本，包含: 主版本号、次版本号、修正版本号
 kubernetes_version=v1.31.1
 # Kubernetes 具体版本后缀
@@ -140,8 +143,8 @@ EOF
 
   elif [[ $package_type == 'apt' ]]; then
 
-    sudo apt-get update
-    sudo apt-get install -y ca-certificates curl
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y ca-certificates curl
 
     sudo install -m 0755 -d /etc/apt/keyrings
     sudo curl -fsSL $docker_baseurl/$docker_repo_name/gpg -o /etc/apt/keyrings/docker.asc
@@ -152,7 +155,7 @@ EOF
       $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
       sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
-    sudo apt-get update
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
 
   else
 
@@ -167,15 +170,15 @@ _remove_apt_ord_docker() {
   case "$os_type" in
   ubuntu)
     if [[ $os_version == '18.04' ]]; then
-      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get remove $pkg; done
+      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
     elif [[ $os_version == '20.04' ]]; then
-      for pkg in docker.io docker-doc docker-compose docker-compose-v2 containerd runc; do sudo apt-get remove $pkg; done
+      for pkg in docker.io docker-doc docker-compose docker-compose-v2 containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
     else
-      for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+      for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
     fi
     ;;
   debian)
-    for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
+    for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
     ;;
   *)
     echo "不支持的发行版: $os_type 卸载旧版 Docker"
@@ -193,7 +196,7 @@ _containerd_install() {
   elif [[ $package_type == 'apt' ]]; then
 
     _remove_apt_ord_docker
-    sudo apt-get install -y containerd.io
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y containerd.io
 
   else
 
@@ -230,7 +233,7 @@ _docker_install() {
   elif [[ $package_type == 'apt' ]]; then
 
     _remove_apt_ord_docker
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
   else
 
@@ -281,8 +284,8 @@ EOF
     case "$kubernetes_repo_type" in
     "" | aliyun | tsinghua | kubernetes)
 
-      sudo apt-get update
-      sudo apt-get install -y ca-certificates curl
+      sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
+      sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y ca-certificates curl
 
       sudo install -m 0755 -d /etc/apt/keyrings
       sudo curl -fsSL $kubernetes_baseurl/$kubernetes_repo_version/deb/Release.key -o /etc/apt/keyrings/kubernetes.asc
@@ -300,7 +303,7 @@ EOF
 
     esac
 
-    sudo apt-get update
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
 
   else
 
@@ -327,8 +330,8 @@ _curl() {
 
   elif [[ $package_type == 'apt' ]]; then
 
-    sudo apt-get update
-    sudo apt-get -y install curl
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y curl
 
   else
 
@@ -346,8 +349,8 @@ _ca_certificates() {
 
   elif [[ $package_type == 'apt' ]]; then
 
-    sudo apt-get update
-    sudo apt-get -y install ca-certificates
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y ca-certificates
 
   else
 
@@ -364,7 +367,7 @@ _kubernetes_install() {
   if [[ $package_type == 'yum' ]]; then
     sudo yum install -y kubelet-"$version" kubeadm-"$version" kubectl-"$version"
   elif [[ $package_type == 'apt' ]]; then
-    sudo apt-get install -y kubelet="$version"-$kubernetes_version_suffix kubeadm="$version"-$kubernetes_version_suffix kubectl="$version"-$kubernetes_version_suffix
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y kubelet="$version"-$kubernetes_version_suffix kubeadm="$version"-$kubernetes_version_suffix kubectl="$version"-$kubernetes_version_suffix
   else
 
     echo "不支持的发行版: $os_type 安装 Kubernetes"
@@ -519,13 +522,17 @@ _bash_completion() {
     sudo yum -y install bash-completion
     source /etc/profile
   elif [[ $package_type == 'apt' ]]; then
-    sudo apt-get -y install bash-completion
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y bash-completion
     source /etc/profile
   fi
 }
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+
+  dpkg-lock-timeout=* | -dpkg-lock-timeout=* | --dpkg-lock-timeout=*)
+    dpkg_lock_timeout="${1#*=}"
+    ;;
 
   firewalld-stop | -firewalld-stop | --firewalld-stop)
     firewalld_stop=true
