@@ -445,7 +445,8 @@ _kubernetes_init() {
   fi
   kubeadm init --image-repository="$kubernetes_images" $kubernetes_init_node_name --kubernetes-version="$kubernetes_version"
   echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >>/etc/profile
-  source /etc/profile
+  # 此处兼容 AnolisOS 23.1，防止退出
+  source /etc/profile || true
   kubectl get node -o wide
   kubectl get svc -o wide
   kubectl get pod -A -o wide
@@ -560,6 +561,7 @@ _selinux_disabled() {
 _bash_completion() {
   if [[ $package_type == 'yum' ]]; then
     sudo yum -y install bash-completion
+    # 此处兼容 AnolisOS 23.1，防止退出
     source /etc/profile || true
   elif [[ $package_type == 'apt' ]]; then
     sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y bash-completion
