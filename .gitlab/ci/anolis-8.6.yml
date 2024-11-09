@@ -60,16 +60,16 @@ anolis-8.6:install:
     pre_get_sources_script:
       - echo $ANOLIS_URL
       - cat /etc/yum.repos.d/AnolisOS-AppStream.repo
-      - sed -i "s#http://mirrors.openanolis.org/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-AppStream.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-AppStream.repo
       - cat /etc/yum.repos.d/AnolisOS-AppStream.repo
       - cat /etc/yum.repos.d/AnolisOS-BaseOS.repo
-      - sed -i "s#http://mirrors.openanolis.org/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-BaseOS.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-BaseOS.repo
       - cat /etc/yum.repos.d/AnolisOS-BaseOS.repo
       - cat /etc/yum.repos.d/AnolisOS-Extras.repo
-      - sed -i "s#http://mirrors.openanolis.org/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-Extras.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-Extras.repo
       - cat /etc/yum.repos.d/AnolisOS-Extras.repo
       - cat /etc/yum.repos.d/AnolisOS-PowerTools.repo
-      - sed -i "s#http://mirrors.openanolis.org/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-PowerTools.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-PowerTools.repo
       - cat /etc/yum.repos.d/AnolisOS-PowerTools.repo
       - yum clean all
       - yum makecache
