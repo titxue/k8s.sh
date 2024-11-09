@@ -41,7 +41,7 @@ anolis-8.6:env:
       done
     - echo '等待一段时间，待服务器完全启动'
     - sleep 30
-  timeout: 120s
+  timeout: 180s
   rules:
     - changes:
         paths:

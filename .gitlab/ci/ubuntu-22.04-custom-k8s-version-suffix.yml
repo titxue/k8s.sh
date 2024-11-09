@@ -41,7 +41,7 @@ ubuntu-22.04:env:custom-k8s-version-suffix:
       done
     - echo '等待一段时间，待服务器完全启动'
     - sleep 30
-  timeout: 120s
+  timeout: 180s
   rules:
     - changes:
         paths:
