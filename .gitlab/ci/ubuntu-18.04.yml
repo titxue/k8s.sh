@@ -63,8 +63,8 @@ ubuntu-18.04:install:
       - sed -i "s#http://archive.ubuntu.com/ubuntu#$UBUNTU_URL#" /etc/apt/sources.list
       - sed -i "s#http://security.ubuntu.com/ubuntu#$UBUNTU_URL#" /etc/apt/sources.list
       - cat /etc/apt/sources.list
-      - sudo apt-get update
-      - sudo apt-get install -y git
+      - sudo apt-get -o Dpkg::Lock::Timeout=120 update
+      - sudo apt-get -o Dpkg::Lock::Timeout=120 install -y git
       - git config --global http.sslVerify false
   before_script:
     - cat /etc/os-release
