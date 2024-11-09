@@ -141,6 +141,15 @@ gpgkey=$docker_baseurl/$docker_repo_name/gpg
 
 EOF
 
+    if [[ $os_type == 'anolis' ]]; then
+      case "$os_version" in
+      '23')
+        sudo sed -i 's/$releasever/8/g' /etc/yum.repos.d/docker-ce.repo
+        ;;
+      *) ;;
+      esac
+    fi
+
   elif [[ $package_type == 'apt' ]]; then
 
     sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
