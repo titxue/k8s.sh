@@ -24,6 +24,7 @@ include:
   - .gitlab/ci/anolis-7.9-custom-k8s-repo-type-private.yml
   - .gitlab/ci/anolis-7.9-custom-k8s-version.yml
   - .gitlab/ci/anolis-7.9-custom-pause-image.yml
+  - .gitlab/ci/anolis-8.2.yml
   - .gitlab/ci/centos-7.9.yml
   - .gitlab/ci/centos-8.5.yml
   - .gitlab/ci/debian-12.4.0.yml
