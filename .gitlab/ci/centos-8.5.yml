@@ -86,6 +86,7 @@ centos-8.5:install:
       - git config --global http.sslVerify false
   before_script:
     - cat /etc/os-release
+    - cat /etc/redhat-release
     - ip addr | grep 'inet '
   script:
     - chmod +x tmp.sh
