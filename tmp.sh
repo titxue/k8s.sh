@@ -430,9 +430,9 @@ _kubernetes_config() {
 
 _kubernetes_init() {
   if [[ $kubernetes_init_node_name ]]; then
-    $kubernetes_init_node_name="--node-name=$kubernetes_init_node_name"
+    kubernetes_init_node_name="--node-name=$kubernetes_init_node_name"
   else
-    $kubernetes_init_node_name=
+    kubernetes_init_node_name=
   fi
   kubeadm init --image-repository="$kubernetes_images" $kubernetes_init_node_name --kubernetes-version="$kubernetes_version"
   echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >>/etc/profile
