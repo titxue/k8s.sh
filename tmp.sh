@@ -560,7 +560,7 @@ _selinux_disabled() {
 _bash_completion() {
   if [[ $package_type == 'yum' ]]; then
     sudo yum -y install bash-completion
-    source /etc/profile
+    source /etc/profile || true
   elif [[ $package_type == 'apt' ]]; then
     sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y bash-completion
     source /etc/profile
