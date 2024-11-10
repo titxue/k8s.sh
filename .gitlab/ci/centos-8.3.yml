@@ -59,27 +59,27 @@ centos-8.3:install:
   hooks:
     pre_get_sources_script:
       - echo $CENTOS_URL
-      - cat /etc/yum.repos.d/CentOS-AppStream.repo
-      - sed -i "s#mirrorlist#\#mirrorlist#" /etc/yum.repos.d/CentOS-AppStream.repo
-      - cat /etc/yum.repos.d/CentOS-AppStream.repo
-      - sed -i "s#\#baseurl#baseurl#" /etc/yum.repos.d/CentOS-AppStream.repo
-      - cat /etc/yum.repos.d/CentOS-AppStream.repo
-      - sed -i "s#http://mirror.centos.org/\$contentdir#$CENTOS_URL#" /etc/yum.repos.d/CentOS-AppStream.repo
-      - cat /etc/yum.repos.d/CentOS-AppStream.repo
-      - cat /etc/yum.repos.d/CentOS-Base.repo
-      - sed -i "s#mirrorlist#\#mirrorlist#" /etc/yum.repos.d/CentOS-Base.repo
-      - cat /etc/yum.repos.d/CentOS-Base.repo
-      - sed -i "s#\#baseurl#baseurl#" /etc/yum.repos.d/CentOS-Base.repo
-      - cat /etc/yum.repos.d/CentOS-Base.repo
-      - sed -i "s#http://mirror.centos.org/\$contentdir#$CENTOS_URL#" /etc/yum.repos.d/CentOS-Base.repo
-      - cat /etc/yum.repos.d/CentOS-Base.repo
-      - cat /etc/yum.repos.d/CentOS-Extras.repo
-      - sed -i "s#mirrorlist#\#mirrorlist#" /etc/yum.repos.d/CentOS-Extras.repo
-      - cat /etc/yum.repos.d/CentOS-Extras.repo
-      - sed -i "s#\#baseurl#baseurl#" /etc/yum.repos.d/CentOS-Extras.repo
-      - cat /etc/yum.repos.d/CentOS-Extras.repo
-      - sed -i "s#http://mirror.centos.org/\$contentdir#$CENTOS_URL#" /etc/yum.repos.d/CentOS-Extras.repo
-      - cat /etc/yum.repos.d/CentOS-Extras.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-AppStream.repo
+      - sed -i "s#mirrorlist#\#mirrorlist#" /etc/yum.repos.d/CentOS-Linux-AppStream.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-AppStream.repo
+      - sed -i "s#\#baseurl#baseurl#" /etc/yum.repos.d/CentOS-Linux-AppStream.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-AppStream.repo
+      - sed -i "s#http://mirror.centos.org/\$contentdir#$CENTOS_URL#" /etc/yum.repos.d/CentOS-Linux-AppStream.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-AppStream.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
+      - sed -i "s#mirrorlist#\#mirrorlist#" /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
+      - sed -i "s#\#baseurl#baseurl#" /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
+      - sed -i "s#http://mirror.centos.org/\$contentdir#$CENTOS_URL#" /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-Extras.repo
+      - sed -i "s#mirrorlist#\#mirrorlist#" /etc/yum.repos.d/CentOS-Linux-Extras.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-Extras.repo
+      - sed -i "s#\#baseurl#baseurl#" /etc/yum.repos.d/CentOS-Linux-Extras.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-Extras.repo
+      - sed -i "s#http://mirror.centos.org/\$contentdir#$CENTOS_URL#" /etc/yum.repos.d/CentOS-Linux-Extras.repo
+      - cat /etc/yum.repos.d/CentOS-Linux-Extras.repo
       - yum clean all
       - yum makecache
       - yum install -y git
