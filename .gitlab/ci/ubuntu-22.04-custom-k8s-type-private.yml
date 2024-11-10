@@ -74,6 +74,20 @@ ubuntu-22.04:install:custom-k8s-type-private:
     - ip addr | grep 'inet '
     - echo $KUBERNETES_VERSION
     - echo $KUBERNETES_REPO_TYPE
+    - |
+      if [[ $(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "ubuntu" ]] ; then
+        echo "系统正确";
+      else
+        echo "系统不正确";
+        exit 1;
+      fi
+    - |
+      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "22.04" ]] ; then
+        echo "系统版本正确";
+      else
+        echo "系统版本不正确";
+        exit 1;
+      fi
   script:
     - chmod +x tmp.sh
     - ./tmp.sh docker-repo containerd-install

@@ -78,6 +78,20 @@ anolis-8.8:install:
   before_script:
     - cat /etc/os-release
     - ip addr | grep 'inet '
+    - |
+      if [[ $(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "anolis" ]] ; then
+        echo "系统正确";
+      else
+        echo "系统不正确";
+        exit 1;
+      fi
+    - |
+      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "8.8" ]] ; then
+        echo "系统版本正确";
+      else
+        echo "系统版本不正确";
+        exit 1;
+      fi
   script:
     - chmod +x tmp.sh
     - ./tmp.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo containerd-install containerd-config socat kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init kubernetes-init-node-name=k8s-1 calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network enable-shell-autocompletion
