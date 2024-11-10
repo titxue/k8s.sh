@@ -39,7 +39,7 @@
 
 ## 文档
 
-- [参数说明](README-docs.md)
+- https://k8s-sh.xuxiaowei.com.cn
 - [GitLab/Kubernetes 知识库](https://gitlab-k8s.xuxiaowei.com.cn)
 
 ## 支持的范围
