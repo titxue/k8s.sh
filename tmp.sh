@@ -200,7 +200,9 @@ _remove_apt_ord_docker() {
     fi
     ;;
   debian)
-    if [[ $os_version == '11' ]]; then
+    if [[ $os_version == '10' ]]; then
+      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
+    elif [[ $os_version == '11' ]]; then
       for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
     else
       for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
