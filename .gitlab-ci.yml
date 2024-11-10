@@ -43,6 +43,7 @@ include:
   - .gitlab/ci/debian-10.10.0.yml
   - .gitlab/ci/debian-11.7.0.yml
   - .gitlab/ci/debian-12.4.0.yml
+  - .gitlab/ci/debian-12.7.0.yml
   - .gitlab/ci/ubuntu-18.04.yml
   - .gitlab/ci/ubuntu-20.04.yml
   - .gitlab/ci/ubuntu-22.04.yml
