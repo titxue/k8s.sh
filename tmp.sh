@@ -576,7 +576,8 @@ _bash_completion() {
     source /etc/profile || true
   elif [[ $package_type == 'apt' ]]; then
     sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y bash-completion
-    source /etc/profile
+    # 此处兼容 Debian 11.7.0，防止退出
+    source /etc/profile || true
   fi
 }
 
