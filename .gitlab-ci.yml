@@ -32,6 +32,7 @@ include:
   - .gitlab/ci/anolis-23.0.yml
   - .gitlab/ci/anolis-23.1.yml
   - .gitlab/ci/centos-7.9.yml
+  - .gitlab/ci/centos-8.1.yml
   - .gitlab/ci/centos-8.5.yml
   - .gitlab/ci/debian-12.4.0.yml
   - .gitlab/ci/ubuntu-18.04.yml
