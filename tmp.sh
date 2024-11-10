@@ -431,9 +431,12 @@ _kubernetes_config() {
   systemctl enable kubelet.service
 
   if [[ $os_type == 'centos' ]]; then
-    if grep -q "8.5" "/etc/redhat-release"; then
+    case "$centos_os_version" in
+    '8.1' | '8.2' | '8.3' | '8.4' | '8.5')
       sudo yum install -y iproute-tc
-    fi
+      ;;
+    *) ;;
+    esac
   elif [[ $os_type == 'anolis' ]]; then
     case "$os_version" in
     '8.2' | '8.4' | '8.6' | '8.8' | '8.9')
