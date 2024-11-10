@@ -98,9 +98,9 @@ anolis-7.9:install:custom-k8s-images:
         exit 1;
       fi
   script:
-    - chmod +x tmp.sh
-    - ./tmp.sh docker-repo containerd-install
-    - ./tmp.sh docker-repo containerd-config
+    - chmod +x k8s.sh
+    - ./k8s.sh docker-repo containerd-install
+    - ./k8s.sh docker-repo containerd-config
     - |
       if grep -q "SystemdCgroup = true" "/etc/containerd/config.toml"; then
         echo "配置了 containerd SystemdCgroup = true";
@@ -115,8 +115,8 @@ anolis-7.9:install:custom-k8s-images:
       else
         echo "配置了 containerd registry.k8s.io/pause 镜像";
       fi
-    - ./tmp.sh docker-repo docker-install
-    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION
+    - ./k8s.sh docker-repo docker-install
+    - ./k8s.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION
     - version=$(kubelet --version | awk '{print $2}')
     - echo $version
     - |
@@ -126,7 +126,7 @@ anolis-7.9:install:custom-k8s-images:
         echo "版本不匹配";
         exit 1;
       fi
-    - ./tmp.sh kubernetes-repo kubernetes-images-pull kubernetes-version=$KUBERNETES_VERSION kubernetes-images=$KUBERNETES_IMAGES
+    - ./k8s.sh kubernetes-repo kubernetes-images-pull kubernetes-version=$KUBERNETES_VERSION kubernetes-images=$KUBERNETES_IMAGES
     - ctr -n=k8s.io i ls | awk '{print $1}' | grep -v 'sha256'
     - output=$(ctr -n=k8s.io i ls | awk '{print $1}' | grep -v 'sha256')
     - |

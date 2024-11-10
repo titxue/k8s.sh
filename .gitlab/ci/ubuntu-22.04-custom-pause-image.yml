@@ -89,8 +89,8 @@ ubuntu-22.04:install:custom-pause-image:
         exit 1;
       fi
   script:
-    - chmod +x tmp.sh
-    - ./tmp.sh docker-repo containerd-install pause-image=$PAUSE_IMAGE containerd-config
+    - chmod +x k8s.sh
+    - ./k8s.sh docker-repo containerd-install pause-image=$PAUSE_IMAGE containerd-config
     - |
       if grep -q "$PAUSE_IMAGE" "/etc/containerd/config.toml"; then
         echo "使用了自定义 pause 镜像";

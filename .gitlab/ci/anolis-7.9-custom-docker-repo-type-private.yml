@@ -96,8 +96,8 @@ anolis-7.9:install:docker-repo-type-private:
         exit 1;
       fi
   script:
-    - chmod +x tmp.sh
-    - ./tmp.sh docker-repo docker-install docker-repo-type=$DOCKER_REPO_TYPE
+    - chmod +x k8s.sh
+    - ./k8s.sh docker-repo docker-install docker-repo-type=$DOCKER_REPO_TYPE
     - |
       if grep -q "$DOCKER_REPO_TYPE" "/etc/yum.repos.d/docker-ce.repo"; then
         echo "使用了自定义 docker 源";

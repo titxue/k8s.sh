@@ -91,10 +91,10 @@ ubuntu-22.04:install:custom-k8s-type-private:
         exit 1;
       fi
   script:
-    - chmod +x tmp.sh
-    - ./tmp.sh docker-repo containerd-install
-    - ./tmp.sh docker-repo docker-install
-    - ./tmp.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION kubernetes-repo-type=$KUBERNETES_REPO_TYPE
+    - chmod +x k8s.sh
+    - ./k8s.sh docker-repo containerd-install
+    - ./k8s.sh docker-repo docker-install
+    - ./k8s.sh kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION kubernetes-repo-type=$KUBERNETES_REPO_TYPE
     - version=$(kubelet --version | awk '{print $2}')
     - echo $version
     - |
