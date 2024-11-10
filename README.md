@@ -1,5 +1,34 @@
 # Kubernetes（k8s）自动安装配置脚本
 
+## 支持系统版本
+
+| 系统/版本                | 1.31 |
+|----------------------|------|
+| AnolisOS 7.7         | ✅    |
+| AnolisOS 7.9         | ✅    |
+| AnolisOS 8.2         | ✅    |
+| AnolisOS 8.4         | ✅    |
+| AnolisOS 8.6         | ✅    |
+| AnolisOS 8.8         | ✅    |
+| AnolisOS 8.9         | ✅    |
+| AnolisOS 23.0        | ✅    |
+| AnolisOS 23.1        | ✅    |
+| CentOS 7.9           | ✅    |
+| CentOS 8.1           | ✅    |
+| CentOS 8.2           | ✅    |
+| CentOS 8.3           | ✅    |
+| CentOS 8.4           | ✅    |
+| CentOS 8.5           | ✅    |
+| CentOS 9-20241028.0  | ✅    |
+| Debian 10.10.0       | ✅    |
+| Debian 11.7.0        | ✅    |
+| Debian 12.4.0        | ✅    |
+| Debian 12.7.0        | ✅    |
+| Ubuntu 18.04         | ✅    |
+| Ubuntu 20.04         | ✅    |
+| Ubuntu 22.04         | ✅    |
+| Ubuntu 24.04         | ✅    |
+
 ## kubernetes 一键安装交互式网站
 
 |                | 网站                                         | 说明 |
