@@ -45,10 +45,12 @@ ubuntu-22.04:env:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/*.yml
+          - .gitlab/ci/anolis-*.yml
+          - .gitlab/ci/centos-*.yml
+          - .gitlab/ci/debian-*.yml
+          - .gitlab/ci/ubuntu-*.yml
           - .gitlab-ci.yml
           - k8s.sh
-          - tmp.sh
   tags:
     - g150s-docker
 
@@ -123,9 +125,11 @@ ubuntu-22.04:install:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/*.yml
+          - .gitlab/ci/anolis-*.yml
+          - .gitlab/ci/centos-*.yml
+          - .gitlab/ci/debian-*.yml
+          - .gitlab/ci/ubuntu-*.yml
           - .gitlab-ci.yml
           - k8s.sh
-          - tmp.sh
   tags:
     - GitLab-CICD-Ubuntu-22-04

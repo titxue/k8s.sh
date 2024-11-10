@@ -45,10 +45,12 @@ centos-7.9:env:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/*.yml
+          - .gitlab/ci/anolis-*.yml
+          - .gitlab/ci/centos-*.yml
+          - .gitlab/ci/debian-*.yml
+          - .gitlab/ci/ubuntu-*.yml
           - .gitlab-ci.yml
           - k8s.sh
-          - tmp.sh
   tags:
     - g150s-docker
 
@@ -129,9 +131,11 @@ centos-7.9:install:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/*.yml
+          - .gitlab/ci/anolis-*.yml
+          - .gitlab/ci/centos-*.yml
+          - .gitlab/ci/debian-*.yml
+          - .gitlab/ci/ubuntu-*.yml
           - .gitlab-ci.yml
           - k8s.sh
-          - tmp.sh
   tags:
     - GitLab-CICD-CentOS-7.9
