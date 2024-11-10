@@ -6,6 +6,7 @@ pages:
     paths:
       - node_modules/
   script:
+    - sed -i "s#base:\\ '/',#base:\\ '/k8s.sh',#g" .vitepress/config.mjs
     - npm run pre:npm
     - if [ $CI_SERVER_HOST == 'framagit.org' ]; then
       cat .vitepress/config.mts;

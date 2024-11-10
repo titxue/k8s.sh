@@ -1,11 +1,7 @@
 stages:
-  # 文档
   - pages
-  # 准备系统环境
   - env
-  # 安装 k8s
   - install
-  # 代码同步
   - sync
 
 variables:
@@ -47,6 +43,7 @@ include:
   - .gitlab/ci/debian-12.4.0.yml
   - .gitlab/ci/debian-12.7.0.yml
   - .gitlab/ci/pages.yml
+  - .gitlab/ci/sync.yml
   - .gitlab/ci/ubuntu-18.04.yml
   - .gitlab/ci/ubuntu-20.04.yml
   - .gitlab/ci/ubuntu-22.04.yml
@@ -56,5 +53,3 @@ include:
   - .gitlab/ci/ubuntu-22.04-custom-k8s-version-suffix.yml
   - .gitlab/ci/ubuntu-22.04-custom-pause-image.yml
   - .gitlab/ci/ubuntu-24.04.yml
-  # 同步代码
-  - .gitlab/ci/sync.yml
