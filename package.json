@@ -1,0 +1,35 @@
+{
+  "name": "k8s-sh",
+  "version": "2.0.0",
+  "scripts": {
+    "pre:npm": "npm install --registry https://registry.npmmirror.com || npm install --registry https://registry.npmjs.org",
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  },
+  "author": "徐晓伟 <xuxiaowei@xuxiaowei.com.cn>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/xuxiaowei-com-cn/k8s.sh/issues"
+  },
+  "homepage": "https://k8s-sh.xuxiaowei.com.cn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xuxiaowei-com-cn/k8s.sh.git"
+  },
+  "keywords": [
+    "vitepress",
+    "kubernetes",
+    "docker",
+    "containerd",
+    "calico",
+    "ingress-nginx",
+    "AnolisOS",
+    "CentOS",
+    "Debian",
+    "Ubuntu"
+  ],
+  "devDependencies": {
+    "vitepress": "1.5.0"
+  }
+}
