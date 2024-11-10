@@ -88,7 +88,7 @@ ubuntu-24.04:install:
       fi
   script:
     - chmod +x k8s.sh
-    - ./k8s.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo containerd-install containerd-config socat kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init kubernetes-init-node-name=k8s-1 calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network enable-shell-autocompletion
+    - ./k8s.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo containerd-install containerd-config kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init kubernetes-init-node-name=k8s-1 calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network enable-shell-autocompletion
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -o wide

@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Kubernetes 一键安装文档",
-  description: "一行命令快速安装 Kubernetes，无需关心拉取镜像问题",
+  description: "一行命令快速安装 Kubernetes，无需关心拉取镜像、配置问题",
   lang: 'zh-CN',
   base: '/',
   head: [
@@ -49,6 +49,8 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: '首页', link: '/' },
+      { text: '快速开始', link: '/getting-started' },
+      { text: '参数配置', link: '/config' },
       {
         text: '其他文档',
         items: [
@@ -113,10 +115,10 @@ export default defineConfig({
     },
     sidebar: [
       {
-        text: 'Examples',
+        text: '开始',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: '快速开始', link: '/getting-started.md' },
+          { text: '参数配置', link: '/config' }
         ]
       }
     ],

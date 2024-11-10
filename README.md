@@ -48,11 +48,11 @@
     1. 截止 `2024-10-30`，`Kubernetes` 最高版是 `v1.31.2`
     2. 具体支持的版本及 `国内镜像` 参见：
        [kubernetes-version.json](https://gitee.com/xuxiaowei-com-cn/k8s.sh/blob/docs/src/json/kubernetes-version.json)
-2. `calico` 一共 24 个版本及 `国内镜像`
+2. `calico` 一共 `24` 个版本及 `国内镜像`
     1. 截止 `2024-10-30`
     2. 具体支持的版本及 `国内镜像` 参见：
        [calico-version.json](https://gitee.com/xuxiaowei-com-cn/k8s.sh/blob/docs/src/json/calico-version.json)
-3. `ingress nginx` 一共 24 个版本及 `国内镜像`
+3. `ingress nginx` 一共 `24` 个版本及 `国内镜像`
     1. 截止 `2024-10-30`
     2. 具体支持的版本及 `国内镜像` 参见：
        [ingress-nginx-version.json](https://gitee.com/xuxiaowei-com-cn/k8s.sh/blob/docs/src/json/ingress-nginx-version.json)

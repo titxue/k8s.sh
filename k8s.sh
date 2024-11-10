@@ -444,6 +444,8 @@ _kubernetes_config() {
 
   _enable_ipv4_packet_forwarding
 
+  _socat
+
   systemctl enable kubelet.service
 
   if [[ $os_type == 'centos' ]]; then
@@ -489,9 +491,23 @@ _kubernetes_taint() {
   kubectl get pod -A -o wide
 }
 
+_bash_completion() {
+  if [[ $package_type == 'yum' ]]; then
+    sudo yum -y install bash-completion
+    # 此处兼容 AnolisOS 23.1，防止退出
+    source /etc/profile || true
+  elif [[ $package_type == 'apt' ]]; then
+    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y bash-completion
+    # 此处兼容 Debian 11.7.0，防止退出
+    source /etc/profile || true
+  fi
+}
+
 # https://kubernetes.io/zh-cn/docs/tasks/tools/install-kubectl-linux/#optional-kubectl-configurations
 # https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/tasks/tools/install-kubectl-linux/#optional-kubectl-configurations
 _enable_shell_autocompletion() {
+
+  _bash_completion
 
   if [[ $package_type == 'yum' ]]; then
 
@@ -582,18 +598,6 @@ _selinux_disabled() {
     cat /etc/selinux/config
     sudo sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
     cat /etc/selinux/config
-  fi
-}
-
-_bash_completion() {
-  if [[ $package_type == 'yum' ]]; then
-    sudo yum -y install bash-completion
-    # 此处兼容 AnolisOS 23.1，防止退出
-    source /etc/profile || true
-  elif [[ $package_type == 'apt' ]]; then
-    sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y bash-completion
-    # 此处兼容 Debian 11.7.0，防止退出
-    source /etc/profile || true
   fi
 }
 
@@ -745,10 +749,6 @@ while [[ $# -gt 0 ]]; do
     docker_install=true
     ;;
 
-  socat | -socat | --socat)
-    socat=true
-    ;;
-
   calico-install | -calico-install | --calico-install)
     calico_install=true
     ;;
@@ -851,10 +851,6 @@ fi
 
 if [[ $containerd_config == true ]]; then
   _containerd_config
-fi
-
-if [[ $socat == true ]]; then
-  _socat
 fi
 
 if [[ $kubernetes_repo == true ]]; then
