@@ -32,6 +32,9 @@ readonly COLOR_RED='\033[31m'
 readonly COLOR_RESET='\033[0m'
 readonly COLOR_YELLOW='\033[93m'
 
+# 查看系统类型、版本、内核
+hostnamectl || true
+
 # 当前系统类型，可能的值:
 # anolis
 # centos
