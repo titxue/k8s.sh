@@ -46,14 +46,24 @@ readonly os_type=$(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"')
 echo "系统类型: $os_type"
 
 # 当前系统版本，可能的值:
-# Anolis OS: 7.9、8.8
-# CentOS: 7、8
+# Anolis OS: 7.7、7.9、8.2、8.4、8.6、8.8、8.9、23
+# CentOS: 7、8、9
 # Debian: 11、12
 # OpenEuler:
-# Ubuntu: 22.04、23.10
+# Ubuntu: 18.04、20.04、22.04、24.04
 # UOS:
 readonly os_version=$(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"')
 echo "系统版本: $os_version"
+
+if [[ $os_type == 'centos' && $os_version == '8' ]]; then
+  readonly centos_os_version=$(cat /etc/redhat-release | awk '{print $4}')
+  echo "CentOS 系统具体版本: $centos_os_version"
+fi
+
+if [[ $os_type == 'debian' ]]; then
+  readonly debian_os_version=$(cat /etc/debian_version)
+  echo "Debian 系统具体版本: $debian_os_version"
+fi
 
 # apt 锁超时时间
 dpkg_lock_timeout=120
