@@ -11,6 +11,8 @@ variables:
   ANOLIS_URL: http://172.25.25.14:48081/repository/anolis
   CENTOS_URL: http://172.25.25.14:48081/repository/centos
   CENTOS_VAULT_URL: http://172.25.25.14:48081/repository/centos-vault
+  CENTOS_STREAM_URL: http://172.25.25.14:48081/repository/centos-stream
+  CENTOS_STREAM_SIGS_URL: http://172.25.25.14:48081/repository/centos-stream-SIGs
   UBUNTU_URL: http://172.25.25.14:48081/repository/ubuntu
 
 # 嵌入
@@ -37,6 +39,7 @@ include:
   - .gitlab/ci/centos-8.3.yml
   - .gitlab/ci/centos-8.4.yml
   - .gitlab/ci/centos-8.5.yml
+  - .gitlab/ci/centos-9-20241028.0.yml
   - .gitlab/ci/debian-12.4.0.yml
   - .gitlab/ci/ubuntu-18.04.yml
   - .gitlab/ci/ubuntu-20.04.yml
