@@ -2,13 +2,13 @@ debian-11.7.0:env:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
-    QEMU_ID: $DEBIAN_12_4_0_QEMU_ID
-    SNAPSHOT: $DEBIAN_12_4_0_SNAPSHOT
+    QEMU_ID: $DEBIAN_11_7_0_QEMU_ID
+    SNAPSHOT: $DEBIAN_11_7_0_SNAPSHOT
   before_script:
     - echo $PVE_ADDRESS
-    - echo $DEBIAN_12_4_0_QEMU_ID
+    - echo $DEBIAN_11_7_0_QEMU_ID
     - echo $QEMU_ID
-    - echo $DEBIAN_12_4_0_SNAPSHOT
+    - echo $DEBIAN_11_7_0_SNAPSHOT
     - echo $SNAPSHOT
   script:
     # 获取凭证
