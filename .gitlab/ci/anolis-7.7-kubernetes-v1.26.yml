@@ -45,11 +45,7 @@ anolis-7.7:env:kubernetes:1.26:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
+          - .gitlab/ci/anolis-7.7-kubernetes-v1.26.yml
           - k8s.sh
   tags:
     - g150s-docker
@@ -187,15 +183,6 @@ anolis-7.7:install:kubernetes:1.26:
         echo "未使用自定义 docker 源";
         exit 1;
       fi
-  rules:
-    - changes:
-        paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
-          - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-7.7
   environment: kubernetes/v1.26

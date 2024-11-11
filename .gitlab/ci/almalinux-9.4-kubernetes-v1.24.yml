@@ -45,12 +45,7 @@ almalinux-9.4:env:kubernetes:1.24:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/almalinux-*.yml
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
+          - .gitlab/ci/almalinux-9.4-kubernetes-v1.24.yml
           - k8s.sh
   tags:
     - g150s-docker
@@ -192,16 +187,6 @@ almalinux-9.4:install:kubernetes:1.24:
         echo "未使用自定义 docker 源";
         exit 1;
       fi
-  rules:
-    - changes:
-        paths:
-          - .gitlab/ci/almalinux-*.yml
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
-          - k8s.sh
   tags:
     - GitLab-CICD-AlmaLinux-9.4
   environment: kubernetes/v1.24

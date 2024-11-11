@@ -45,11 +45,7 @@ debian-12.7.0:env:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
+          - .gitlab/ci/debian-12.7.0.yml
           - k8s.sh
   tags:
     - g150s-docker
@@ -149,14 +145,5 @@ debian-12.7.0:install:
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
-  rules:
-    - changes:
-        paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
-          - k8s.sh
   tags:
     - GitLab-CICD-Debian-12.7.0

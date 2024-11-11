@@ -45,11 +45,7 @@ anolis-7.9:env:custom-k8s-images:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
+          - .gitlab/ci/anolis-7.9-custom-k8s-images.yml
           - k8s.sh
   tags:
     - g150s-docker
@@ -150,14 +146,5 @@ anolis-7.9:install:custom-k8s-images:
         echo "未找到名称带有 $KUBERNETES_IMAGES 的镜像";
         exit 1;
       fi
-  rules:
-    - changes:
-        paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
-          - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-7.9

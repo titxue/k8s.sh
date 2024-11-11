@@ -45,11 +45,7 @@ anolis-7.7:env:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
+          - .gitlab/ci/anolis-7.7.yml
           - k8s.sh
   tags:
     - g150s-docker
@@ -151,14 +147,5 @@ anolis-7.7:install:
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
-  rules:
-    - changes:
-        paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
-          - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-7.7

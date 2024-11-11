@@ -45,11 +45,7 @@ ubuntu-22.04:env:custom-pause-image:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
+          - .gitlab/ci/ubuntu-22.04-custom-pause-image.yml
           - k8s.sh
   tags:
     - g150s-docker
@@ -98,14 +94,5 @@ ubuntu-22.04:install:custom-pause-image:
         echo "未使用自定义 pause 镜像";
         exit 1;
       fi
-  rules:
-    - changes:
-        paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
-          - k8s.sh
   tags:
     - GitLab-CICD-Ubuntu-22-04

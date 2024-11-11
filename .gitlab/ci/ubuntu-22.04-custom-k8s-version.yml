@@ -45,11 +45,7 @@ ubuntu-22.04:env:custom-k8s-version:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
+          - .gitlab/ci/ubuntu-22.04-custom-k8s-version.yml
           - k8s.sh
   tags:
     - g150s-docker
@@ -102,14 +98,5 @@ ubuntu-22.04:install:custom-k8s-version:
         echo "版本不匹配";
         exit 1;
       fi
-  rules:
-    - changes:
-        paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
-          - k8s.sh
   tags:
     - GitLab-CICD-Ubuntu-22-04

@@ -30,7 +30,6 @@ pages:
           - .gitlab/ci/pages.yml
           - .vitepress/**
           - "**.md"
-          - .gitlab-ci.yml
           - public
           - static
           - .npmrc

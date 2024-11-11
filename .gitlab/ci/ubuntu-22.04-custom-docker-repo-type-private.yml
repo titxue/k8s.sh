@@ -45,11 +45,7 @@ ubuntu-22.04:env:custom-docker-repo-type-private:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
+          - .gitlab/ci/ubuntu-22.04-custom-docker-repo-type-private.yml
           - k8s.sh
   tags:
     - g150s-docker
@@ -98,14 +94,5 @@ ubuntu-22.04:install:custom-docker-repo-type-private:
         echo "未使用自定义 docker 源";
         exit 1;
       fi
-  rules:
-    - changes:
-        paths:
-          - .gitlab/ci/anolis-*.yml
-          - .gitlab/ci/centos-*.yml
-          - .gitlab/ci/debian-*.yml
-          - .gitlab/ci/ubuntu-*.yml
-          - .gitlab-ci.yml
-          - k8s.sh
   tags:
     - GitLab-CICD-Ubuntu-22-04
