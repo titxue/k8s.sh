@@ -53,6 +53,7 @@ centos-9-20241028.0:env:
           - k8s.sh
   tags:
     - g150s-docker
+  when: manual
 
 centos-9-20241028.0:install:
   stage: install

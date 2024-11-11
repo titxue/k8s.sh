@@ -53,6 +53,7 @@ centos-8.1:env:
           - k8s.sh
   tags:
     - g150s-docker
+  when: manual
 
 centos-8.1:install:
   stage: install

@@ -53,6 +53,7 @@ debian-10.10.0:env:
           - k8s.sh
   tags:
     - g150s-docker
+  when: manual
 
 debian-10.10.0:install:
   stage: install

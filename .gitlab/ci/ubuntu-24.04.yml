@@ -53,6 +53,7 @@ ubuntu-24.04:env:
           - k8s.sh
   tags:
     - g150s-docker
+  when: manual
 
 ubuntu-24.04:install:
   stage: install

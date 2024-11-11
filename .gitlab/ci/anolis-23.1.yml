@@ -53,6 +53,7 @@ anolis-23.1:env:
           - k8s.sh
   tags:
     - g150s-docker
+  when: manual
 
 anolis-23.1:install:
   stage: install
