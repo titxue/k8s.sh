@@ -62,3 +62,4 @@ include:
   - .gitlab/ci/ubuntu-22.04-custom-k8s-version-suffix.yml
   - .gitlab/ci/ubuntu-22.04-custom-pause-image.yml
   - .gitlab/ci/ubuntu-24.04.yml
+  - .gitlab/ci/ubuntu-24.04-kubernetes-v1.24.yml
