@@ -137,5 +137,10 @@ anolis-7.9:install:custom-k8s-version:
         echo "未找到版本带有 $KUBERNETES_VERSION 的镜像";
         exit 1;
       fi
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/anolis-7.9-custom-k8s-version.yml
+          - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-7.9

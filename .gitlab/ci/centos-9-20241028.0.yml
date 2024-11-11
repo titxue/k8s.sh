@@ -146,5 +146,10 @@ centos-9-20241028.0:install:
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/centos-9-20241028.0.yml
+          - k8s.sh
   tags:
     - GitLab-CICD-CentOS-9-20241028.0

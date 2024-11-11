@@ -100,5 +100,10 @@ ubuntu-22.04:install:custom-k8s-version-suffix:
         echo "版本不匹配";
         exit 1;
       fi
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/ubuntu-22.04-custom-k8s-version-suffix.yml
+          - k8s.sh
   tags:
     - GitLab-CICD-Ubuntu-22-04

@@ -101,5 +101,10 @@ anolis-7.9:install:custom-pause-image:
         echo "未使用自定义 pause 镜像";
         exit 1;
       fi
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/anolis-7.9-custom-pause-image.yml
+          - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-7.9

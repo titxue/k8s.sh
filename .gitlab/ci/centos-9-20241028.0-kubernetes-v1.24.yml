@@ -182,6 +182,11 @@ centos-9-20241028.0:install:kubernetes:1.24:
         echo "未使用自定义 docker 源";
         exit 1;
       fi
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/centos-9-20241028.0-kubernetes-v1.24.yml
+          - k8s.sh
   tags:
     - GitLab-CICD-CentOS-9-20241028.0
   environment: kubernetes/v1.24

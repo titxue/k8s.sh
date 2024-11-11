@@ -103,5 +103,10 @@ anolis-7.9:install:custom-docker-repo-type:
         echo "未使用自定义仓库";
         exit 1;
       fi
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/anolis-7.9-custom-docker-repo-type.yml
+          - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-7.9

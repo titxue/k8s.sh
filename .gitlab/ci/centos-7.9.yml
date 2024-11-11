@@ -146,5 +146,10 @@ centos-7.9:install:
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/centos-7.9.yml
+          - k8s.sh
   tags:
     - GitLab-CICD-CentOS-7.9

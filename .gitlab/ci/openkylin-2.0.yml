@@ -137,5 +137,10 @@ openkylin-2.0:install:
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/openkylin-2.0.yml
+          - k8s.sh
   tags:
     - GitLab-CICD-OpenKylin-2.0
