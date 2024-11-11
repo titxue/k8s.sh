@@ -55,6 +55,12 @@ echo "系统类型: $os_type"
 readonly os_version=$(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"')
 echo "系统版本: $os_version"
 
+# 代码版本
+readonly code_name=$(grep -w "VERSION_CODENAME" /etc/os-release | cut -d'=' -f2 | tr -d '"')
+if [[ $code_name ]]; then
+  echo "代码版本: $code_name"
+fi
+
 if [[ $os_type == 'centos' && $os_version == '8' ]]; then
   readonly centos_os_version=$(cat /etc/redhat-release | awk '{print $4}')
   echo "CentOS 系统具体版本: $centos_os_version"
@@ -93,7 +99,7 @@ case "$os_type" in
 anolis | almalinux)
   docker_repo_name='centos'
   ;;
-kylin)
+kylin | openkylin)
   docker_repo_name='debian'
   ;;
 *) ;;
@@ -120,7 +126,7 @@ ingress_nginx_kube_webhook_certgen_mirror=${ingress_nginx_kube_webhook_certgen_m
 # 包管理类型
 package_type=
 case "$os_type" in
-ubuntu | debian | kylin)
+ubuntu | debian | kylin | openkylin)
   package_type=apt
   ;;
 centos | anolis | almalinux)
@@ -177,6 +183,15 @@ EOF
       $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
       sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
+    if [[ $os_type == 'openkylin' ]]; then
+      case "$code_name" in
+      nile)
+        sed -i 's#nile#bookworm#' /etc/apt/sources.list.d/docker.list
+        ;;
+      *) ;;
+      esac
+    fi
+
     sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
 
   else
@@ -192,20 +207,20 @@ _remove_apt_ord_docker() {
   case "$os_type" in
   ubuntu)
     if [[ $os_version == '18.04' ]]; then
-      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
+      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     elif [[ $os_version == '20.04' ]]; then
-      for pkg in docker.io docker-doc docker-compose docker-compose-v2 containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
+      for pkg in docker.io docker-doc docker-compose docker-compose-v2 containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     else
-      for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
+      for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     fi
     ;;
-  debian)
+  debian | openkylin)
     if [[ $os_version == '10' ]]; then
-      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
+      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     elif [[ $os_version == '11' ]]; then
-      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
+      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     else
-      for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove $pkg; done
+      for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     fi
     ;;
   *)

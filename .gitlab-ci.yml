@@ -54,6 +54,7 @@ include:
   - .gitlab/ci/debian-11.7.0.yml
   - .gitlab/ci/debian-12.4.0.yml
   - .gitlab/ci/debian-12.7.0.yml
+  - .gitlab/ci/openkylin-2.0.yml
   - .gitlab/ci/pages.yml
   - .gitlab/ci/sync.yml
   - .gitlab/ci/ubuntu-18.04.yml
