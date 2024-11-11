@@ -1,33 +1,39 @@
 # Kubernetes（k8s）自动安装配置脚本
 
-## 支持系统版本
+## 支持系统/版本
 
-| 系统/版本                | 1.31 |
-|----------------------|------|
-| AnolisOS 7.7         | ✅    |
-| AnolisOS 7.9         | ✅    |
-| AnolisOS 8.2         | ✅    |
-| AnolisOS 8.4         | ✅    |
-| AnolisOS 8.6         | ✅    |
-| AnolisOS 8.8         | ✅    |
-| AnolisOS 8.9         | ✅    |
-| AnolisOS 23.0        | ✅    |
-| AnolisOS 23.1        | ✅    |
-| CentOS 7.9           | ✅    |
-| CentOS 8.1           | ✅    |
-| CentOS 8.2           | ✅    |
-| CentOS 8.3           | ✅    |
-| CentOS 8.4           | ✅    |
-| CentOS 8.5           | ✅    |
-| CentOS 9-20241028.0  | ✅    |
-| Debian 10.10.0       | ✅    |
-| Debian 11.7.0        | ✅    |
-| Debian 12.4.0        | ✅    |
-| Debian 12.7.0        | ✅    |
-| Ubuntu 18.04         | ✅    |
-| Ubuntu 20.04         | ✅    |
-| Ubuntu 22.04         | ✅    |
-| Ubuntu 24.04         | ✅    |
+- 测试流水线：https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/pipelines
+    - 测试原理
+        1. 每次执行均创建一个对应系统的虚拟机：最小化安装系统（防止干扰，减小开销）
+        2. 执行安装：验证相关功能是否可用
+- 未标注：只是还未增加自动化测试，不代表不支持
+
+| Linux/Kubernetes    | 1.31 | 1.30 | 1.29 | 1.28 | 1.27 | 1.26 | 1.25 | 1.24 |
+|---------------------|------|------|------|------|------|------|------|------|
+| AnolisOS 7.7        | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    |
+| AnolisOS 7.9        | ✅    |      |      |      |      |      |      | ✅    |
+| AnolisOS 8.2        | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.4        | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.6        | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.8        | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.9        | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 23.0       | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 23.1       | ✅    |      |      |      |      |      |      |      |
+| CentOS 7.9          | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.1          | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.2          | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.3          | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.4          | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.5          | ✅    |      |      |      |      |      |      |      |
+| CentOS 9-20241028.0 | ✅    |      |      |      |      |      |      |      |
+| Debian 10.10.0      | ✅    |      |      |      |      |      |      |      |
+| Debian 11.7.0       | ✅    |      |      |      |      |      |      |      |
+| Debian 12.4.0       | ✅    |      |      |      |      |      |      |      |
+| Debian 12.7.0       | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 18.04        | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 20.04        | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 22.04        | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 24.04        | ✅    |      |      |      |      |      |      |      |
 
 ## kubernetes 一键安装交互式网站
 
