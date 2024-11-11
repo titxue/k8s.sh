@@ -101,7 +101,7 @@ anolis-7.7:install:kubernetes:1.29:
       fi
   script:
     - chmod +x k8s.sh
-    - |
+    - >-
       ./k8s.sh 
       swap-off 
       curl 
