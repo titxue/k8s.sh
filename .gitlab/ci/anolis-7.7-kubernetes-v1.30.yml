@@ -1,4 +1,4 @@
-anolis-7.7:env:1.30:
+anolis-7.7:env:kubernetes:1.30:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
@@ -55,13 +55,14 @@ anolis-7.7:env:1.30:
     - g150s-docker
   when: manual
 
-anolis-7.7:install:1.30:
+anolis-7.7:install:kubernetes:1.30:
   stage: install
   needs:
-    - anolis-7.7:env:1.30
+    - anolis-7.7:env:kubernetes:1.30
   variables:
-    KUBERNETES_1_30_VERSION: v1.30.6
-    KUBERNETES_VERSION: $KUBERNETES_1_30_VERSION
+    KUBERNETES_VERSION: v1.30.6
+    KUBERNETES_REPO_TYPE: http://172.25.25.14:48081/repository/kubernetes-new-yum
+    DOCKER_REPO_TYPE: http://172.25.25.14:48081/repository/docker-yum
   hooks:
     pre_get_sources_script:
       - echo $ANOLIS_URL
@@ -81,8 +82,9 @@ anolis-7.7:install:1.30:
   before_script:
     - cat /etc/os-release
     - ip addr | grep 'inet '
-    - echo $KUBERNETES_1_30_VERSION
     - echo $KUBERNETES_VERSION
+    - echo $KUBERNETES_REPO_TYPE
+    - echo $DOCKER_REPO_TYPE
     - |
       if [[ $(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "anolis" ]] ; then
         echo "系统正确";
@@ -99,7 +101,7 @@ anolis-7.7:install:1.30:
       fi
   script:
     - chmod +x k8s.sh
-    - ./k8s.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo containerd-install containerd-config kubernetes-repo kubernetes-install kubernetes-version=$KUBERNETES_VERSION kubernetes-images-pull kubernetes-config kubernetes-init kubernetes-init-node-name=k8s-1 calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network enable-shell-autocompletion
+    - ./k8s.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo containerd-install containerd-config kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init kubernetes-init-node-name=k8s-1 calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network enable-shell-autocompletion kubernetes-version=$KUBERNETES_VERSION kubernetes-repo-type=$KUBERNETES_REPO_TYPE docker-repo-type=$DOCKER_REPO_TYPE
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -o wide
@@ -136,12 +138,29 @@ anolis-7.7:install:1.30:
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - kubectl get node -o wide
-    - version=$(kubectl get node -o wide | awk '{print $2}')
+    - version=$(kubelet --version | awk '{print $2}')
+    - echo $version
     - |
       if [ "$version" == "$KUBERNETES_VERSION" ]; then
         echo "版本正确";
       else
         echo "版本不匹配";
+        exit 1;
+      fi
+    - cat /etc/yum.repos.d/kubernetes.repo
+    - |
+      if grep -q "$KUBERNETES_REPO_TYPE" "/etc/yum.repos.d/kubernetes.repo"; then
+        echo "使用了自定义 Kubernetes 源";
+      else
+        echo "未使用自定义 Kubernetes 源";
+        exit 1;
+      fi
+    - cat /etc/yum.repos.d/docker-ce.repo
+    - |
+      if grep -q "$DOCKER_REPO_TYPE" "/etc/yum.repos.d/docker-ce.repo"; then
+        echo "使用了自定义 docker 源";
+      else
+        echo "未使用自定义 docker 源";
         exit 1;
       fi
   rules:
@@ -155,3 +174,4 @@ anolis-7.7:install:1.30:
           - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-7.7
+  environment: kubernetes/v1.30
