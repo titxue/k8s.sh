@@ -431,13 +431,54 @@ _kubernetes_images_pull() {
 # https://kubernetes.io/zh-cn/docs/setup/production-environment/container-runtimes/
 # https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/
 _enable_ipv4_packet_forwarding() {
-  # 设置所需的 sysctl 参数，参数在重新启动后保持不变
-  cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+  # Kubernetes 版本号，包含: 主版本号、次版本号
+  kubernetes_version_tmp=$(echo $kubernetes_version | cut -d. -f1-2)
+
+  case "$kubernetes_version_tmp" in
+  "v1.24" | "v1.25" | "v1.26" | "v1.27" | "v1.28" | "v1.29")
+
+    # https://kubernetes-v1-24.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
+    # https://kubernetes-v1-25.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
+    # https://kubernetes-v1-26.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
+    # https://kubernetes-v1-27.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
+    # https://kubernetes-v1-28.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
+    # https://kubernetes-v1-29.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
+
+    cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+
+    sudo modprobe overlay
+    sudo modprobe br_netfilter
+
+    # 设置所需的 sysctl 参数，参数在重新启动后保持不变
+    cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+
+    # 应用 sysctl 参数而不重新启动
+    sudo sysctl --system
+
+    lsmod | grep br_netfilter
+    lsmod | grep overlay
+    ;;
+  *)
+
+    # https://kubernetes-v1-30.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
+    # https://kubernetes-v1-31.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
+
+    # 设置所需的 sysctl 参数，参数在重新启动后保持不变
+    cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.ipv4.ip_forward = 1
 EOF
 
-  # 应用 sysctl 参数而不重新启动
-  sudo sysctl --system
+    # 应用 sysctl 参数而不重新启动
+    sudo sysctl --system
+    ;;
+  esac
 }
 
 _kubernetes_config() {
