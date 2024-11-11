@@ -90,7 +90,7 @@ docker_baseurl=${docker_mirrors[0]}
 # Docker 仓库类型
 docker_repo_name=$os_type
 case "$os_type" in
-anolis)
+anolis | almalinux)
   docker_repo_name='centos'
   ;;
 kylin)
@@ -123,7 +123,7 @@ case "$os_type" in
 ubuntu | debian | kylin)
   package_type=apt
   ;;
-centos | anolis)
+centos | anolis | almalinux)
   package_type=yum
   ;;
 *)
