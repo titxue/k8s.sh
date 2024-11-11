@@ -259,10 +259,8 @@ _containerd_install() {
 _containerd_config() {
   sudo mkdir -p /etc/containerd
   sudo cp /etc/containerd/config.toml /etc/containerd/config.toml.$(date +%Y%m%d%H%M%S) || true
-  sudo containerd config default | sudo tee /etc/containerd/config.toml
-
-  # 兼容 OpenKylin 2.0
-  sudo sed -i 's#User ‘root’ has no time limits enabled##' /etc/containerd/config.toml
+  sudo containerd config default >/etc/containerd/config.toml
+  cat /etc/containerd/config.toml
 
   sudo sed -i "s#registry.k8s.io/pause#$pause_image#g" /etc/containerd/config.toml
   sudo sed -i "s#SystemdCgroup = false#SystemdCgroup = true#g" /etc/containerd/config.toml
