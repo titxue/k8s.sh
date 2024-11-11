@@ -528,7 +528,8 @@ _kubernetes_taint() {
   kubectl get node -o yaml | grep taint -A 10
   kubernetes_version_tmp=$(echo $kubernetes_version | cut -d. -f1-2)
   if [[ $kubernetes_version_tmp == 'v1.24' ]]; then
-    kubectl taint nodes --all node-role.kubernetes.io/master-
+    kubectl taint nodes --all node-role.kubernetes.io/master- || true
+    kubectl taint nodes --all node-role.kubernetes.io/control-plane- || true
   else
     kubectl taint nodes --all node-role.kubernetes.io/control-plane-
   fi
