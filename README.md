@@ -42,6 +42,8 @@
 - https://k8s-sh.xuxiaowei.com.cn
 - [GitLab/Kubernetes 知识库](https://gitlab-k8s.xuxiaowei.com.cn)
 
+## [分支与历史版本](history.md)
+
 ## 支持的范围
 
 1. `Kubernetes` 从 `1.24.0` 到 `最新版`，一共 105 个版本及 `国内镜像`
