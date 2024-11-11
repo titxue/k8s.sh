@@ -122,7 +122,7 @@ anolis-7.7:install:kubernetes:1.29:
       kubernetes-taint 
       ingress-nginx-install 
       ingress-nginx-host-network 
-      enable-shell-autocompletion 
+      enable-shell-autocompletion
       kubernetes-version=$KUBERNETES_VERSION 
       kubernetes-repo-type=$KUBERNETES_REPO_TYPE 
       docker-repo-type=$DOCKER_REPO_TYPE
