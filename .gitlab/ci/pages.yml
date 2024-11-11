@@ -25,3 +25,13 @@ pages:
       - public/
   rules:
     - if: $CI_COMMIT_BRANCH == "SNAPSHOT/2.0.0" && $ENABLE_DOCS == "true"
+      changes:
+        paths:
+          - .gitlab/ci/pages.yml
+          - .vitepress/**
+          - "**.md"
+          - .gitlab-ci.yml
+          - public
+          - static
+          - .npmrc
+          - package.json
