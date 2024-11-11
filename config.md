@@ -75,6 +75,14 @@
 
 ### docker-repo {id=docker-repo}
 
+::: danger 危险
+
+- 配置 docker 仓库时，会删除 `旧版 Docker`
+    1. `旧版 Docker`: `docker.io`
+    2. `新版 Docker`: `docker-ce`
+
+:::
+
 - 类型：`Boolean`
 - 说明：配置 Docker 仓库
 - 用途：安装 `containerd` 或 `docker` 所需仓库
