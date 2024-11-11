@@ -16,6 +16,7 @@ variables:
 # 嵌入
 include:
   - .gitlab/ci/anolis-7.7.yml
+  - .gitlab/ci/anolis-7.7-kubernetes-v1.27.yml
   - .gitlab/ci/anolis-7.7-kubernetes-v1.28.yml
   - .gitlab/ci/anolis-7.7-kubernetes-v1.29.yml
   - .gitlab/ci/anolis-7.7-kubernetes-v1.30.yml
