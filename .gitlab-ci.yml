@@ -46,6 +46,7 @@ include:
   - .gitlab/ci/centos-8.4.yml
   - .gitlab/ci/centos-8.5.yml
   - .gitlab/ci/centos-9-20241028.0.yml
+  - .gitlab/ci/centos-9-20241028.0-kubernetes-v1.24.yml
   - .gitlab/ci/debian-10.10.0.yml
   - .gitlab/ci/debian-10.10.0-kubernetes-v1.24.yml
   - .gitlab/ci/debian-11.7.0.yml

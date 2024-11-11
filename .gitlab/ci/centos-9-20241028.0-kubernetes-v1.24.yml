@@ -1,0 +1,200 @@
+centos-9-20241028.0:env:kubernetes:1.24:
+  stage: env
+  image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
+  variables:
+    QEMU_ID: $CENTOS_9_20241028_0_QEMU_ID
+    SNAPSHOT: $CENTOS_9_20241028_0_SNAPSHOT
+  before_script:
+    - echo $PVE_ADDRESS
+    - echo $CENTOS_9_20241028_0_QEMU_ID
+    - echo $QEMU_ID
+    - echo $CENTOS_9_20241028_0_SNAPSHOT
+    - echo $SNAPSHOT
+  script:
+    # 获取凭证
+    - |
+      response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/access/ticket" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "username=$PVE_USERNAME" --data-urlencode "password=$PVE_PASSWORD" --data-urlencode 'realm=pam' --data-urlencode 'new-format=1')
+    - echo $response | jq -r '.success'
+    # 解析凭证
+    - token=$(echo $response | jq -r '.data.CSRFPreventionToken')
+    - ticket=$(echo $response | jq -r '.data.ticket')
+    # 还原服务器快照
+    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/snapshot/$SNAPSHOT/rollback" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+    - echo $response | jq -r '.success'
+    # 休眠一段时间，等待服务器还原快照
+    - sleep 30
+    # 开机
+    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/status/start" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+    - echo $response | jq -r '.success'
+    - |
+      while true; do
+        # 查看状态
+        response=$(curl -k --request GET --url "$PVE_ADDRESS/api2/json/nodes/pve/qemu/$QEMU_ID/status/current" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+        status=$(echo "$response" | jq -r '.data.status')
+        if [ "$status" = "running" ]; then
+          echo "服务器已运行";
+          break
+        else
+          echo '等待服务器运行';
+          sleep 1;
+        fi
+      done
+    - echo '等待一段时间，待服务器完全启动'
+    - sleep 30
+  timeout: 180s
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/anolis-*.yml
+          - .gitlab/ci/centos-*.yml
+          - .gitlab/ci/debian-*.yml
+          - .gitlab/ci/ubuntu-*.yml
+          - .gitlab-ci.yml
+          - k8s.sh
+  tags:
+    - g150s-docker
+  when: manual
+
+centos-9-20241028.0:install:kubernetes:1.24:
+  stage: install
+  needs:
+    - centos-9-20241028.0:env:kubernetes:1.24
+  variables:
+    KUBERNETES_VERSION: v1.24.17
+    KUBERNETES_REPO_TYPE: http://172.25.25.14:48081/repository/kubernetes-new-yum
+    DOCKER_REPO_TYPE: http://172.25.25.14:48081/repository/docker-yum
+  hooks:
+    pre_get_sources_script:
+      - echo $CENTOS_STREAM_URL
+      - echo $CENTOS_STREAM_SIGS_URL
+      - cat /etc/yum.repos.d/centos.repo
+      - sed -i "s#metalink#\#metalink#" /etc/yum.repos.d/centos.repo
+      - cat /etc/yum.repos.d/centos.repo
+      - sed -i '/metalink=https:\/\/mirrors.centos.org\/metalink?repo=centos-baseos-$stream&arch=$basearch&protocol=https,http/a baseurl=CENTOS_STREAM_URL/$stream/BaseOS/$basearch/os' /etc/yum.repos.d/centos.repo
+      - sed -i '/metalink=https:\/\/mirrors.centos.org\/metalink?repo=centos-appstream-$stream&arch=$basearch&protocol=https,http/a baseurl=CENTOS_STREAM_URL/$stream/AppStream/$basearch/os' /etc/yum.repos.d/centos.repo
+      - sed -i "s#CENTOS_STREAM_URL#$CENTOS_STREAM_URL#" /etc/yum.repos.d/centos.repo
+      - cat /etc/yum.repos.d/centos.repo
+      - cat /etc/yum.repos.d/centos-addons.repo
+      - sed -i "s#metalink#\#metalink#" /etc/yum.repos.d/centos-addons.repo
+      - cat /etc/yum.repos.d/centos-addons.repo
+      - sed -i '/metalink=https:\/\/mirrors.centos.org\/metalink?repo=centos-extras-sig-extras-common-$stream&arch=$basearch&protocol=https,http/a baseurl=CENTOS_STREAM_SIGS_URL/$stream/extras/$basearch/extras-common' /etc/yum.repos.d/centos-addons.repo
+      - sed -i "s#CENTOS_STREAM_SIGS_URL#$CENTOS_STREAM_SIGS_URL#" /etc/yum.repos.d/centos-addons.repo
+      - cat /etc/yum.repos.d/centos-addons.repo
+      - yum clean all
+      - yum makecache
+      - yum install -y git
+      - git config --global http.sslVerify false
+  before_script:
+    - cat /etc/os-release
+    - cat /etc/redhat-release
+    - ip addr | grep 'inet '
+    - echo $KUBERNETES_VERSION
+    - echo $KUBERNETES_REPO_TYPE
+    - echo $DOCKER_REPO_TYPE
+    - |
+      if [[ $(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "centos" ]] ; then
+        echo "系统正确";
+      else
+        echo "系统不正确";
+        exit 1;
+      fi
+  script:
+    - chmod +x k8s.sh
+    - >-
+      ./k8s.sh 
+      swap-off 
+      curl 
+      ca-certificates 
+      firewalld-stop 
+      selinux-disabled 
+      bash-completion 
+      docker-repo 
+      containerd-install 
+      containerd-config 
+      kubernetes-repo 
+      kubernetes-install 
+      kubernetes-images-pull 
+      kubernetes-config 
+      kubernetes-init 
+      kubernetes-init-node-name=k8s-1 
+      calico-install 
+      kubernetes-taint 
+      ingress-nginx-install 
+      ingress-nginx-host-network 
+      enable-shell-autocompletion
+      kubernetes-version=$KUBERNETES_VERSION 
+      kubernetes-repo-type=$KUBERNETES_REPO_TYPE 
+      docker-repo-type=$DOCKER_REPO_TYPE
+    - export KUBECONFIG=/etc/kubernetes/admin.conf
+    - kubectl get node -o wide
+    - kubectl get svc -o wide
+    - kubectl get pod -A -o wide
+    - |
+      while true; do
+        pod_status=$(kubectl get pods --all-namespaces -o jsonpath="{range .items[*]}{.status.phase}{'\n'}{end}" | sort | uniq);
+        echo $pod_status
+        if echo "$pod_status" | grep -q "Pending"; then
+          echo '等待 pod 运行';
+          sleep 5;
+        else
+          break;
+        fi
+      done
+    - sleep 30
+    - kubectl apply -f https://gitee.com/xuxiaowei-com-cn/java/raw/main/deploy/deploy-service-ingress.yaml
+    - |
+      while true; do
+        pod_status=$(kubectl get pods --all-namespaces -o jsonpath="{range .items[*]}{.status.phase}{'\n'}{end}" | sort | uniq);
+        echo $pod_status
+        if echo "$pod_status" | grep -q "Pending"; then
+          echo '等待 pod 运行';
+          sleep 5;
+        else
+          break;
+        fi
+      done
+    - sleep 30
+    - kubectl get node -o wide
+    - kubectl get svc -o wide
+    - kubectl get pod -A -o wide
+    - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
+    - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
+    - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
+    - kubectl get node -o wide
+    - version=$(kubelet --version | awk '{print $2}')
+    - echo $version
+    - |
+      if [ "$version" == "$KUBERNETES_VERSION" ]; then
+        echo "版本正确";
+      else
+        echo "版本不匹配";
+        exit 1;
+      fi
+    - cat /etc/yum.repos.d/kubernetes.repo
+    - |
+      if grep -q "$KUBERNETES_REPO_TYPE" "/etc/yum.repos.d/kubernetes.repo"; then
+        echo "使用了自定义 Kubernetes 源";
+      else
+        echo "未使用自定义 Kubernetes 源";
+        exit 1;
+      fi
+    - cat /etc/yum.repos.d/docker-ce.repo
+    - |
+      if grep -q "$DOCKER_REPO_TYPE" "/etc/yum.repos.d/docker-ce.repo"; then
+        echo "使用了自定义 docker 源";
+      else
+        echo "未使用自定义 docker 源";
+        exit 1;
+      fi
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/anolis-*.yml
+          - .gitlab/ci/centos-*.yml
+          - .gitlab/ci/debian-*.yml
+          - .gitlab/ci/ubuntu-*.yml
+          - .gitlab-ci.yml
+          - k8s.sh
+  tags:
+    - GitLab-CICD-CentOS-9-20241028.0
+  environment: kubernetes/v1.24
