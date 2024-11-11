@@ -101,6 +101,7 @@ anolis-7.9:install:custom-pause-image:
         echo "未使用自定义 pause 镜像";
         exit 1;
       fi
+    - poweroff
   rules:
     - changes:
         paths:

@@ -98,6 +98,7 @@ ubuntu-22.04:install:custom-k8s-version:
         echo "版本不匹配";
         exit 1;
       fi
+    - poweroff
   rules:
     - changes:
         paths:

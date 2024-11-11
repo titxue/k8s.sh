@@ -183,6 +183,7 @@ anolis-7.9:install:kubernetes:1.24:
         echo "未使用自定义 docker 源";
         exit 1;
       fi
+    - poweroff
   rules:
     - changes:
         paths:

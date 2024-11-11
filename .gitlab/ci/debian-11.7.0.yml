@@ -145,6 +145,7 @@ debian-11.7.0:install:
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
+    - poweroff
   rules:
     - changes:
         paths:

@@ -107,6 +107,7 @@ ubuntu-22.04:install:custom-k8s-type-private:
         echo "未使用自定义仓库";
         exit 1;
       fi
+    - poweroff
   rules:
     - changes:
         paths:
