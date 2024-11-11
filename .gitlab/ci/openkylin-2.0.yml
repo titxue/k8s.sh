@@ -92,6 +92,8 @@ openkylin-2.0:install:
       firewalld-stop 
       selinux-disabled 
       bash-completion 
+      docker-repo 
+      containerd-install 
       containerd-config 
       kubernetes-repo 
       kubernetes-install 
