@@ -257,8 +257,10 @@ _containerd_install() {
 # https://kubernetes.io/zh-cn/docs/setup/production-environment/container-runtimes/
 # https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/
 _containerd_config() {
-  sudo cp /etc/containerd/config.toml /etc/containerd/config.toml.$(date +%Y%m%d%H%M%S)
-  sudo containerd config default | sudo tee /etc/containerd/config.toml
+  sudo mkdir -p /etc/containerd
+  sudo cp /etc/containerd/config.toml /etc/containerd/config.toml.$(date +%Y%m%d%H%M%S) || true
+  sudo containerd config default | sudo tee config.toml
+  sudo cp config.toml /etc/containerd/config.toml
   sudo sed -i "s#registry.k8s.io/pause#$pause_image#g" /etc/containerd/config.toml
   sudo sed -i "s#SystemdCgroup = false#SystemdCgroup = true#g" /etc/containerd/config.toml
 
