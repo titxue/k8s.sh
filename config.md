@@ -6,6 +6,9 @@
 
 1. `参数的顺序` 不影响结果，脚本内置固定顺序
 2. 可直接使用参数名，也可使用 `-`、`--` 开头
+    - 如：`kubernetes-version=v1.31.1`、`-kubernetes-version=v1.31.1`、`--kubernetes-version=v1.31.1` 都是合法值
+3. 参数名中单词中间使用 `-` 分割，脚本中单词中间使用 `_` 分割
+    - 如：`Kubernetes` 版本，参数中使用 `kubernetes-version=v1.31.1`，脚本中使用 `kubernetes_version=v1.31.1`
 
 ### `Boolean 类型` 的参数 {id=intro-boolean}
 
