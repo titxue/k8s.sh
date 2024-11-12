@@ -93,6 +93,8 @@ pause_image=${kubernetes_images_mirrors[0]}/pause
 docker_mirrors=("https://mirrors.aliyun.com/docker-ce/linux" "https://mirrors.cloud.tencent.com/docker-ce/linux" "https://download.docker.com/linux")
 # Docker 仓库: 默认仓库，取第一个
 docker_baseurl=${docker_mirrors[0]}
+# 自定义 container-selinux 安装包，仅在少数系统中使用，如：OpenEuler 20.03
+container_selinux_rpm=https://mirrors.aliyun.com/centos-altarch/7.9.2009/extras/i386/Packages/container-selinux-2.107-3.el7.noarch.rpm
 # Docker 仓库类型
 docker_repo_name=$os_type
 case "$os_type" in
@@ -171,7 +173,7 @@ EOF
 
     if [[ $os_type == 'openEuler' ]]; then
       case "$os_version" in
-      '22.03' | '24.03')
+      '20.03' | '22.03' | '24.03')
         sudo sed -i 's/$releasever/8/g' /etc/yum.repos.d/docker-ce.repo
         ;;
       *) ;;
@@ -253,6 +255,11 @@ _containerd_install() {
   if [[ $package_type == 'yum' ]]; then
 
     sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
+
+    if [[ $os_type == 'openEuler' && $os_version == '20.03' ]]; then
+      sudo yum install -y $container_selinux_rpm
+    fi
+
     sudo yum install -y containerd.io
 
   elif [[ $package_type == 'apt' ]]; then
@@ -297,6 +304,11 @@ _docker_install() {
   if [[ $package_type == 'yum' ]]; then
 
     sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
+
+    if [[ $os_type == 'openEuler' && $os_version == '20.03' ]]; then
+      sudo yum install -y $container_selinux_rpm
+    fi
+
     sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
   elif [[ $package_type == 'apt' ]]; then
@@ -831,6 +843,10 @@ while [[ $# -gt 0 ]]; do
       docker_baseurl=$docker_repo_type
       ;;
     esac
+    ;;
+
+  container-selinux-rpm=* | -container-selinux-rpm=* | --container-selinux-rpm=*)
+    container_selinux_rpm="${1#*=}"
     ;;
 
   containerd-install | -containerd-install | --containerd-install)
