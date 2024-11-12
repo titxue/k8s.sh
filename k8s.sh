@@ -129,7 +129,7 @@ case "$os_type" in
 ubuntu | debian | kylin | openkylin)
   package_type=apt
   ;;
-centos | anolis | almalinux)
+centos | anolis | almalinux | openEuler)
   package_type=yum
   ;;
 *)
