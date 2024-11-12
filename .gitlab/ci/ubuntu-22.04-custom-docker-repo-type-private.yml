@@ -94,7 +94,6 @@ ubuntu-22.04:install:custom-docker-repo-type-private:
         echo "未使用自定义 docker 源";
         exit 1;
       fi
-    - poweroff
   rules:
     - changes:
         paths:

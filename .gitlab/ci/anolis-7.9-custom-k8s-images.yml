@@ -146,7 +146,6 @@ anolis-7.9:install:custom-k8s-images:
         echo "未找到名称带有 $KUBERNETES_IMAGES 的镜像";
         exit 1;
       fi
-    - poweroff
   rules:
     - changes:
         paths:
