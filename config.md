@@ -7,7 +7,7 @@
 1. `参数的顺序` 不影响结果，脚本内置固定顺序
 2. 可直接使用参数名，也可使用 `-`、`--` 开头
     - 如：`kubernetes-version=v1.31.1`、`-kubernetes-version=v1.31.1`、`--kubernetes-version=v1.31.1` 都是合法值
-3. 参数名中单词中间使用 `-` 分割，脚本中单词中间使用 `_` 分割
+3. 参数名中单词中间使用 `-` 分隔，脚本中单词中间使用 `_` 分隔
     - 如：`Kubernetes` 版本，参数中使用 `kubernetes-version=v1.31.1`，脚本中使用 `kubernetes_version=v1.31.1`
 
 ### `Boolean 类型` 的参数 {id=intro-boolean}
@@ -104,6 +104,15 @@
         - 需要与 https://mirrors.aliyun.com/docker-ce/linux
           或 https://mirrors.cloud.tencent.com/docker-ce/linux 结构相同
         - 自定义仓库时，地址结尾不要有 `/`
+
+### container-selinux-rpm {id=container-selinux-rpm}
+
+- 类型：`String`
+- 默认值：
+  `https://mirrors.aliyun.com/centos-altarch/7.9.2009/extras/i386/Packages/container-selinux-2.107-3.el7.noarch.rpm`
+- 说明：自定义 `container-selinux` 安装包，仅在少数系统中使用，如：`OpenEuler` `20.03`
+- 相关：在 `OpenEuler` `20.03` 中安装 `containerd`、`docker` 时会依赖 `container-selinux`，而 `OpenEuler` `20.03`
+  中的 `container-selinux` 版本过低，无法使用，所以采用了自定义。除 `OpenEuler` `20.03` 以外的系统，无需关注
 
 ### docker-install {id=docker-install}
 

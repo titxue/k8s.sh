@@ -6,36 +6,54 @@
     - 测试原理
         1. 每次执行均创建一个对应系统的虚拟机：最小化安装系统（防止干扰，减小开销）
         2. 执行安装：验证相关功能是否可用
-- 未标注：只是还未增加自动化测试，不代表不支持
+- 标注：
+    1. ✅：支持，已完成自动化测试
+    2. 空：未增加自动化测试，理论上支持
+    3. ❌：不支持
+- 按照名称排序、按照版本倒叙
 
-| Linux/Kubernetes       | 1.31 | 1.30 | 1.29 | 1.28 | 1.27 | 1.26 | 1.25 | 1.24 |
-|------------------------|------|------|------|------|------|------|------|------|
-| AlmaLinux 9.4          | ✅    |      |      |      |      |      |      | ✅    |
-| AnolisOS 7.7           | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    |
-| AnolisOS 7.9           | ✅    |      |      |      |      |      |      | ✅    |
-| AnolisOS 8.2           | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 8.4           | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 8.6           | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 8.8           | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 8.9           | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 23.0          | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 23.1          | ✅    |      |      |      |      |      |      |      |
-| CentOS 7.9             | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.1             | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.2             | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.3             | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.4             | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.5             | ✅    |      |      |      |      |      |      |      |
-| CentOS 9-20241028.0    | ✅    |      |      |      |      |      |      | ✅    |
-| Debian 10.10.0 buster  | ✅    |      |      |      |      |      |      | ✅    |
-| Debian 11.7.0 bullseye | ✅    |      |      |      |      |      |      |      |
-| Debian 12.4.0 bookworm | ✅    |      |      |      |      |      |      |      |
-| Debian 12.7.0 bookworm | ✅    |      |      |      |      |      |      |      |
-| OpenKylin 2.0 nile     | ✅    |      |      |      |      |      |      |      |
-| Ubuntu 18.04 bionic    | ✅    |      |      |      |      |      |      |      |
-| Ubuntu 20.04 focal     | ✅    |      |      |      |      |      |      |      |
-| Ubuntu 22.04 jammy     | ✅    |      |      |      |      |      |      |      |
-| Ubuntu 24.04 noble     | ✅    |      |      |      |      |      |      | ✅    |
+| Linux/Kubernetes        | 1.31 | 1.30 | 1.29 | 1.28 | 1.27 | 1.26 | 1.25 | 1.24 |
+|-------------------------|------|------|------|------|------|------|------|------|
+| AlmaLinux 8.10          | ✅    |      |      |      |      |      |      |      |
+| AlmaLinux 9.4           | ✅    |      |      |      |      |      |      | ✅    |
+| AnolisOS 7.7            | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    |
+| AnolisOS 7.9            | ✅    |      |      |      |      |      |      | ✅    |
+| AnolisOS 8.2            | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.4            | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.6            | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.8            | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.9            | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 23.0           | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 23.1           | ✅    |      |      |      |      |      |      |      |
+| CentOS 7.9              | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.1              | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.2              | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.3              | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.4              | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.5              | ✅    |      |      |      |      |      |      |      |
+| CentOS 9-20241028.0     | ✅    |      |      |      |      |      |      | ✅    |
+| Debian 10.10.0 buster   | ✅    |      |      |      |      |      |      | ✅    |
+| Debian 11.7.0 bullseye  | ✅    |      |      |      |      |      |      |      |
+| Debian 12.4.0 bookworm  | ✅    |      |      |      |      |      |      |      |
+| Debian 12.7.0 bookworm  | ✅    |      |      |      |      |      |      |      |
+| OpenEuler 20.03         | ✅    |      |      |      |      |      |      |      |
+| OpenEuler 22.03         | ✅    |      |      |      |      |      |      |      |
+| OpenEuler 24.03         | ✅    |      |      |      |      |      |      |      |
+| OpenKylin 1.0 yangtze   | ✅    |      |      |      |      |      |      |      |
+| OpenKylin 1.0.1 yangtze | ✅    |      |      |      |      |      |      |      |
+| OpenKylin 1.0.2 yangtze | ✅    |      |      |      |      |      |      |      |
+| OpenKylin 2.0 nile      | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 18.04 bionic     | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 20.04 focal      | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 22.04 jammy      | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 24.04 noble      | ✅    |      |      |      |      |      |      | ✅    |
+
+## 原则
+
+1. 最小化修改系统配置
+    - 针对每种系统、每个版本有特定的配置，而不是直接在所有系统和版本中添加固定的配置
+2. 最小原则安装软件
+    - 只安装需要用到的软件
 
 ## kubernetes 一键安装交互式网站
 
@@ -47,12 +65,22 @@
 
 ## 文档
 
-- https://k8s-sh.xuxiaowei.com.cn
 - [GitLab/Kubernetes 知识库](https://gitlab-k8s.xuxiaowei.com.cn)
+- [Kubernetes 中文文档国内镜像-最新版](https://kubernetes.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.30](https://kubernetes-v1-30.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.29](https://kubernetes-v1-29.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.28](https://kubernetes-v1-28.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.27](https://kubernetes-v1-27.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.26](https://kubernetes-v1-26.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.25](https://kubernetes-v1-25.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.24](https://kubernetes-v1-24.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.23](https://kubernetes-v1-23.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.22](https://kubernetes-v1-22.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.21](https://kubernetes-v1-21.xuxiaowei.com.cn/zh-cn/)
 
 ## [分支与历史版本](history.md)
 
-## 支持的范围
+## 国内镜像支持的范围
 
 1. `Kubernetes` 从 `1.24.0` 到 `最新版`，一共 105 个版本及 `国内镜像`
     1. 截止 `2024-10-30`，`Kubernetes` 最高版是 `v1.31.2`

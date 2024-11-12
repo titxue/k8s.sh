@@ -36,20 +36,24 @@ readonly COLOR_YELLOW='\033[93m'
 hostnamectl || true
 
 # 当前系统类型，可能的值:
+# almalinux
 # anolis
 # centos
 # debian
 # openEuler
+# openkylin
 # ubuntu
 # uos
 readonly os_type=$(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"')
 echo "系统类型: $os_type"
 
 # 当前系统版本，可能的值:
+# AlmaLinux: 8.10、9.4
 # Anolis OS: 7.7、7.9、8.2、8.4、8.6、8.8、8.9、23
 # CentOS: 7、8、9
-# Debian: 11、12
-# OpenEuler:
+# Debian: 10、11、12
+# OpenEuler: 20.03、22.03、24.03
+# OpenKylin: 1.0、1.0.1、1.0.2、2.0
 # Ubuntu: 18.04、20.04、22.04、24.04
 # UOS:
 readonly os_version=$(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"')
