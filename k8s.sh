@@ -217,7 +217,14 @@ _remove_apt_ord_docker() {
       for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     fi
     ;;
-  debian | openkylin)
+  openkylin)
+    if [[ $os_version == '1.0' ]]; then
+      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
+    else
+      for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
+    fi
+    ;;
+  debian)
     if [[ $os_version == '10' ]]; then
       for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     elif [[ $os_version == '11' ]]; then
