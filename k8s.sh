@@ -96,7 +96,7 @@ docker_baseurl=${docker_mirrors[0]}
 # Docker 仓库类型
 docker_repo_name=$os_type
 case "$os_type" in
-anolis | almalinux)
+anolis | almalinux | openEuler)
   docker_repo_name='centos'
   ;;
 kylin | openkylin)
@@ -163,6 +163,15 @@ EOF
     if [[ $os_type == 'anolis' ]]; then
       case "$os_version" in
       '23')
+        sudo sed -i 's/$releasever/8/g' /etc/yum.repos.d/docker-ce.repo
+        ;;
+      *) ;;
+      esac
+    fi
+
+    if [[ $os_type == 'openEuler' ]]; then
+      case "$os_version" in
+      '22.03')
         sudo sed -i 's/$releasever/8/g' /etc/yum.repos.d/docker-ce.repo
         ;;
       *) ;;
