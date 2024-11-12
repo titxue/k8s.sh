@@ -475,6 +475,18 @@ _enable_ipv4_packet_forwarding() {
   # Kubernetes 版本号，包含: 主版本号、次版本号
   kubernetes_version_tmp=$(echo $kubernetes_version | cut -d. -f1-2)
 
+  ipv4_ip_forward=$(grep -w "net.ipv4.ip_forward" /etc/sysctl.conf | cut -d'=' -f2 | tr -d ' ')
+  if [[ $ipv4_ip_forward == '0' ]]; then
+    # 如果 IPv4 数据包转发 已关闭: 注释已存在的配置，防止冲突
+    sudo sed -i 's|net.ipv4.ip_forward|#net.ipv4.ip_forward|g' /etc/sysctl.conf
+  fi
+
+  ipv4_ip_forward=$(grep -w "net.ipv4.ip_forward" /etc/sysctl.d/99-sysctl.conf | cut -d'=' -f2 | tr -d ' ')
+  if [[ $ipv4_ip_forward == '0' ]]; then
+    # 如果 IPv4 数据包转发 已关闭: 注释已存在的配置，防止冲突
+    sudo sed -i 's|net.ipv4.ip_forward|#net.ipv4.ip_forward|g' /etc/sysctl.d/99-sysctl.conf
+  fi
+
   case "$kubernetes_version_tmp" in
   "v1.24" | "v1.25" | "v1.26" | "v1.27" | "v1.28" | "v1.29")
 
