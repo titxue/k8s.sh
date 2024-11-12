@@ -218,7 +218,7 @@ _remove_apt_ord_docker() {
     fi
     ;;
   openkylin)
-    if [[ $os_version == '1.0' || $os_version == '1.0.1' ]]; then
+    if [[ $os_version == '1.0' || $os_version == '1.0.1' || $os_version == '1.0.2' ]]; then
       for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     else
       for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
