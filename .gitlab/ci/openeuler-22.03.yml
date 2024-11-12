@@ -1,14 +1,14 @@
-openeuler-20.03:env:
+openeuler-22.03:env:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
-    QEMU_ID: $OPENEULER_20_03_QEMU_ID
-    SNAPSHOT: $OPENEULER_20_03_SNAPSHOT
+    QEMU_ID: $OPENEULER_22_03_QEMU_ID
+    SNAPSHOT: $OPENEULER_22_03_SNAPSHOT
   before_script:
     - echo $PVE_ADDRESS
-    - echo $OPENEULER_20_03_QEMU_ID
+    - echo $OPENEULER_22_03_QEMU_ID
     - echo $QEMU_ID
-    - echo $OPENEULER_20_03_SNAPSHOT
+    - echo $OPENEULER_22_03_SNAPSHOT
     - echo $SNAPSHOT
   script:
     # 获取凭证
@@ -45,16 +45,16 @@ openeuler-20.03:env:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/openeuler-20.03.yml
+          - .gitlab/ci/openeuler-22.03.yml
           - k8s.sh
   tags:
     - g150s-docker
   when: manual
 
-openeuler-20.03:install:
+openeuler-22.03:install:
   stage: install
   needs:
-    - openeuler-20.03:env
+    - openeuler-22.03:env
   hooks:
     pre_get_sources_script:
       - yum clean all
@@ -72,7 +72,7 @@ openeuler-20.03:install:
         exit 1;
       fi
     - |
-      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "20.03" ]] ; then
+      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "22.03" ]] ; then
         echo "系统版本正确";
       else
         echo "系统版本不正确";
@@ -141,7 +141,7 @@ openeuler-20.03:install:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/openeuler-20.03.yml
+          - .gitlab/ci/openeuler-22.03.yml
           - k8s.sh
   tags:
-    - GitLab-CICD-OpenEuler-20.03
+    - GitLab-CICD-OpenEuler-22.03

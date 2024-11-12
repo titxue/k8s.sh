@@ -171,8 +171,8 @@ EOF
 
     if [[ $os_type == 'openEuler' ]]; then
       case "$os_version" in
-      '20.03')
-        sudo sed -i 's/$releasever/7/g' /etc/yum.repos.d/docker-ce.repo
+      '22.03')
+        sudo sed -i 's/$releasever/8/g' /etc/yum.repos.d/docker-ce.repo
         ;;
       *) ;;
       esac
