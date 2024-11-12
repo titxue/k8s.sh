@@ -188,6 +188,9 @@ EOF
       nile)
         sed -i 's#nile#bookworm#' /etc/apt/sources.list.d/docker.list
         ;;
+      yangtze)
+        sed -i 's#yangtze#bookworm#' /etc/apt/sources.list.d/docker.list
+        ;;
       *) ;;
       esac
     fi
