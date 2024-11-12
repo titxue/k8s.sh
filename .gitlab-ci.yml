@@ -56,6 +56,7 @@ include:
   - .gitlab/ci/debian-12.4.0.yml
   - .gitlab/ci/debian-12.7.0.yml
   - .gitlab/ci/openeuler-22.03.yml
+  - .gitlab/ci/openeuler-24.03.yml
   - .gitlab/ci/openkylin-1.0.1.yml
   - .gitlab/ci/openkylin-1.0.2.yml
   - .gitlab/ci/openkylin-1.0.yml
