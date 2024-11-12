@@ -58,18 +58,14 @@ almalinux-8.10:install:
   hooks:
     pre_get_sources_script:
       - ls -lh /etc/yum.repos.d
-      - cat /etc/yum.repos.d/almalinux-appstream.repo
-      - cat /etc/yum.repos.d/almalinux-baseos.repo
-      - cat /etc/yum.repos.d/almalinux-extras.repo
+      - cat /etc/yum.repos.d/almalinux.repo
       - |
         sed -e 's|^mirrorlist=|#mirrorlist=|g' \
             -e 's|^# baseurl=https://repo.almalinux.org|baseurl=http://172.25.25.14:48081/repository|g' \
             -i.bak \
-            /etc/yum.repos.d/almalinux*.repo
+            /etc/yum.repos.d/almalinux.repo
       - ls -lh /etc/yum.repos.d
-      - cat /etc/yum.repos.d/almalinux-appstream.repo
-      - cat /etc/yum.repos.d/almalinux-baseos.repo
-      - cat /etc/yum.repos.d/almalinux-extras.repo
+      - cat /etc/yum.repos.d/almalinux.repo
       - yum clean all
       - yum makecache
       - yum install -y git
