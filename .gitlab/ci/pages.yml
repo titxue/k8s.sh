@@ -76,6 +76,8 @@ docker:build:
           - public
           - static
           - .npmrc
+          - docker-compose.yml
+          - Dockerfile
           - package.json
   tags:
     - 911k-docker
@@ -104,6 +106,8 @@ docker:deploy:
           - public
           - static
           - .npmrc
+          - docker-compose.yml
+          - Dockerfile
           - package.json
   tags:
     - lighthouse-docker
