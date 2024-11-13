@@ -11,10 +11,10 @@ pages:
     - sed -i "s#base:\\ '/',#base:\\ '/k8s.sh',#g" .vitepress/config.mjs
     - npm run pre:npm
     - if [ $CI_SERVER_HOST == 'framagit.org' ]; then
-      cat .vitepress/config.mts;
-      sed -i 's#在 Gitee 上编辑此页面#在 FramaGit 上编辑#g' .vitepress/config.mts;
+      cat .vitepress/config.mjs;
+      sed -i 's#在 Gitee 上编辑此页面#在 FramaGit 上编辑#g' .vitepress/config.mjs;
       sed -i 's#https://gitee.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.0/#https://framagit.org/xuxiaowei-com-cn/k8s.sh/-/edit/SNAPSHOT/2.0.0/#g' .vitepress/config.mts;
-      cat .vitepress/config.mts;
+      cat .vitepress/config.mjs;
       fi
     - npm run docs:build
     # https://docs.gitlab.com/ee/user/project/pages/introduction.html#serving-compressed-assets
