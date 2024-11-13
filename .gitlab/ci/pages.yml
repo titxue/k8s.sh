@@ -31,7 +31,7 @@ pages:
       changes:
         paths:
           - .gitlab/ci/pages.yml
-          - .vitepress/**
+          - .vitepress/**/*
           - "**.md"
           - public
           - static
@@ -76,7 +76,7 @@ docker:build:
       changes:
         paths:
           - .gitlab/ci/pages.yml
-          - .vitepress/**
+          - .vitepress/**/*
           - "**.md"
           - public
           - static
@@ -106,7 +106,7 @@ docker:deploy:
       changes:
         paths:
           - .gitlab/ci/pages.yml
-          - .vitepress/**
+          - .vitepress/**/*
           - "**.md"
           - public
           - static
