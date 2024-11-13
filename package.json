@@ -4,7 +4,7 @@
   "scripts": {
     "pre:npm": "npm install --registry https://registry.npmmirror.com || npm install --registry https://registry.npmjs.org",
     "docs:dev": "vitepress dev",
-    "docs:build": "vitepress build",
+    "docs:build": "vitepress build && node .vitepress/copy.js",
     "docs:preview": "vitepress preview"
   },
   "author": "徐晓伟 <xuxiaowei@xuxiaowei.com.cn>",
@@ -33,6 +33,7 @@
     "vitepress"
   ],
   "devDependencies": {
+    "fs-extra": "11.2.0",
     "vitepress": "1.5.0"
   },
   "dependencies": {
