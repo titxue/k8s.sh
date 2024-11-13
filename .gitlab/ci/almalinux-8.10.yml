@@ -166,4 +166,3 @@ almalinux-8.10:shutdown:
           - k8s.sh
   tags:
     - g150s-docker
-  when: manual
