@@ -720,6 +720,14 @@ _selinux_disabled() {
 while [[ $# -gt 0 ]]; do
   case "$1" in
 
+  standalone | -standalone | --standalone)
+    standalone=true
+    ;;
+
+  node | -node | --node)
+    node=true
+    ;;
+
   dpkg-lock-timeout=* | -dpkg-lock-timeout=* | --dpkg-lock-timeout=*)
     dpkg_lock_timeout="${1#*=}"
     ;;
@@ -933,82 +941,115 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-if [[ $swap_off == true ]]; then
+_node() {
   _swap_off
-fi
-
-if [[ $curl == true ]]; then
   _curl
-fi
-
-if [[ $ca_certificates == true ]]; then
   _ca_certificates
-fi
-
-if [[ $firewalld_stop == true ]]; then
   _firewalld_stop
-fi
-
-if [[ $selinux_disabled == true ]]; then
   _selinux_disabled
-fi
-
-if [[ $bash_completion == true ]]; then
   _bash_completion
-fi
-
-if [[ $docker_repo == true ]]; then
   _docker_repo
-fi
-
-if [[ $docker_install == true ]]; then
-  _docker_install
-fi
-
-if [[ $containerd_install == true ]]; then
   _containerd_install
-fi
-
-if [[ $containerd_config == true ]]; then
   _containerd_config
-fi
-
-if [[ $kubernetes_repo == true ]]; then
   _kubernetes_repo
-fi
-
-if [[ $kubernetes_install == true ]]; then
   _kubernetes_install
-fi
-
-if [[ $kubernetes_images_pull == true ]]; then
   _kubernetes_images_pull
-fi
-
-if [[ $kubernetes_config == true ]]; then
   _kubernetes_config
-fi
+}
 
-if [[ $kubernetes_init == true ]]; then
+# 单机模式
+if [[ $standalone == true ]]; then
+  if ! [[ $kubernetes_init_node_name ]]; then
+    kubernetes_init_node_name=k8s-1
+  fi
+  _node
   _kubernetes_init
-fi
-
-if [[ $calico_install == true ]]; then
   _calico_install
-fi
-
-if [[ $kubernetes_taint == true ]]; then
   _kubernetes_taint
-fi
-
-if [[ $enable_shell_autocompletion == true ]]; then
-  _enable_shell_autocompletion
-fi
-
-if [[ $ingress_nginx_install == true ]]; then
   _ingress_nginx_install
-fi
-
-if [[ $ingress_nginx_host_network == true ]]; then
   _ingress_nginx_host_network
+  _enable_shell_autocompletion
+elif [[ $node == true ]]; then
+  _node
+else
+
+  if [[ $swap_off == true ]]; then
+    _swap_off
+  fi
+
+  if [[ $curl == true ]]; then
+    _curl
+  fi
+
+  if [[ $ca_certificates == true ]]; then
+    _ca_certificates
+  fi
+
+  if [[ $firewalld_stop == true ]]; then
+    _firewalld_stop
+  fi
+
+  if [[ $selinux_disabled == true ]]; then
+    _selinux_disabled
+  fi
+
+  if [[ $bash_completion == true ]]; then
+    _bash_completion
+  fi
+
+  if [[ $docker_repo == true ]]; then
+    _docker_repo
+  fi
+
+  if [[ $docker_install == true ]]; then
+    _docker_install
+  fi
+
+  if [[ $containerd_install == true ]]; then
+    _containerd_install
+  fi
+
+  if [[ $containerd_config == true ]]; then
+    _containerd_config
+  fi
+
+  if [[ $kubernetes_repo == true ]]; then
+    _kubernetes_repo
+  fi
+
+  if [[ $kubernetes_install == true ]]; then
+    _kubernetes_install
+  fi
+
+  if [[ $kubernetes_images_pull == true ]]; then
+    _kubernetes_images_pull
+  fi
+
+  if [[ $kubernetes_config == true ]]; then
+    _kubernetes_config
+  fi
+
+  if [[ $kubernetes_init == true ]]; then
+    _kubernetes_init
+  fi
+
+  if [[ $calico_install == true ]]; then
+    _calico_install
+  fi
+
+  if [[ $kubernetes_taint == true ]]; then
+    _kubernetes_taint
+  fi
+
+  if [[ $enable_shell_autocompletion == true ]]; then
+    _enable_shell_autocompletion
+  fi
+
+  if [[ $ingress_nginx_install == true ]]; then
+    _ingress_nginx_install
+  fi
+
+  if [[ $ingress_nginx_host_network == true ]]; then
+    _ingress_nginx_host_network
+  fi
 fi
