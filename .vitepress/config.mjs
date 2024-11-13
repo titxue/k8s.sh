@@ -127,6 +127,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: '历史分支', link: '/history' },
+          { text: '为什么不使用 Docker？', link: '/question/why-not-use-docker' },
         ]
       }
     ],
