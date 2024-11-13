@@ -30,9 +30,31 @@
 ### standalone {id=standalone}
 
 - 类型：`Boolean`
-- 说明：单机模式
+- 说明：单机模式，开箱即用，无需任何配置
 - 相关：此参数会创建一个已删除污点的 k8s 单机模式，并且安装 `calico`、`Ingress Nginx` 等，
   `Ingress Nginx` 使用宿主机网络（`80`/`443`）
+- 参数组合：
+    1. 可与其他参数组合使用，如：自定义 `Kubernetes` 版本 `kubernetes-version=v1.30.3`
+    2. 存在默认行为（无法取消）：
+        - `控制节点`（`控制平面`） 初始化
+        - `calico` 网络插件安装配置
+        - `Ingress Nginx` 安装配置
+        - 等等
+
+### node {id=node}
+
+- 类型：`Boolean`
+- 说明：工作节点加入集群前的准备工作
+- 相关：此参数会与 `控制节点`（`控制平面`）
+  安装、配置相同的内容，不同的在于 `不进行节点初始化`、`不进行初始化以后的插件安装配置`，
+  用于在 `工作节点` 中安装和配置 `Kubernetes` 相关内容，然后此节点即可加入集群
+- 参数组合：
+    1. 可与其他参数组合使用，如：自定义 `Kubernetes` 版本 `kubernetes-version=v1.30.3`
+    2. 不可组合的参数（无效组合：与 `控制节点`（`控制平面`）有关的配置组合时无效）：
+        - `控制节点`（`控制平面`） 初始化
+        - `calico` 网络插件安装配置
+        - `Ingress Nginx` 安装配置
+        - 等等
 
 ### dpkg-lock-timeout {id=dpkg-lock-timeout}
 
