@@ -116,9 +116,17 @@ export default defineConfig({
     sidebar: [
       {
         text: '开始',
+        collapsed: false,
         items: [
-          { text: '快速开始', link: '/getting-started.md' },
+          { text: '快速开始', link: '/getting-started' },
           { text: '参数配置', link: '/config' }
+        ]
+      },
+      {
+        text: '问题',
+        collapsed: false,
+        items: [
+          { text: '历史分支', link: '/history' },
         ]
       }
     ],
