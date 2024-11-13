@@ -27,6 +27,13 @@
 
 ## 参数 {id=arguments}
 
+### standalone {id=standalone}
+
+- 类型：`Boolean`
+- 说明：单机模式
+- 相关：此参数会创建一个已删除污点的 k8s 单机模式，并且安装 `calico`、`Ingress Nginx` 等，
+  `Ingress Nginx` 使用宿主机网络（`80`/`443`）
+
 ### dpkg-lock-timeout {id=dpkg-lock-timeout}
 
 - 类型：`Number`

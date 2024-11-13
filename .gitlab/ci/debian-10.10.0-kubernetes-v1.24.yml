@@ -93,28 +93,7 @@ debian-10.10.0:install:kubernetes:1.24:
       fi
   script:
     - chmod +x k8s.sh
-    - >-
-      ./k8s.sh 
-      swap-off 
-      curl 
-      ca-certificates 
-      firewalld-stop 
-      selinux-disabled 
-      bash-completion 
-      docker-repo 
-      containerd-install 
-      containerd-config 
-      kubernetes-repo 
-      kubernetes-install 
-      kubernetes-images-pull 
-      kubernetes-config 
-      kubernetes-init 
-      kubernetes-init-node-name=k8s-1 
-      calico-install 
-      kubernetes-taint 
-      ingress-nginx-install 
-      ingress-nginx-host-network 
-      enable-shell-autocompletion
+    - ./k8s.sh standalone
       kubernetes-version=$KUBERNETES_VERSION 
       kubernetes-repo-type=$KUBERNETES_REPO_TYPE 
       docker-repo-type=$DOCKER_REPO_TYPE
