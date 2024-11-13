@@ -93,10 +93,7 @@ debian-10.10.0:install:kubernetes:1.24:
       fi
   script:
     - chmod +x k8s.sh
-    - ./k8s.sh standalone
-      kubernetes-version=$KUBERNETES_VERSION 
-      kubernetes-repo-type=$KUBERNETES_REPO_TYPE 
-      docker-repo-type=$DOCKER_REPO_TYPE
+    - ./k8s.sh standalone kubernetes-version=$KUBERNETES_VERSION kubernetes-repo-type=$KUBERNETES_REPO_TYPE docker-repo-type=$DOCKER_REPO_TYPE
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -o wide
