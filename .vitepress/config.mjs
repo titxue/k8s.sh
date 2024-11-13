@@ -44,6 +44,11 @@ export default defineConfig({
     'mirrors/**',
     "*.sh"
   ],
+  // https://vitepress.dev/zh/reference/site-config#ignoredeadlinks
+  ignoreDeadLinks: [
+    // ignore all links include "/etc/""
+    /\/etc\//,
+  ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
