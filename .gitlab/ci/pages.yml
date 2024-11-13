@@ -35,6 +35,7 @@ pages:
           - .gitlab/ci/pages.yml
           - .vitepress/**/*
           - "**.md"
+          - "**/*.md"
           - public
           - static
           - .npmrc
@@ -80,6 +81,7 @@ docker:build:
           - .gitlab/ci/pages.yml
           - .vitepress/**/*
           - "**.md"
+          - "**/*.md"
           - public
           - static
           - .npmrc
@@ -110,6 +112,7 @@ docker:deploy:
           - .gitlab/ci/pages.yml
           - .vitepress/**/*
           - "**.md"
+          - "**/*.md"
           - public
           - static
           - .npmrc
