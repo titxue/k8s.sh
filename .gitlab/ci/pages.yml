@@ -1,6 +1,6 @@
 pages:
   stage: pages
-  image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/node:20.12.0
+  image: ${CUSTOM_NODE_IMAGE_PREFIX:docker.io/library}/node:20.12.0
   cache:
     key: "${CI_JOB_NAME}"
     paths:
