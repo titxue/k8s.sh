@@ -19,10 +19,13 @@ pages:
     - find .vitepress/dist -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\)$' -exec gzip -f -k {} \;
     #- find .vitepress/dist -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\)$' -exec brotli -f -k {} \;
     - cp -r .vitepress/dist/* public/
+    - sed -i "s#base:\\ '/k8s.sh',#base:\\ '/',#g" .vitepress/config.mjs
+    - npm run docs:build
   artifacts:
     expire_in: 1 week
     paths:
       - public/
+      - .vitepress/dist
   rules:
     - if: $ENABLE_DOCS == "true"
       changes:
