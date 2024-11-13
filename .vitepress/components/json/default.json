@@ -1,6 +1,6 @@
 {
   "projectUrl": "https://gitee.com/xuxiaowei-com-cn/k8s.sh",
-  "branch": "SNAPSHOT/1.0.0",
+  "branch": "SNAPSHOT/2.0.0",
   "kubernetesVersion": "v1.30.6",
   "taint": true,
   "nodeName": "control-plane-1",
