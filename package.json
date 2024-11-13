@@ -18,18 +18,25 @@
     "url": "git+https://github.com/xuxiaowei-com-cn/k8s.sh.git"
   },
   "keywords": [
-    "vitepress",
-    "kubernetes",
-    "docker",
-    "containerd",
-    "calico",
-    "ingress-nginx",
+    "AlmaLinux",
     "AnolisOS",
     "CentOS",
     "Debian",
-    "Ubuntu"
+    "OpenEuler",
+    "OpenKylin",
+    "Ubuntu",
+    "kubernetes",
+    "Docker",
+    "Containerd",
+    "Calico",
+    "ingress-nginx",
+    "vitepress"
   ],
   "devDependencies": {
     "vitepress": "1.5.0"
+  },
+  "dependencies": {
+    "element-plus": "2.8.7",
+    "markdown-it": "14.1.0"
   }
 }

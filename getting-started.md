@@ -1,1 +1,157 @@
 # 快速开始 {id=getting-started}
+
+[[toc]]
+
+## 快速安装 {id=getting-started-install}
+
+::: warning 警告
+
+1. `单机模式`、`集群模式` 会删除旧版 `Docker`
+    - `旧版 Docker`: `docker.io`
+    - `新版 Docker`: `docker-ce`
+
+2. `单机模式`、`集群模式` 会卸载 `containerd`，然后重新安装、配置 `containerd`
+
+3. `单机模式`、`集群模式` 安装完成后，需要运行 `source /etc/profile` 才能控制 `Kubernetes`，
+   也可以重新连接 `SSH` 后 控制 `Kubernetes`
+
+4. 在 `控制节点`（`控制平面`）中运行 `kubeadm token create --print-join-command` 命令后，可得到 `工作节点` 加入集群的命令，
+   也可以使用脚本参数 `./k8s.sh print-join-command` 生成
+
+:::
+
+### 单机模式 {id=standalone}
+
+::: warning 警告
+
+1. `控制节点`（`控制面板`）会去污，开箱即用
+
+:::
+
+<el-select v-model="source" size="large" style="width: 240px; margin-top: 20px;">
+    <el-option v-for="item in sources" :key="item.value" :label="item.label" :value="item.value" />
+</el-select>
+
+<el-select v-model="branch" size="large" style="width: 240px; margin-top: 20px;">
+    <el-option v-for="item in branchs" :key="item.value" :label="item.label" :value="item.value" />
+</el-select>
+
+<div class="language-shell vp-adaptive-theme">
+  <button title="Copy Code" class="copy"></button><span class="lang">shell</span>
+  <div id="standalone-code"></div>
+</div>
+
+### 集群模式 {id=cluster}
+
+::: warning 警告
+
+1. `工作节点` 未加入集群时，`Kubernetes` 集群将无法正常使用
+
+:::
+
+<el-select v-model="source" size="large" style="width: 240px; margin-top: 20px;">
+    <el-option v-for="item in sources" :key="item.value" :label="item.label" :value="item.value" />
+</el-select>
+
+<el-select v-model="branch" size="large" style="width: 240px; margin-top: 20px;">
+    <el-option v-for="item in branchs" :key="item.value" :label="item.label" :value="item.value" />
+</el-select>
+
+<div class="language-shell vp-adaptive-theme">
+  <button title="Copy Code" class="copy"></button><span class="lang">shell</span>
+  <div id="cluster-code"></div>
+</div>
+
+### 工作节点 {id=node}
+
+::: warning 警告
+
+1. `工作节点` 无法独立使用，需要加入集群后才能使用
+
+:::
+
+<el-select v-model="source" size="large" style="width: 240px; margin-top: 20px;">
+    <el-option v-for="item in sources" :key="item.value" :label="item.label" :value="item.value" />
+</el-select>
+
+<el-select v-model="branch" size="large" style="width: 240px; margin-top: 20px;">
+    <el-option v-for="item in branchs" :key="item.value" :label="item.label" :value="item.value" />
+</el-select>
+
+<div class="language-shell vp-adaptive-theme">
+  <button title="Copy Code" class="copy"></button><span class="lang">shell</span>
+  <div id="node-code"></div>
+</div>
+
+## 参数说明
+
+- 提供强大的自定参数配置，请阅读：[参数配置](config.md)
+
+<script lang="ts" setup>
+import { ref, onMounted, watch } from 'vue'
+import markdownit from 'markdown-it'
+import { ElSelect, ElOption } from 'element-plus'
+
+import 'element-plus/dist/index.css'
+
+const md = markdownit()
+
+const source = ref('https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw')
+
+const sources = [
+  {
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw',
+    label: 'gitlab.xuxiaowei.com.cn',
+  },
+  {
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw',
+    label: 'gitee.com',
+  },
+  {
+    value: 'https://raw.githubusercontent.com/xuxiaowei-com-cn/k8s.sh/refs/heads',
+    label: 'github.com',
+  }
+]
+
+const branch = ref('SNAPSHOT/2.0.0')
+
+const branchs = [
+  {
+    value: 'SNAPSHOT/2.0.0',
+    label: 'SNAPSHOT/2.0.0',
+  }
+]
+
+const command = function () {
+
+  const standaloneResult = md.render(`
+    curl -k -o k8s.sh ${source.value}/${branch.value}/k8s.sh
+    chmod +x k8s.sh
+    sudo ./k8s.sh standalone
+  `, { lang: 'shell' })
+
+  const clusterResult = md.render(`
+    curl -k -o k8s.sh ${source.value}/${branch.value}/k8s.sh
+    chmod +x k8s.sh
+    sudo ./k8s.sh cluster
+  `, { lang: 'shell' })
+
+  const nodeResult = md.render(`
+    curl -k -o k8s.sh ${source.value}/${branch.value}/k8s.sh
+    chmod +x k8s.sh
+    sudo ./k8s.sh node
+  `, { lang: 'shell' })
+
+  document.getElementById('standalone-code').innerHTML = standaloneResult
+  document.getElementById('cluster-code').innerHTML = clusterResult
+  document.getElementById('node-code').innerHTML = nodeResult
+}
+
+onMounted(async () => {
+  command()
+})
+
+watch(() => [ source.value, branch.value ], () => {
+  command()
+})
+</script>

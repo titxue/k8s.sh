@@ -5,7 +5,8 @@
 - 测试流水线：https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/pipelines
     - 测试原理
         1. 每次执行均创建一个对应系统的虚拟机：最小化安装系统（防止干扰，减小开销）
-        2. 执行安装：验证相关功能是否可用
+        2. 执行安装配置：安装 `Kubernetes` 必要的软件及配置，如：`Containerd`、`Calico`、`Ingress nginx` 等
+        3. 执行测试：验证相关功能是否可用，如：部署 `Deployment`、`Service`、`Ingress` 等
 - 标注：
     1. ✅：支持，已完成自动化测试
     2. 空：未增加自动化测试，理论上支持
