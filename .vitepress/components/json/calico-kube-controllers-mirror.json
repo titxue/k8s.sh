@@ -1,0 +1,10 @@
+[
+  {
+    "value": "docker.io/calico/kube-controllers",
+    "label": "docker.io/calico/kube-controllers"
+  },
+  {
+    "value": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-kube-controllers",
+    "label": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-kube-controllers"
+  }
+]

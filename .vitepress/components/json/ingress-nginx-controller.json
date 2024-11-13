@@ -1,0 +1,10 @@
+[
+  {
+    "value": "registry.k8s.io/ingress-nginx/controller",
+    "label": "registry.k8s.io/ingress-nginx/controller"
+  },
+  {
+    "value": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-controller",
+    "label": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-controller"
+  }
+]

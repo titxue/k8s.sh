@@ -1,0 +1,10 @@
+[
+  {
+    "value": "https://get.helm.sh",
+    "label": "https://get.helm.sh"
+  },
+  {
+    "value": "https://mirrors.huaweicloud.com/helm",
+    "label": "https://mirrors.huaweicloud.com/helm"
+  }
+]

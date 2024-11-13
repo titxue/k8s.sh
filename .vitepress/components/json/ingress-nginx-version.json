@@ -1,0 +1,134 @@
+[
+  {
+    "value": "v1.11.3",
+    "label": "v1.11.3",
+    "support": ["v1.30", "v1.29", "v1.28", "v1.27", "v1.26"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v1.4.4"
+  },
+  {
+    "value": "v1.11.2",
+    "label": "v1.11.2",
+    "support": ["v1.30", "v1.29", "v1.28", "v1.27", "v1.26"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v1.4.3"
+  },
+  {
+    "value": "v1.11.1",
+    "label": "v1.11.1",
+    "support": ["v1.30", "v1.29", "v1.28", "v1.27", "v1.26"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v1.4.1"
+  },
+  {
+    "value": "v1.11.0",
+    "label": "v1.11.0",
+    "support": ["v1.30", "v1.29", "v1.28", "v1.27", "v1.26"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v1.4.1"
+  },
+  {
+    "value": "v1.10.5",
+    "label": "v1.10.5",
+    "support": ["v1.30", "v1.29", "v1.28", "v1.27", "v1.26"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v1.4.4"
+  },
+  {
+    "value": "v1.10.4",
+    "label": "v1.10.4",
+    "support": ["v1.30", "v1.29", "v1.28", "v1.27", "v1.26"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v1.4.3"
+  },
+  {
+    "value": "v1.10.3",
+    "label": "v1.10.3",
+    "support": ["v1.30", "v1.29", "v1.28", "v1.27", "v1.26"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v1.4.3"
+  },
+  {
+    "value": "v1.10.2",
+    "label": "v1.10.2",
+    "support": ["v1.30", "v1.29", "v1.28", "v1.27", "v1.26"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v1.4.1"
+  },
+  {
+    "value": "v1.10.1",
+    "label": "v1.10.1",
+    "support": ["v1.30", "v1.29", "v1.28", "v1.27", "v1.26"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v1.4.1"
+  },
+  {
+    "value": "v1.10.0",
+    "label": "v1.10.0",
+    "support": ["v1.29", "v1.28", "v1.27", "v1.26"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v1.4.0"
+  },
+  {
+    "value": "v1.9.6",
+    "label": "v1.9.6",
+    "support": ["v1.29", "v1.28", "v1.27", "v1.26", "v1.25"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v20231226-1a7112e06"
+  },
+  {
+    "value": "v1.9.5",
+    "label": "v1.9.5",
+    "support": ["v1.28", "v1.27", "v1.26", "v1.25"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v20231011-8b53cabe0"
+  },
+  {
+    "value": "v1.9.4",
+    "label": "v1.9.4",
+    "support": ["v1.28", "v1.27", "v1.26", "v1.25"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v20231011-8b53cabe0"
+  },
+  {
+    "value": "v1.9.3",
+    "label": "v1.9.3",
+    "support": ["v1.28", "v1.27", "v1.26", "v1.25"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v20230407"
+  },
+  {
+    "value": "v1.9.1",
+    "label": "v1.9.1",
+    "support": ["v1.28", "v1.27", "v1.26", "v1.25"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v20230407"
+  },
+  {
+    "value": "v1.9.0",
+    "label": "v1.9.0",
+    "support": ["v1.28", "v1.27", "v1.26", "v1.25"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v20230407"
+  },
+  {
+    "value": "v1.8.4",
+    "label": "v1.8.4",
+    "support": ["v1.27", "v1.26", "v1.25", "v1.24"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v20231011-8b53cabe0"
+  },
+  {
+    "value": "v1.7.1",
+    "label": "v1.7.1",
+    "support": ["v1.27", "v1.26", "v1.25", "v1.24"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v20230312-helm-chart-4.5.2-28-g66a760794"
+  },
+  {
+    "value": "v1.6.4",
+    "label": "v1.6.4",
+    "support": ["v1.26", "v1.25", "v1.24", "v1.23"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v20220916-gd32f8c343"
+  },
+  {
+    "value": "v1.5.1",
+    "label": "v1.5.1",
+    "support": ["v1.25", "v1.24", "v1.23"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v20220916-gd32f8c343"
+  },
+  {
+    "value": "v1.4.0",
+    "label": "v1.4.0",
+    "support": ["v1.25", "v1.24", "v1.23", "v1.22"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v20220916-gd32f8c343"
+  },
+  {
+    "value": "v1.3.1",
+    "label": "v1.3.1",
+    "support": ["v1.24", "v1.23", "v1.22", "v1.21", "v1.20"],
+    "registry.k8s.io/ingress-nginx/kube-webhook-certgen": "v1.3.0"
+  }
+]

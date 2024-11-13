@@ -1,0 +1,10 @@
+[
+  {
+    "value": "docker.io/calico/cni",
+    "label": "docker.io/calico/cni"
+  },
+  {
+    "value": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-cni",
+    "label": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-cni"
+  }
+]

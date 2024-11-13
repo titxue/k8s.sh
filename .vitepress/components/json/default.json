@@ -1,0 +1,18 @@
+{
+  "projectUrl": "https://gitee.com/xuxiaowei-com-cn/k8s.sh",
+  "branch": "SNAPSHOT/1.0.0",
+  "kubernetesVersion": "v1.30.6",
+  "taint": true,
+  "nodeName": "control-plane-1",
+  "calicoVersion": "v3.29.0",
+  "calicoNodeMirror": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-node",
+  "calicoCniMirror": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-cni",
+  "calicoKubeControllersMirror": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-kube-controllers",
+  "ingressNginxVersion": "v1.11.3",
+  "ingressNginxKubeWebhookCertgenMirror": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen",
+  "ingressNginxControllerMirror": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-controller",
+  "ingressNginxHostNetwork": true,
+  "dockerRepoType": "aliyun",
+  "dockerInstallSkip": true,
+  "metricsServerVersion": "v0.7.1"
+}

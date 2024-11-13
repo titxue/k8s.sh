@@ -1,0 +1,10 @@
+[
+  {
+    "value": "registry.k8s.io/ingress-nginx/kube-webhook-certgen",
+    "label": "registry.k8s.io/ingress-nginx/kube-webhook-certgen"
+  },
+  {
+    "value": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen",
+    "label": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen"
+  }
+]

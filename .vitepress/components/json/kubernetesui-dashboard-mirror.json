@@ -1,0 +1,10 @@
+[
+  {
+    "value": "docker.io/kubernetesui/dashboard",
+    "label": "docker.io/kubernetesui/dashboard"
+  },
+  {
+    "value": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard",
+    "label": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard"
+  }
+]

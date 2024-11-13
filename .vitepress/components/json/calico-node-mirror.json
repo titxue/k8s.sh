@@ -1,0 +1,10 @@
+[
+  {
+    "value": "docker.io/calico/node",
+    "label": "docker.io/calico/node"
+  },
+  {
+    "value": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-node",
+    "label": "registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-node"
+  }
+]
