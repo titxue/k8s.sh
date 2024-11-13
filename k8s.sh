@@ -677,7 +677,9 @@ _calico_install() {
 
   kubectl apply -f calico.yaml
   kubectl get pod -A -o wide
-  kubectl wait --for=condition=Ready --all pods -A --timeout=300s || true
+  if [[ $cluster != true ]]; then
+    kubectl wait --for=condition=Ready --all pods -A --timeout=300s || true
+  fi
 }
 
 _ingress_nginx_install() {
@@ -722,6 +724,10 @@ while [[ $# -gt 0 ]]; do
 
   standalone | -standalone | --standalone)
     standalone=true
+    ;;
+
+  cluster | -cluster | --cluster)
+    cluster=true
     ;;
 
   node | -node | --node)
@@ -957,8 +963,9 @@ _node() {
   _kubernetes_config
 }
 
-# 单机模式
 if [[ $standalone == true ]]; then
+  # 单机模式
+
   if ! [[ $kubernetes_init_node_name ]]; then
     kubernetes_init_node_name=k8s-1
   fi
@@ -970,6 +977,20 @@ if [[ $standalone == true ]]; then
   _ingress_nginx_host_network
   _enable_shell_autocompletion
 elif [[ $node == true ]]; then
+  # 集群模式
+
+  if ! [[ $kubernetes_init_node_name ]]; then
+    kubernetes_init_node_name=k8s-1
+  fi
+  _node
+  _kubernetes_init
+  _calico_install
+  _ingress_nginx_install
+  _ingress_nginx_host_network
+  _enable_shell_autocompletion
+elif [[ $node == true ]]; then
+  # 工作节点准备
+
   _node
 else
 

@@ -30,12 +30,36 @@
 ### standalone {id=standalone}
 
 - 类型：`Boolean`
-- 说明：单机模式，开箱即用，无需任何配置
-- 相关：此参数会创建一个已删除污点的 k8s 单机模式，并且安装 `calico`、`Ingress Nginx` 等，
-  `Ingress Nginx` 使用宿主机网络（`80`/`443`）
+- 说明：`单机模式`，开箱即用，无需任何配置
+- 相关：此参数会创建一个 <strong><font color="red">已删除污点</font></strong> 的 k8s 单机模式，
+  并且安装 `calico`、`Ingress Nginx` 等， `Ingress Nginx` 使用宿主机网络（`80`/`443`）
 - 参数组合：
     1. 可与其他参数组合使用，如：自定义 `Kubernetes` 版本 `kubernetes-version=v1.30.3`
-    2. 存在默认行为（无法取消）：
+    2. 如果未指定 `kubernetes-init-node-name` `初始化节点名称`，将使用默认值 `k8s-1`
+    3. 存在默认行为（无法取消）：
+        - 删除污点
+        - `控制节点`（`控制平面`） 初始化
+        - `calico` 网络插件安装配置
+        - `Ingress Nginx` 安装配置
+        - 等等
+
+### cluster {id=cluster}
+
+::: warning 警告
+
+- 在 `集群模式` 中，`工作节点` 加入集群之前，集群不可使用
+
+:::
+
+- 类型：`Boolean`
+- 说明：`集群模式`
+- 相关：此参数会创建一个 <strong><font color="red">未删除污点</font></strong> 的 k8s 单机模式，
+  并且安装 `calico`、`Ingress Nginx` 等， `Ingress Nginx` 使用宿主机网络（`80`/`443`）
+- 类似参数：`standalone` `单机模式`，唯一不同的是 <strong><font color="red">未删除污点</font></strong>
+- 参数组合：
+    1. 可与其他参数组合使用，如：自定义 `Kubernetes` 版本 `kubernetes-version=v1.30.3`
+    2. 如果未指定 `kubernetes-init-node-name` `初始化节点名称`，将使用默认值 `k8s-1`
+    3. 存在默认行为（无法取消）：
         - `控制节点`（`控制平面`） 初始化
         - `calico` 网络插件安装配置
         - `Ingress Nginx` 安装配置
@@ -50,7 +74,7 @@
   用于在 `工作节点` 中安装和配置 `Kubernetes` 相关内容，然后此节点即可加入集群
 - 参数组合：
     1. 可与其他参数组合使用，如：自定义 `Kubernetes` 版本 `kubernetes-version=v1.30.3`
-    2. 不可组合的参数（无效组合：与 `控制节点`（`控制平面`）有关的配置组合时无效）：
+    2. <strong><font color="red">不可组合的参数</font></strong>（无效组合：与 `控制节点`（`控制平面`）有关的配置组合时无效）：
         - `控制节点`（`控制平面`） 初始化
         - `calico` 网络插件安装配置
         - `Ingress Nginx` 安装配置
