@@ -33,6 +33,8 @@ pages:
           - public
           - static
           - .npmrc
+          - docker-compose.yml
+          - Dockerfile
           - package.json
 
 docker:build:
