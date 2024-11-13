@@ -144,3 +144,36 @@ anolis-7.9:install:custom-k8s-version:
           - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-7.9
+
+anolis-7.9:shutdown:custom-k8s-version:
+  stage: shutdown
+  needs:
+    - anolis-7.9:install:custom-k8s-version
+  image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
+  variables:
+    QEMU_ID: $ANOLISOS_7_9_QEMU_ID
+    SNAPSHOT: $ANOLISOS_7_9_SNAPSHOT
+  before_script:
+    - echo $PVE_ADDRESS
+    - echo $ANOLISOS_7_9_QEMU_ID
+    - echo $QEMU_ID
+    - echo $ANOLISOS_7_9_SNAPSHOT
+    - echo $SNAPSHOT
+  script:
+    # 获取凭证
+    - |
+      response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/access/ticket" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "username=$PVE_USERNAME" --data-urlencode "password=$PVE_PASSWORD" --data-urlencode 'realm=pam' --data-urlencode 'new-format=1')
+    - echo $response | jq -r '.success'
+    # 解析凭证
+    - token=$(echo $response | jq -r '.data.CSRFPreventionToken')
+    - ticket=$(echo $response | jq -r '.data.ticket')
+    # 关机
+    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/status/shutdown" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+    - echo $response | jq -r '.success'
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/anolis-7.9-custom-k8s-version.yml
+          - k8s.sh
+  tags:
+    - g150s-docker
