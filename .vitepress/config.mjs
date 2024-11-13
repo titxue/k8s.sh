@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Kubernetes 一键安装文档",
+  title: "kubernetes（k8s）一键安装交互式网站",
   description: "一行命令快速安装 Kubernetes，无需关心拉取镜像、配置问题",
   lang: 'zh-CN',
   base: '/',
