@@ -124,8 +124,8 @@ openkylin-1.0:install:
   tags:
     - GitLab-CICD-OpenKylin-1.0
 
-openkylin-1.0:shutdown:
-  stage: shutdown
+openkylin-1.0:stop:
+  stage: stop
   needs:
     - openkylin-1.0:install
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
@@ -147,7 +147,7 @@ openkylin-1.0:shutdown:
     - token=$(echo $response | jq -r '.data.CSRFPreventionToken')
     - ticket=$(echo $response | jq -r '.data.ticket')
     # 关机
-    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/status/shutdown" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/status/stop" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
     - echo $response | jq -r '.success'
   rules:
     - changes:

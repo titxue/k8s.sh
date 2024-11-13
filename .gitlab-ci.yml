@@ -2,6 +2,7 @@ stages:
   - env
   - install
   - shutdown
+  - stop
   - pages
   - sync
 
