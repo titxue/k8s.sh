@@ -1,0 +1,43 @@
+# 独立运行：https://framagit.org 专用
+
+stages:
+  - pages
+
+pages:
+  stage: pages
+  image: node:20.12.0
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - node_modules/
+  script:
+    - sed -i "s#base:\\ '/',#base:\\ '/k8s.sh',#g" .vitepress/config.mjs
+    - npm run pre:npm
+    - if [ $CI_SERVER_HOST == 'framagit.org' ]; then
+      cat .vitepress/config.mts;
+      sed -i 's#在 Gitee 上编辑此页面#在 FramaGit 上编辑#g' .vitepress/config.mts;
+      sed -i 's#https://gitee.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.0/#https://framagit.org/xuxiaowei-com-cn/k8s.sh/-/edit/SNAPSHOT/2.0.0/#g' .vitepress/config.mts;
+      cat .vitepress/config.mts;
+      fi
+    - npm run docs:build
+    # https://docs.gitlab.com/ee/user/project/pages/introduction.html#serving-compressed-assets
+    - find .vitepress/dist -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\)$' -exec gzip -f -k {} \;
+    #- find .vitepress/dist -type f -regex '.*\.\(htm\|html\|txt\|text\|js\|css\)$' -exec brotli -f -k {} \;
+    - cp -r .vitepress/dist/* public/
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - public/
+  rules:
+    - if: $ENABLE_DOCS == "true"
+      changes:
+        paths:
+          - .gitlab/ci/pages.yml
+          - .vitepress/**/*
+          - "**.md"
+          - public
+          - static
+          - .npmrc
+          - docker-compose.yml
+          - Dockerfile
+          - package.json
