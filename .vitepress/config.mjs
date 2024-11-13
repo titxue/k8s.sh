@@ -42,7 +42,6 @@ export default defineConfig({
     'deploy',
     'etc/**',
     'mirrors/**',
-    'README.md',
     "*.sh"
   ],
   themeConfig: {
@@ -118,6 +117,7 @@ export default defineConfig({
         text: '开始',
         collapsed: false,
         items: [
+          { text: '简介', link: '/README' },
           { text: '快速开始', link: '/getting-started' },
           { text: '参数配置', link: '/config' }
         ]
