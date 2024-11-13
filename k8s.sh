@@ -607,6 +607,10 @@ _kubernetes_taint() {
   kubectl get pod -A -o wide
 }
 
+_print_join_command() {
+  kubeadm token create --print-join-command
+}
+
 _bash_completion() {
   if [[ $package_type == 'yum' ]]; then
     sudo yum -y install bash-completion
@@ -824,6 +828,10 @@ while [[ $# -gt 0 ]]; do
     kubernetes_init_node_name="${1#*=}"
     ;;
 
+  print-join-command | -print-join-command | --print-join-command)
+    print_join_command=true
+    ;;
+
   kubernetes-taint | -kubernetes-taint | --kubernetes-taint)
     kubernetes_taint=true
     ;;
@@ -976,6 +984,7 @@ if [[ $standalone == true ]]; then
   _ingress_nginx_install
   _ingress_nginx_host_network
   _enable_shell_autocompletion
+  _print_join_command
 elif [[ $node == true ]]; then
   # 集群模式
 
@@ -988,6 +997,7 @@ elif [[ $node == true ]]; then
   _ingress_nginx_install
   _ingress_nginx_host_network
   _enable_shell_autocompletion
+  _print_join_command
 elif [[ $node == true ]]; then
   # 工作节点准备
 
@@ -1072,5 +1082,9 @@ else
 
   if [[ $ingress_nginx_host_network == true ]]; then
     _ingress_nginx_host_network
+  fi
+
+  if [[ $print_join_command == true ]]; then
+    _print_join_command
   fi
 fi
