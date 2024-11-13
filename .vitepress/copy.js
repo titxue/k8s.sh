@@ -13,7 +13,15 @@ const data = [
     {
         "source": "mirrors",
         "target": "mirrors"
-    }
+    },
+    {
+        "source": "check.sh",
+        "target": "check.sh"
+    },
+    {
+        "source": "k8s.sh",
+        "target": "k8s.sh"
+    },
 ]
 
 data.forEach(item => {
