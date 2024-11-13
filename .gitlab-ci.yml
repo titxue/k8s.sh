@@ -4,9 +4,12 @@ stages:
   - shutdown
   - stop
   - pages
+  - docker:build
+  - docker:deploy
   - sync
 
 variables:
+  DOCKER_TAG: 2.0.0
   NEEDRESTART: n
   ANOLIS_URL: http://172.25.25.14:48081/repository/anolis
   CENTOS_URL: http://172.25.25.14:48081/repository/centos

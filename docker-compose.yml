@@ -1,0 +1,9 @@
+services:
+  k8s-sh-docs:
+    image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/k8s-sh-docs:${DOCKER_TAG}-${CI_PIPELINE_ID}
+    restart: always
+    ports:
+      - ${K8S_SH_DOCS_PORT:-46110}:80
+    volumes:
+      - /k8s-sh-docs/logs:/var/log/nginx
+    container_name: k8s-sh-docs
