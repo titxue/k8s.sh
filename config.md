@@ -318,6 +318,17 @@
 - 用途：用于`控制节点`（`控制平面`）初始化时自定义当前节点的名称
 - 相关：如果未定义，将使用宿主机的名称作为节点名称。整个集群唯一。
 
+### service-cidr {id=service-cidr}
+
+- 类型：`String`
+- 默认值：`10.96.0.0/12`
+- 说明：自定义 `Kubernetes` `Service` `CIDR`
+
+### pod-network-cidr {id=pod-network-cidr}
+
+- 类型：`String`
+- 说明：自定义 `Kubernetes` `Pod` `CIDR`
+
 ### print-join-command {id=print-join-command}
 
 ::: warning 警告

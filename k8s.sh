@@ -579,13 +579,22 @@ _kubernetes_config() {
 _kubernetes_init() {
   if [[ $kubernetes_init_node_name ]]; then
     kubernetes_init_node_name="--node-name=$kubernetes_init_node_name"
-  else
-    kubernetes_init_node_name=
   fi
-  kubeadm init --image-repository="$kubernetes_images" $kubernetes_init_node_name --kubernetes-version="$kubernetes_version"
+
+  if [[ $service_cidr ]]; then
+    service_cidr="--service-cidr=$service_cidr"
+  fi
+
+  if [[ $pod_network_cidr ]]; then
+    pod_network_cidr="--pod-network-cidr=$pod_network_cidr"
+  fi
+
+  kubeadm init --image-repository="$kubernetes_images" $kubernetes_init_node_name $service_cidr $pod_network_cidr --kubernetes-version="$kubernetes_version"
   echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >>/etc/profile
+
   # 此处兼容 AnolisOS 23.1，防止退出
   source /etc/profile || true
+
   kubectl get node -o wide
   kubectl get svc -o wide
   kubectl get pod -A -o wide
@@ -826,6 +835,17 @@ while [[ $# -gt 0 ]]; do
 
   kubernetes-init-node-name=* | -kubernetes-init-node-name=* | --kubernetes-init-node-name=*)
     kubernetes_init_node_name="${1#*=}"
+    ;;
+
+  service-cidr=* | -service-cidr=* | --service-cidr=*)
+    # --service-cidr string     默认值："10.96.0.0/12"
+    # https://kubernetes.io/zh-cn/docs/reference/setup-tools/kubeadm/kubeadm-init/
+    # https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/reference/setup-tools/kubeadm/kubeadm-init/
+    service_cidr="${1#*=}"
+    ;;
+
+  pod-network-cidr=* | -pod-network-cidr=* | --pod-network-cidr=*)
+    pod_network_cidr="${1#*=}"
     ;;
 
   print-join-command | -print-join-command | --print-join-command)
