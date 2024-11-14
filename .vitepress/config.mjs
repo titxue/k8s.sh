@@ -145,6 +145,7 @@ export default defineConfig({
         items: [
           { text: '历史分支', link: '/history' },
           { text: '为什么不使用 Docker？', link: '/question/why-not-use-docker' },
+          { text: 'Kubernetes 重置', link: '/question/kubeadm-reset' },
         ]
       }
     ],
