@@ -11,6 +11,12 @@
     1. ✅：支持，已完成自动化测试
     2. 空：未增加自动化测试，理论上支持
     3. ❌：不支持
+- 如果使用异常，请提交议题，请附上 `原始的完整日志`（有敏感信息可隐藏）
+    1. [Gitee](https://gitee.com/xuxiaowei-com-cn/k8s.sh/issues)
+    2. [GitHub](https://github.com/xuxiaowei-com-cn/k8s.sh/issues)
+- 如果要支持其他操作系统，请提交议题，建议提供 `系统下载的原始地址`，节省查找时间
+    1. [Gitee](https://gitee.com/xuxiaowei-com-cn/k8s.sh/issues)
+    2. [GitHub](https://github.com/xuxiaowei-com-cn/k8s.sh/issues)
 - 按照名称排序、按照版本倒叙
 
 | Linux/Kubernetes        | 1.31 | 1.30 | 1.29 | 1.28 | 1.27 | 1.26 | 1.25 | 1.24 |
