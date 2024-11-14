@@ -911,6 +911,10 @@ while [[ $# -gt 0 ]]; do
     docker_install=true
     ;;
 
+  interface-name=* | -interface-name=* | --interface-name=*)
+    interface_name="${1#*=}"
+    ;;
+
   calico-install | -calico-install | --calico-install)
     calico_install=true
     ;;

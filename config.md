@@ -342,6 +342,18 @@
 - 说明：在 `控制节点`（`控制平面`）打印 `工作节点` 加入集群的命令
 - 用途：工作节点环境准备完成后，在 `控制节点`（`控制平面`）打印 `工作节点` 加入集群的命令，复制到工作节点运行即可
 
+### interface-name {id=interface-name}
+
+- 类型：`String`
+- 说明：自定义网卡名称
+- 默认值：无，会联网访问 `阿里云 DNS` `223.5.5.5` 自动检测上网网卡
+- 用途：在 `calico` 安装配置时使用
+
+### calico-install {id=calico-install}
+
+- 类型：`Boolean`
+- 说明：是否安装 `calico`
+
 ### calico-url {id=calico-url}
 
 - 类型：`String`
