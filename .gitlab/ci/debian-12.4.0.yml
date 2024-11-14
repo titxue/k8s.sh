@@ -91,7 +91,7 @@ debian-12.4.0:install:
     - ./k8s.sh standalone
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
-    - kubectl get svc -o wide
+    - kubectl get svc -A -o wide
     - kubectl get pod -A -o wide
     - |
       while true; do
@@ -119,7 +119,7 @@ debian-12.4.0:install:
       done
     - sleep 30
     - kubectl get node -o wide
-    - kubectl get svc -o wide
+    - kubectl get svc -A -o wide
     - kubectl get pod -A -o wide
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
