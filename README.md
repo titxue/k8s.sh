@@ -55,6 +55,17 @@
 | Ubuntu 22.04 jammy      | ✅    |      |      |      |      |      |      |      |
 | Ubuntu 24.04 noble      | ✅    |      |      |      |      |      |      | ✅    |
 
+| kubernetes 版本 | 流水线环境                                                                                                                |
+|---------------|----------------------------------------------------------------------------------------------------------------------|
+| 1.31          | [kubernetes/v1.31](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/43?tab=deployment-history) |
+| 1.30          | [kubernetes/v1.30](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/36?tab=deployment-history) |
+| 1.29          | [kubernetes/v1.29](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/37?tab=deployment-history) |
+| 1.28          | [kubernetes/v1.28](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/38?tab=deployment-history) |
+| 1.27          | [kubernetes/v1.27](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/39?tab=deployment-history) |
+| 1.26          | [kubernetes/v1.26](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/40?tab=deployment-history) |
+| 1.25          | [kubernetes/v1.25](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/41?tab=deployment-history) |
+| 1.24          | [kubernetes/v1.24](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/42?tab=deployment-history) |
+
 ## 原则
 
 1. 最小化修改系统配置
