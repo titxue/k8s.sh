@@ -133,6 +133,7 @@ anolis-7.9:install:
           - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-7.9
+  environment: kubernetes/v1.31
 
 anolis-7.9:shutdown:
   stage: shutdown

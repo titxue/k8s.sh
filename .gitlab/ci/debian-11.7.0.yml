@@ -131,6 +131,7 @@ debian-11.7.0:install:
           - k8s.sh
   tags:
     - GitLab-CICD-Debian-11.7.0
+  environment: kubernetes/v1.31
 
 debian-11.7.0:shutdown:
   stage: shutdown

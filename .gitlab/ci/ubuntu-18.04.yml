@@ -127,6 +127,7 @@ ubuntu-18.04:install:
           - k8s.sh
   tags:
     - GitLab-CICD-Ubuntu-18-04
+  environment: kubernetes/v1.31
 
 ubuntu-18.04:shutdown:
   stage: shutdown

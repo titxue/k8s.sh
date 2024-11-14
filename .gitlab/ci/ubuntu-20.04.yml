@@ -126,6 +126,7 @@ ubuntu-20.04:install:
           - k8s.sh
   tags:
     - GitLab-CICD-Ubuntu-20-04
+  environment: kubernetes/v1.31
 
 ubuntu-20.04:shutdown:
   stage: shutdown

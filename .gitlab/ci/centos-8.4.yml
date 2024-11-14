@@ -146,6 +146,7 @@ centos-8.4:install:
           - k8s.sh
   tags:
     - GitLab-CICD-CentOS-8.4
+  environment: kubernetes/v1.31
 
 centos-8.4:shutdown:
   stage: shutdown

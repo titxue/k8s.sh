@@ -137,6 +137,7 @@ almalinux-9.4:install:
           - k8s.sh
   tags:
     - GitLab-CICD-AlmaLinux-9.4
+  environment: kubernetes/v1.31
 
 almalinux-9.4:shutdown:
   stage: shutdown

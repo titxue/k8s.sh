@@ -136,6 +136,7 @@ anolis-8.6:install:
           - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-8.6
+  environment: kubernetes/v1.31
 
 anolis-8.6:shutdown:
   stage: shutdown

@@ -132,6 +132,7 @@ centos-9-20241028.0:install:
           - k8s.sh
   tags:
     - GitLab-CICD-CentOS-9-20241028.0
+  environment: kubernetes/v1.31
 
 centos-9-20241028.0:shutdown:
   stage: shutdown

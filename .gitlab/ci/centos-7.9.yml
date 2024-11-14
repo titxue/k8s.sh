@@ -132,6 +132,7 @@ centos-7.9:install:
           - k8s.sh
   tags:
     - GitLab-CICD-CentOS-7.9
+  environment: kubernetes/v1.31
 
 centos-7.9:shutdown:
   stage: shutdown

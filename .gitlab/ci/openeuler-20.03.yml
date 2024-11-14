@@ -123,6 +123,7 @@ openeuler-20.03:install:
           - k8s.sh
   tags:
     - GitLab-CICD-OpenEuler-20.03
+  environment: kubernetes/v1.31
 
 openeuler-20.03:shutdown:
   stage: shutdown

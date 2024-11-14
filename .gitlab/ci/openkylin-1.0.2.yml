@@ -123,6 +123,7 @@ openkylin-1.0.2:install:
           - k8s.sh
   tags:
     - GitLab-CICD-OpenKylin-1.0.2
+  environment: kubernetes/v1.31
 
 openkylin-1.0.2:stop:
   stage: stop
