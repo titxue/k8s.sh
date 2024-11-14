@@ -17,6 +17,8 @@ hero:
 features:
   - title: Kubernetes
     details: 支持从 1.24 到 1.31 的所有版本，使用国内镜像加速安装配置
+  - title: 操作系统
+    details: 支持主流操作系统，支持国产操作系统（龙蜥 AnolisOS、欧拉 OpenEuler、麒麟 OpenKylin 等），现已支持超过 33 中不同系统版本，提供超过 57 个流水线自动化测试
   - title: Containerd
     details: 使用 Containerd 作为容器运行时，使用国内镜像加速安装配置
   - title: Calico
