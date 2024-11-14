@@ -111,8 +111,8 @@ kylin | openkylin)
 *) ;;
 esac
 
-calico_manifests_mirrors=("https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico" "https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/raw" "https://raw.githubusercontent.com/projectcalico/calico/refs/tags")
-calico_manifests_mirror=${calico_manifests_mirrors[0]}
+calico_mirrors=("https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico" "https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/raw" "https://raw.githubusercontent.com/projectcalico/calico/refs/tags")
+calico_mirror=${calico_mirrors[0]}
 calico_version=v3.29.0
 calico_node_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-node" "docker.io/calico/node")
 calico_node_image=${calico_node_images[0]}
@@ -124,10 +124,10 @@ calico_kube_controllers_image=${calico_kube_controllers_images[0]}
 ingress_nginx_manifests_mirrors=("https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw" "https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/tags")
 ingress_nginx_manifests_mirror=${ingress_nginx_manifests_mirrors[0]}
 ingress_nginx_version=v1.11.3
-ingress_nginx_controller_mirrors=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-controller" "registry.k8s.io/ingress-nginx/controller")
-ingress_nginx_controller_mirror=${ingress_nginx_controller_mirrors[0]}
-ingress_nginx_kube_webhook_certgen_mirrors=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen" "registry.k8s.io/ingress-nginx/kube-webhook-certgen")
-ingress_nginx_kube_webhook_certgen_mirror=${ingress_nginx_kube_webhook_certgen_mirrors[0]}
+ingress_nginx_controller_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-controller" "registry.k8s.io/ingress-nginx/controller")
+ingress_nginx_controller_image=${ingress_nginx_controller_images[0]}
+ingress_nginx_kube_webhook_certgen_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen" "registry.k8s.io/ingress-nginx/kube-webhook-certgen")
+ingress_nginx_kube_webhook_certgen_image=${ingress_nginx_kube_webhook_certgen_images[0]}
 
 # 包管理类型
 package_type=
@@ -674,7 +674,7 @@ _interface_name() {
 
 _calico_install() {
   if ! [[ $calico_url ]]; then
-    calico_url="$calico_manifests_mirror"/"$calico_version"/manifests/calico.yaml
+    calico_url="$calico_mirror"/"$calico_version"/manifests/calico.yaml
   fi
   echo "calico manifests url: $calico_url"
   curl -k -o calico.yaml $calico_url
@@ -703,8 +703,8 @@ _ingress_nginx_install() {
   curl -k -o deploy.yaml $ingress_nginx_url
 
   sudo sed -i 's/@.*$//' deploy.yaml
-  sudo sed -i "s#${ingress_nginx_controller_mirrors[-1]}#$ingress_nginx_controller_mirror#g" deploy.yaml
-  sudo sed -i "s#${ingress_nginx_kube_webhook_certgen_mirrors[-1]}#$ingress_nginx_kube_webhook_certgen_mirror#g" deploy.yaml
+  sudo sed -i "s#${ingress_nginx_controller_images[-1]}#$ingress_nginx_controller_image#g" deploy.yaml
+  sudo sed -i "s#${ingress_nginx_kube_webhook_certgen_images[-1]}#$ingress_nginx_kube_webhook_certgen_image#g" deploy.yaml
 
   kubectl apply -f deploy.yaml
   kubectl get pod -A -o wide
@@ -923,8 +923,8 @@ while [[ $# -gt 0 ]]; do
     calico_url="${1#*=}"
     ;;
 
-  calico-manifests-mirror=* | -calico-manifests-mirror=* | --calico-manifests-mirror=*)
-    calico_manifests_mirror="${1#*=}"
+  calico-mirror=* | -calico-mirror=* | --calico-mirror=*)
+    calico_mirror="${1#*=}"
     ;;
 
   calico-version=* | -calico-version=* | --calico-version=*)
@@ -964,11 +964,11 @@ while [[ $# -gt 0 ]]; do
     ;;
 
   ingress-nginx-controller-image=* | -ingress-nginx-controller-image=* | --ingress-nginx-controller-image=*)
-    ingress_nginx_controller_mirror="${1#*=}"
+    ingress_nginx_controller_image="${1#*=}"
     ;;
 
   ingress-nginx-kube-webhook-certgen-image=* | -ingress-nginx-kube-webhook-certgen-image=* | --ingress-nginx-kube-webhook-certgen-image=*)
-    ingress_nginx_kube_webhook_certgen_mirror="${1#*=}"
+    ingress_nginx_kube_webhook_certgen_image="${1#*=}"
     ;;
 
   *)

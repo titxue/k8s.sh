@@ -359,13 +359,13 @@
 - 类型：`String`
 - 说明：`calico` 安装（初始化）时，使用的 `manifests` 文件 `URL`
 - 默认值：空
-- 相关：优先级高于 `calico-manifests-mirror`、`calico-version`
+- 相关：优先级高于 `calico-mirror`、`calico-version`
 
-### calico-manifests-mirror {id=calico-manifests-mirror}
+### calico-mirror {id=calico-mirror}
 
 - 类型：`String`
 - 说明：`calico` 安装（初始化）时，拼接生成 `calico-url`，
-  拼接规则：`calico_url=$calico_manifests_mirror/$calico_version/manifests/calico.yaml`
+  拼接规则：`calico_url=$calico_mirror/$calico_version/manifests/calico.yaml`
 - 默认值：https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico
 - 可选择：
     1. https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico
@@ -404,7 +404,7 @@
 
 - 类型：`String`
 - 说明：`calico` 安装（初始化）时，拼接生成 `calico-url`，
-  拼接规则：`calico_url=$calico_manifests_mirror/$calico_version/manifests/calico.yaml`
+  拼接规则：`calico_url=$calico_mirror/$calico_version/manifests/calico.yaml`
 - 默认值：`v3.29.0`
 - 可选择：
     - 查看 https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/tags 中的标签
