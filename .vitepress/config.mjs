@@ -133,6 +133,13 @@ export default defineConfig({
         ]
       },
       {
+        text: '功能',
+        collapsed: false,
+        items: [
+          { text: '镜像', link: '/mirrors' },
+        ]
+      },
+      {
         text: '问题',
         collapsed: false,
         items: [

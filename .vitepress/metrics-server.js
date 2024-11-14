@@ -69,6 +69,19 @@ async function tags() {
       }
     }
   }
+
+  // 倒叙打印
+  for (const item of data) {
+    const name = item.name
+
+    if (name.includes('-')) {
+      continue
+    }
+
+    if (semver.gte(name, 'v0.4.0')) {
+      console.log(name)
+    }
+  }
 }
 
 tags()
