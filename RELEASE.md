@@ -45,6 +45,7 @@
 7. 更新 [history.md](history.md) 等
 8. 更新 [index.md](index.md) 中的 【Kubernetes】【版本范围】 等
 9. 更新 [k8s.sh](k8s.sh) 中的 【默认值】等
-10. 更新 [package.json](package.json) 中的 【version】 等
-11. 更新 [pages.yml](.gitlab/ci/pages.yml) 中的 【sed】 等
-12. 更新 [README.md](README.md) 中的 【国内镜像支持的范围】 中的 链接 等
+10. 更新 [mirrors.md](mirrors.md) 中的 【下拉列表】等
+11. 更新 [package.json](package.json) 中的 【version】 等
+12. 更新 [pages.yml](.gitlab/ci/pages.yml) 中的 【sed】 等
+13. 更新 [README.md](README.md) 中的 【国内镜像支持的范围】 中的 链接 等
