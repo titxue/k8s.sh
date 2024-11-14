@@ -6,6 +6,7 @@
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build && node .vitepress/copy.js",
     "docs:preview": "vitepress preview",
+    "download:calico": "node .vitepress/calico.js",
     "download:metrics-server": "node .vitepress/metrics-server.js"
   },
   "author": "徐晓伟 <xuxiaowei@xuxiaowei.com.cn>",
