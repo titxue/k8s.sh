@@ -83,7 +83,7 @@
   <div id="node-code"></div>
 </div>
 
-## 参数说明
+## 参数说明 {id=parameter-description}
 
 - 提供强大的自定参数配置，请阅读：[参数配置](config.md)
 
