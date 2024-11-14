@@ -13,9 +13,11 @@ const proxyUrl = process.env.HTTP_PROXY || process.env.HTTPS_PROXY
 
 const folderName = path.resolve(__dirname, '../mirrors/kubernetes-sigs/metrics-server')
 
-async function tags() {
-  const tagUrl = 'https://api.github.com/repos/kubernetes-sigs/metrics-server/tags'
+async function tags(page, per_page) {
+  const tagUrl = `https://api.github.com/repos/kubernetes-sigs/metrics-server/tags?page=${page}&per_page=${per_page}`
   const downloadUrl = 'https://github.com/kubernetes-sigs/metrics-server/releases/download'
+  const minimumVersion = 'v0.4.0'
+
   const fileNameList = ['components.yaml', 'high-availability.yaml', 'high-availability-1.21+.yaml']
 
   const headers = {}
@@ -35,11 +37,12 @@ async function tags() {
 
   for (const item of data) {
     const name = item.name
+
     if (name.includes('-')) {
       continue
     }
 
-    if (semver.gte(name, 'v0.4.0')) {
+    if (semver.gte(name, minimumVersion)) {
       for (const fileName of fileNameList) {
 
         if (fileName === 'high-availability.yaml' || fileName === 'high-availability-1.21+.yaml') {
@@ -78,10 +81,21 @@ async function tags() {
       continue
     }
 
-    if (semver.gte(name, 'v0.4.0')) {
+    if (semver.gte(name, minimumVersion)) {
       console.log(name)
     }
   }
+
+  return data.length
 }
 
-tags()
+async function main() {
+  let page = 1
+  let per_page = 100
+  let total = per_page
+  do {
+    total = await tags(page++, per_page)
+  } while (total === per_page)
+}
+
+main()

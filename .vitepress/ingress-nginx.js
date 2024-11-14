@@ -16,6 +16,8 @@ const folderName = path.resolve(__dirname, '../mirrors/kubernetes/ingress-nginx'
 async function tags(page, per_page) {
   const tagUrl = `https://api.github.com/repos/kubernetes/ingress-nginx/tags?page=${page}&per_page=${per_page}`
   const downloadUrl = 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/tags'
+  const minimumVersion = 'v1.3.1'
+
   const fileNameList = [
     // Azure、Oracle Cloud Infrastructure
     'deploy/static/provider/cloud/deploy.yaml',
@@ -58,7 +60,7 @@ async function tags(page, per_page) {
       continue
     }
 
-    if (semver.gte(name.replace('controller-', ''), 'v1.3.1')) {
+    if (semver.gte(name.replace('controller-', ''), minimumVersion)) {
       for (const fileName of fileNameList) {
 
         const url = `${downloadUrl}/${name}/${fileName}`
@@ -91,7 +93,7 @@ async function tags(page, per_page) {
       continue
     }
 
-    if (semver.gte(name, 'v1.3.1')) {
+    if (semver.gte(name, minimumVersion)) {
       console.log(name)
     }
   }
