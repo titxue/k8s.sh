@@ -42,7 +42,8 @@ export default defineConfig({
     'deploy',
     'etc/**',
     'mirrors/**',
-    "*.sh"
+    "*.sh",
+    "RELEASE.md"
   ],
   // https://vitepress.dev/zh/reference/site-config#ignoredeadlinks
   ignoreDeadLinks: [
