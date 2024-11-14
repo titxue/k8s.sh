@@ -111,7 +111,7 @@ kylin | openkylin)
 *) ;;
 esac
 
-calico_manifests_mirrors=("https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/raw" "https://raw.githubusercontent.com/projectcalico/calico/refs/tags")
+calico_manifests_mirrors=("https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico" "https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/raw" "https://raw.githubusercontent.com/projectcalico/calico/refs/tags")
 calico_manifests_mirror=${calico_manifests_mirrors[0]}
 calico_version=v3.29.0
 calico_node_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-node" "docker.io/calico/node")

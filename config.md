@@ -366,10 +366,11 @@
 - 类型：`String`
 - 说明：`calico` 安装（初始化）时，拼接生成 `calico-url`，
   拼接规则：`calico_url=$calico_manifests_mirror/$calico_version/manifests/calico.yaml`
-- 默认值：https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/raw
+- 默认值：https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico
 - 可选择：
-    1. https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/raw
-    2. https://raw.githubusercontent.com/projectcalico/calico/refs/tags
+    1. https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico
+    2. https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/raw
+    3. https://raw.githubusercontent.com/projectcalico/calico/refs/tags
 - 相关：优先级低于 `calico-url`
 
 ### calico-node-image {id=calico-node-image}
