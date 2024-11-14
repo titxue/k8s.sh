@@ -43,7 +43,7 @@ async function tags() {
       for (const fileName of fileNameList) {
 
         const url = `${downloadUrl}/${name}/manifests/${fileName}`
-        const dirPath = path.join(folderName, name)
+        const dirPath = path.join(folderName, name, 'manifests')
         const filePath = path.join(dirPath, fileName)
 
         if (!fs.existsSync(dirPath)) {
