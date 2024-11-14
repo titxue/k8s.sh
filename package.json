@@ -5,7 +5,8 @@
     "pre:npm": "npm install --registry https://registry.npmmirror.com || npm install --registry https://registry.npmjs.org",
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build && node .vitepress/copy.js",
-    "docs:preview": "vitepress preview"
+    "docs:preview": "vitepress preview",
+    "download:metrics-server": "node .vitepress/metrics-server.js"
   },
   "author": "徐晓伟 <xuxiaowei@xuxiaowei.com.cn>",
   "license": "Apache-2.0",
@@ -33,7 +34,10 @@
     "vitepress"
   ],
   "devDependencies": {
+    "axios": "1.7.7",
     "fs-extra": "11.2.0",
+    "semver": "7.6.3",
+    "socks-proxy-agent": "8.0.4",
     "vitepress": "1.5.0"
   },
   "dependencies": {
