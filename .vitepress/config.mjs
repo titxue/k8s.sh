@@ -54,6 +54,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: '首页', link: '/' },
+      { text: '简介', link: '/README' },
       { text: '快速开始', link: '/getting-started' },
       { text: '参数配置', link: '/config' },
       {
