@@ -128,7 +128,7 @@ ubuntu-24.04:install:custom-cidr:
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - cat /etc/kubernetes/manifests/kube-apiserver.yaml
     - |
-      if grep -q "--service-cluster-ip-range=$SERVICE_CIDR" "/etc/kubernetes/manifests/kube-apiserver.yaml"; then
+      if grep -q "service-cluster-ip-range=$SERVICE_CIDR" "/etc/kubernetes/manifests/kube-apiserver.yaml"; then
         echo "使用了自定义 Service CIDR";
       else
         echo "未使用自定义 Service CIDR";
@@ -136,7 +136,7 @@ ubuntu-24.04:install:custom-cidr:
       fi
     - cat /etc/kubernetes/manifests/kube-controller-manager.yaml
     - |
-      if grep -q "--cluster-cidr=$POD_NETWORK_CIDR" "/etc/kubernetes/manifests/kube-controller-manager.yaml"; then
+      if grep -q "cluster-cidr=$POD_NETWORK_CIDR" "/etc/kubernetes/manifests/kube-controller-manager.yaml"; then
         echo "使用了自定义 Pod CIDR";
       else
         echo "未使用自定义 Pod CIDR";
