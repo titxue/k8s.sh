@@ -32,6 +32,9 @@ readonly COLOR_RED='\033[31m'
 readonly COLOR_RESET='\033[0m'
 readonly COLOR_YELLOW='\033[93m'
 
+# 定义表情
+readonly EMOJI_CONGRATS="\U0001F389"
+
 # 查看系统类型、版本、内核
 hostnamectl || true
 
@@ -597,7 +600,12 @@ _kubernetes_init() {
   fi
 
   kubeadm init --image-repository="$kubernetes_images" $kubernetes_init_node_name $service_cidr $pod_network_cidr --kubernetes-version="$kubernetes_version"
-  echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >>/etc/profile
+
+  KUBECONFIG=$(grep -w "KUBECONFIG" /etc/profile | cut -d'=' -f2)
+  if [[ $KUBECONFIG != '/etc/kubernetes/admin.conf' ]]; then
+    sudo sed -i 's/.*KUBECONFIG.*/#&/' /etc/profile
+    echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >>/etc/profile
+  fi
 
   # 此处兼容 AnolisOS 23.1，防止退出
   source /etc/profile || true
@@ -605,6 +613,20 @@ _kubernetes_init() {
   kubectl get node -o wide
   kubectl get svc -o wide
   kubectl get pod -A -o wide
+
+  echo
+  echo
+  echo
+  echo -e "${COLOR_BLUE}${EMOJI_CONGRATS}${EMOJI_CONGRATS}${EMOJI_CONGRATS}${COLOR_RESET}"
+  echo -e "${COLOR_BLUE}Kubernetes 已完成安装${COLOR_RESET}"
+  echo
+  echo -e "${COLOR_BLUE}请选择下列方式之一，重载环境变量后，即可直接控制 Kubernetes${COLOR_RESET}"
+  echo
+  echo -e "${COLOR_BLUE}1. 执行命令刷新环境变量: ${COLOR_GREEN}source /etc/profile${COLOR_RESET}"
+  echo -e "${COLOR_BLUE}2. 重新连接 SSH${COLOR_RESET}"
+  echo
+  echo
+  echo
 }
 
 _kubernetes_taint() {
