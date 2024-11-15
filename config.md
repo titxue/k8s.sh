@@ -37,10 +37,11 @@
     1. 可与其他参数组合使用，如：自定义 `Kubernetes` 版本 `kubernetes-version=v1.30.3`
     2. 如果未指定 `kubernetes-init-node-name` `初始化节点名称`，将使用默认值 `k8s-1`
     3. 存在默认行为（无法取消）：
-        - 删除污点
+        - <strong><font color="red">删除污点</font></strong>
         - `控制节点`（`控制平面`） 初始化
-        - `calico` 网络插件安装配置
-        - `Ingress Nginx` 安装配置
+        - `calico` 网络插件 安装配置
+        - `Ingress Nginx` 负载均衡器 安装配置
+        - `Metrics Server` 安装配置
         - 等等
 
 ### cluster {id=cluster}
@@ -61,8 +62,9 @@
     2. 如果未指定 `kubernetes-init-node-name` `初始化节点名称`，将使用默认值 `k8s-1`
     3. 存在默认行为（无法取消）：
         - `控制节点`（`控制平面`） 初始化
-        - `calico` 网络插件安装配置
-        - `Ingress Nginx` 安装配置
+        - `calico` 网络插件 安装配置
+        - `Ingress Nginx` 负载均衡器 安装配置
+        - `Metrics Server` 安装配置
         - 等等
 
 ### node {id=node}
