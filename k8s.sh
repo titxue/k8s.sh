@@ -1013,7 +1013,7 @@ if [[ $standalone == true ]]; then
   _ingress_nginx_host_network
   _enable_shell_autocompletion
   _print_join_command
-elif [[ $node == true ]]; then
+elif [[ $cluster == true ]]; then
   # 集群模式
 
   if ! [[ $kubernetes_init_node_name ]]; then
