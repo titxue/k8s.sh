@@ -1,5 +1,15 @@
 # 镜像文件
 
+[[toc]]
+
+### kubernetes/dashboard
+
+<el-select v-model="dashboard" size="large" style="width: 240px; margin-top: 20px;">
+    <el-option v-for="item in dashboardOptions" :key="item.value" :label="item.label" :value="item.value" />
+</el-select>
+
+<div id="dashboard-md"></div>
+
 ## kubernetes-sigs/metrics-server
 
 <el-select v-model="metricsServer" size="large" style="width: 240px; margin-top: 20px;">
@@ -25,8 +35,28 @@ import 'element-plus/dist/index.css'
 
 const md = markdownit()
 
+const dashboard = ref('https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes/dashboard')
 const metricsServer = ref('https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes-sigs/metrics-server')
 const calico = ref('https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico')
+
+const dashboardOptions = [
+  {
+    value: 'https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes/dashboard',
+    label: 'k8s-sh.xuxiaowei.com.cn',
+  },
+  {
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.0/mirrors/kubernetes/dashboard',
+    label: 'gitlab.xuxiaowei.com.cn',
+  },
+  {
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.0/mirrors/kubernetes/dashboard',
+    label: 'gitee.com',
+  },
+  {
+    value: 'https://raw.githubusercontent.com/kubernetes/dashboard/refs/tags',
+    label: 'github.com',
+  }
+]
 
 const metricsServerOptions = [
   {
@@ -67,6 +97,14 @@ const calicoOptions = [
 ]
 
 const command = function () {
+
+  const dashboardMdResult = md.render(`
+| 版本     | recommended.yaml                                                                    |
+|--------|-------------------------------------------------------------------------------------|
+| v2.7.0 | [recommended.yaml](${dashboard.value}/v2.7.0/aio/deploy/recommended.yaml) |
+| v2.6.1 | [recommended.yaml](${dashboard.value}/v2.6.1/aio/deploy/recommended.yaml) |
+| v2.6.0 | [recommended.yaml](${dashboard.value}/v2.6.0/aio/deploy/recommended.yaml) |
+  `)
 
   const metricsServerMdResult = md.render(`
 | 版本     | components.yaml                                                  | high-availability-1.21+.yaml                                                               |
@@ -109,6 +147,7 @@ const command = function () {
 | v3.24.0 | [calico.yaml](${calico.value}/v3.24.0/manifests/calico.yaml) |
   `)
 
+  document.getElementById('dashboard-md').innerHTML = dashboardMdResult
   document.getElementById('metrics-server-md').innerHTML = metricsServerMdResult
   document.getElementById('calico-md').innerHTML = calicoMdResult
 }
@@ -117,7 +156,7 @@ onMounted(async () => {
   command()
 })
 
-watch(() => [ metricsServer.value, calico.value ], () => {
+watch(() => [ dashboard.value, metricsServer.value, calico.value ], () => {
   command()
 })
 </script>
