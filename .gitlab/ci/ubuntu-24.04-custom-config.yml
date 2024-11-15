@@ -92,7 +92,7 @@ ubuntu-24.04:install:custom-config:
     - chmod +x k8s.sh
     - echo '开始准备配置文件'
     - echo "service_cidr=$SERVICE_CIDR" >> ./config.cfg
-    - echo "pod-network-cidr=$POD_NETWORK_CIDR" >> ./config.cfg
+    - echo "pod_network_cidr=$POD_NETWORK_CIDR" >> ./config.cfg
     - echo '查看已生成的配置文件'
     - cat ./config.cfg
     - echo '使用配置文件安装 k8s'
