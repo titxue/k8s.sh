@@ -10,6 +10,18 @@
 
 <div id="dashboard-md"></div>
 
+### kubernetes/ingress-nginx
+
+<el-select v-model="ingressNginx" size="large" style="width: 240px; margin-top: 20px;">
+    <el-option v-for="item in ingressNginxOptions" :key="item.value" :label="item.label" :value="item.value" />
+</el-select>
+
+<el-select v-model="ingressNginxFileName" size="large" style="width: 328px; margin-top: 20px;">
+    <el-option v-for="item in ingressNginxFileNameOptions" :key="item.value" :label="item.label" :value="item.value" />
+</el-select>
+
+<div id="ingress-nginx-md"></div>
+
 ## kubernetes-sigs/metrics-server
 
 <el-select v-model="metricsServer" size="large" style="width: 240px; margin-top: 20px;">
@@ -36,6 +48,8 @@ import 'element-plus/dist/index.css'
 const md = markdownit()
 
 const dashboard = ref('https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes/dashboard')
+const ingressNginx = ref('https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes/ingress-nginx')
+const ingressNginxFileName = ref('deploy/static/provider/cloud/deploy.yaml')
 const metricsServer = ref('https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes-sigs/metrics-server')
 const calico = ref('https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico')
 
@@ -56,6 +70,56 @@ const dashboardOptions = [
     value: 'https://raw.githubusercontent.com/kubernetes/dashboard/refs/tags',
     label: 'github.com',
   }
+]
+
+const ingressNginxOptions = [
+  {
+    value: 'https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes/ingress-nginx',
+    label: 'k8s-sh.xuxiaowei.com.cn',
+  },
+  {
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.0/mirrors/kubernetes/ingress-nginx',
+    label: 'gitlab.xuxiaowei.com.cn',
+  },
+  {
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.0/mirrors/kubernetes/ingress-nginx',
+    label: 'gitee.com',
+  },
+  {
+    value: 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/tags',
+    label: 'github.com',
+  }
+]
+
+const ingressNginxFileNameOptions = [
+  {
+    value: 'deploy/static/provider/aws/nlb-with-tls-termination/deploy.yaml',
+    label: 'deploy/static/provider/aws/nlb-with-tls-termination/deploy.yaml',
+  },
+  {
+    value: 'deploy/static/provider/aws/deploy.yaml',
+    label: 'deploy/static/provider/aws/deploy.yaml',
+  },
+  {
+    value: 'deploy/static/provider/baremetal/deploy.yaml',
+    label: 'deploy/static/provider/baremetal/deploy.yaml',
+  },
+  {
+    value: 'deploy/static/provider/cloud/deploy.yaml',
+    label: 'deploy/static/provider/cloud/deploy.yaml',
+  },
+  {
+    value: 'deploy/static/provider/do/deploy.yaml',
+    label: 'deploy/static/provider/do/deploy.yaml',
+  },
+  {
+    value: 'deploy/static/provider/exoscale/deploy.yaml',
+    label: 'deploy/static/provider/exoscale/deploy.yaml',
+  },
+  {
+    value: 'deploy/static/provider/scw/deploy.yaml',
+    label: 'deploy/static/provider/scw/deploy.yaml',
+  },
 ]
 
 const metricsServerOptions = [
@@ -106,6 +170,43 @@ const command = function () {
 | v2.6.0 | [recommended.yaml](${dashboard.value}/v2.6.0/aio/deploy/recommended.yaml) |
   `)
 
+  const ingressNginxMdResult = md.render(`
+| 版本                 | ${ingressNginxFileName.value}                                                                           |
+|--------------------|---------------------------------------------------------------------------------------------------------|
+| controller-v1.11.3 | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.11.3/${ingressNginxFileName.value}) |
+| controller-v1.11.2 | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.11.2/${ingressNginxFileName.value}) |
+| controller-v1.11.1 | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.11.1/${ingressNginxFileName.value}) |
+| controller-v1.11.0 | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.11.0/${ingressNginxFileName.value}) |
+| controller-v1.10.5 | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.10.5/${ingressNginxFileName.value}) |
+| controller-v1.10.4 | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.10.4/${ingressNginxFileName.value}) |
+| controller-v1.10.3 | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.10.3/${ingressNginxFileName.value}) |
+| controller-v1.10.2 | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.10.2/${ingressNginxFileName.value}) |
+| controller-v1.10.1 | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.10.1/${ingressNginxFileName.value}) |
+| controller-v1.10.0 | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.10.0/${ingressNginxFileName.value}) |
+| controller-v1.9.6  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.9.6/${ingressNginxFileName.value})  |
+| controller-v1.9.5  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.9.5/${ingressNginxFileName.value})  |
+| controller-v1.9.4  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.9.4/${ingressNginxFileName.value})  |
+| controller-v1.9.3  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.9.3/${ingressNginxFileName.value})  |
+| controller-v1.9.1  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.9.1/${ingressNginxFileName.value})  |
+| controller-v1.9.0  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.9.0/${ingressNginxFileName.value})  |
+| controller-v1.8.5  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.8.5/${ingressNginxFileName.value})  |
+| controller-v1.8.4  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.8.4/${ingressNginxFileName.value})  |
+| controller-v1.8.2  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.8.2/${ingressNginxFileName.value})  |
+| controller-v1.8.1  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.8.1/${ingressNginxFileName.value})  |
+| controller-v1.8.0  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.8.0/${ingressNginxFileName.value})  |
+| controller-v1.7.1  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.7.1/${ingressNginxFileName.value})  |
+| controller-v1.7.0  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.7.0/${ingressNginxFileName.value})  |
+| controller-v1.6.4  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.6.4/${ingressNginxFileName.value})  |
+| controller-v1.6.3  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.6.3/${ingressNginxFileName.value})  |
+| controller-v1.6.2  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.6.2/${ingressNginxFileName.value})  |
+| controller-v1.6.1  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.6.1/${ingressNginxFileName.value})  |
+| controller-v1.6.0  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.6.0/${ingressNginxFileName.value})  |
+| controller-v1.5.2  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.5.2/${ingressNginxFileName.value})  |
+| controller-v1.5.1  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.5.1/${ingressNginxFileName.value})  |
+| controller-v1.4.0  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.4.0/${ingressNginxFileName.value})  |
+| controller-v1.3.1  | [${ingressNginxFileName.value}](${ingressNginx.value}/controller-v1.3.1/${ingressNginxFileName.value})  |
+  `)
+
   const metricsServerMdResult = md.render(`
 | 版本     | components.yaml                                                  | high-availability-1.21+.yaml                                                               |
 |--------|------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
@@ -148,6 +249,7 @@ const command = function () {
   `)
 
   document.getElementById('dashboard-md').innerHTML = dashboardMdResult
+  document.getElementById('ingress-nginx-md').innerHTML = ingressNginxMdResult
   document.getElementById('metrics-server-md').innerHTML = metricsServerMdResult
   document.getElementById('calico-md').innerHTML = calicoMdResult
 }
@@ -156,7 +258,7 @@ onMounted(async () => {
   command()
 })
 
-watch(() => [ dashboard.value, metricsServer.value, calico.value ], () => {
+watch(() => [ dashboard.value, ingressNginx.value, ingressNginxFileName.value, metricsServer.value, calico.value ], () => {
   command()
 })
 </script>
