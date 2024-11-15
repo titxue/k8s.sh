@@ -129,6 +129,12 @@ ingress_nginx_controller_image=${ingress_nginx_controller_images[0]}
 ingress_nginx_kube_webhook_certgen_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen" "registry.k8s.io/ingress-nginx/kube-webhook-certgen")
 ingress_nginx_kube_webhook_certgen_image=${ingress_nginx_kube_webhook_certgen_images[0]}
 
+metrics_server_version=v0.7.2
+metrics_server_mirrors=("https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes-sigs/metrics-server" "https://github.com/kubernetes-sigs/metrics-server/releases/download")
+metrics_server_mirror=${metrics_server_mirrors[0]}
+metrics_server_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/metrics-server" "registry.k8s.io/metrics-server/metrics-server")
+metrics_server_image=${metrics_server_images[0]}
+
 # 包管理类型
 package_type=
 case "$os_type" in
@@ -717,6 +723,25 @@ _ingress_nginx_host_network() {
   kubectl -n ingress-nginx patch deployment ingress-nginx-controller --patch '{"spec": {"template": {"spec": {"hostNetwork": true}}}}'
 }
 
+_metrics_server_install() {
+
+  if ! [[ $metrics_server_url ]]; then
+    metrics_server_url="$metrics_server_mirror"/"$metrics_server_version"/components.yaml
+  fi
+
+  echo "metrics server manifests url: $metrics_server_url"
+  curl -k -o components.yaml $metrics_server_url
+
+  sudo sed -i "s#${metrics_server_images[-1]}#$metrics_server_image#g" components.yaml
+
+  if [[ $metrics_server_secure_tls != true ]]; then
+    sed -i '/- args:/a \ \ \ \ \ \ \ \ - --kubelet-insecure-tls' components.yaml
+  fi
+
+  kubectl apply -f components.yaml
+  kubectl get pod -A -o wide
+}
+
 _firewalld_stop() {
   if [[ $package_type == 'yum' ]]; then
     sudo systemctl stop firewalld.service
@@ -975,6 +1000,30 @@ while [[ $# -gt 0 ]]; do
     ingress_nginx_kube_webhook_certgen_image="${1#*=}"
     ;;
 
+  metrics-server-install | -metrics-server-install | --metrics-server-install)
+    metrics_server_install=true
+    ;;
+
+  metrics-server-url=* | -metrics-server-url=* | --metrics-server-url=*)
+    metrics_server_url="${1#*=}"
+    ;;
+
+  metrics-server-version=* | -metrics-server-version=* | --metrics-server-version=*)
+    metrics_server_version="${1#*=}"
+    ;;
+
+  metrics-server-mirror=* | -metrics-server-mirror=* | --metrics-server-mirror=*)
+    metrics_server_mirror="${1#*=}"
+    ;;
+
+  metrics-server-image=* | -metrics-server-image=* | --metrics-server-image=*)
+    metrics_server_image="${1#*=}"
+    ;;
+
+  metrics-server-secure-tls | -metrics-server-secure-tls | --metrics-server-secure-tls)
+    metrics_server_secure_tls=true
+    ;;
+
   *)
     echo -e "${COLOR_RED}无效参数: $1，退出程序${COLOR_RESET}"
     exit 1
@@ -1011,6 +1060,7 @@ if [[ $standalone == true ]]; then
   _kubernetes_taint
   _ingress_nginx_install
   _ingress_nginx_host_network
+  _metrics_server_install
   _enable_shell_autocompletion
   _print_join_command
 elif [[ $cluster == true ]]; then
@@ -1024,6 +1074,7 @@ elif [[ $cluster == true ]]; then
   _calico_install
   _ingress_nginx_install
   _ingress_nginx_host_network
+  _metrics_server_install
   _enable_shell_autocompletion
   _print_join_command
 elif [[ $node == true ]]; then
@@ -1110,6 +1161,10 @@ else
 
   if [[ $ingress_nginx_host_network == true ]]; then
     _ingress_nginx_host_network
+  fi
+
+  if [[ $metrics_server_install == true ]]; then
+    _metrics_server_install
   fi
 
   if [[ $print_join_command == true ]]; then
