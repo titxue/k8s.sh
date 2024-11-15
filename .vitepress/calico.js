@@ -18,7 +18,7 @@ async function tags(page, per_page) {
   const downloadUrl = 'https://raw.githubusercontent.com/projectcalico/calico/refs/tags'
   const minimumVersion = 'v3.24.0'
 
-  const fileNameList = ['calico.yaml']
+  const fileNameList = ['manifests/calico.yaml']
 
   const headers = {}
   if (githubToken) {
@@ -45,9 +45,10 @@ async function tags(page, per_page) {
     if (semver.gte(name, minimumVersion)) {
       for (const fileName of fileNameList) {
 
-        const url = `${downloadUrl}/${name}/manifests/${fileName}`
-        const dirPath = path.join(folderName, name, 'manifests')
-        const filePath = path.join(dirPath, fileName)
+        const url = `${downloadUrl}/${name}/${fileName}`
+        const filePath = path.join(folderName, name, fileName)
+
+        const dirPath = path.dirname(filePath)
 
         if (!fs.existsSync(dirPath)) {
           fs.mkdirSync(dirPath, { recursive: true })
