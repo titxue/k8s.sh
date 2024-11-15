@@ -38,6 +38,14 @@
 
 <div id="calico-md"></div>
 
+## prometheus-operator/kube-prometheus
+
+<el-select v-model="kubePrometheus" size="large" style="width: 240px; margin-top: 20px;">
+    <el-option v-for="item in kubePrometheusOptions" :key="item.value" :label="item.label" :value="item.value" />
+</el-select>
+
+<div id="kube-prometheus-md"></div>
+
 <script lang="ts" setup>
 import { ref, onMounted, watch } from 'vue'
 import markdownit from 'markdown-it'
@@ -52,6 +60,7 @@ const ingressNginx = ref('https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes/ing
 const ingressNginxFileName = ref('deploy/static/provider/cloud/deploy.yaml')
 const metricsServer = ref('https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes-sigs/metrics-server')
 const calico = ref('https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico')
+const kubePrometheus = ref('https://k8s-sh.xuxiaowei.com.cn/mirrors/prometheus-operator/kube-prometheus')
 
 const dashboardOptions = [
   {
@@ -160,6 +169,25 @@ const calicoOptions = [
   }
 ]
 
+const kubePrometheusOptions = [
+  {
+    value: 'https://k8s-sh.xuxiaowei.com.cn/mirrors/prometheus-operator/kube-prometheus',
+    label: 'k8s-sh.xuxiaowei.com.cn',
+  },
+  {
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.0/mirrors/prometheus-operator/kube-prometheus',
+    label: 'gitlab.xuxiaowei.com.cn',
+  },
+  {
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.0/mirrors/prometheus-operator/kube-prometheus',
+    label: 'gitee.com',
+  },
+  {
+    value: 'https://github.com/prometheus-operator/kube-prometheus/archive/refs/tags/',
+    label: 'github.com',
+  }
+]
+
 const command = function () {
 
   const dashboardMdResult = md.render(`
@@ -248,17 +276,27 @@ const command = function () {
 | v3.24.0 | [calico.yaml](${calico.value}/v3.24.0/manifests/calico.yaml) |
   `)
 
+  const kubePrometheusMdResult = md.render(`
+| 版本      | kube-prometheus.tar.gz                                                                         |
+|---------|------------------------------------------------------------------------------------------------|
+| v0.14.0 | [kube-prometheus-0.14.0.tar.gz](${kubePrometheus.value}/v0.14.0/kube-prometheus-0.14.0.tar.gz) |
+| v0.13.0 | [kube-prometheus-0.13.0.tar.gz](${kubePrometheus.value}/v0.13.0/kube-prometheus-0.13.0.tar.gz) |
+| v0.12.0 | [kube-prometheus-0.12.0.tar.gz](${kubePrometheus.value}/v0.12.0/kube-prometheus-0.12.0.tar.gz) |
+| v0.11.0 | [kube-prometheus-0.11.0.tar.gz](${kubePrometheus.value}/v0.11.0/kube-prometheus-0.11.0.tar.gz) |
+  `)
+
   document.getElementById('dashboard-md').innerHTML = dashboardMdResult
   document.getElementById('ingress-nginx-md').innerHTML = ingressNginxMdResult
   document.getElementById('metrics-server-md').innerHTML = metricsServerMdResult
   document.getElementById('calico-md').innerHTML = calicoMdResult
+  document.getElementById('kube-prometheus-md').innerHTML = kubePrometheusMdResult
 }
 
 onMounted(async () => {
   command()
 })
 
-watch(() => [ dashboard.value, ingressNginx.value, ingressNginxFileName.value, metricsServer.value, calico.value ], () => {
+watch(() => [ dashboard.value, ingressNginx.value, ingressNginxFileName.value, metricsServer.value, calico.value, kubePrometheus.value ], () => {
   command()
 })
 </script>
