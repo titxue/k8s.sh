@@ -683,7 +683,7 @@ _interface_name() {
 
 _calico_install() {
   if ! [[ $calico_url ]]; then
-    calico_url="$calico_mirror"/"$calico_version"/manifests/calico.yaml
+    calico_url=$calico_mirror/$calico_version/manifests/calico.yaml
   fi
   echo "calico manifests url: $calico_url"
   curl -k -o calico.yaml $calico_url
@@ -706,7 +706,7 @@ _calico_install() {
 
 _ingress_nginx_install() {
   if ! [[ $ingress_nginx_url ]]; then
-    ingress_nginx_url="$ingress_nginx_mirror"/controller-"$ingress_nginx_version"/deploy/static/provider/cloud/deploy.yaml
+    ingress_nginx_url=$ingress_nginx_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml
   fi
   echo "ingress nginx manifests url: $ingress_nginx_url"
   curl -k -o deploy.yaml $ingress_nginx_url
@@ -726,7 +726,7 @@ _ingress_nginx_host_network() {
 _metrics_server_install() {
 
   if ! [[ $metrics_server_url ]]; then
-    metrics_server_url="$metrics_server_mirror"/"$metrics_server_version"/components.yaml
+    metrics_server_url=$metrics_server_mirror/$metrics_server_version/components.yaml
   fi
 
   echo "metrics server manifests url: $metrics_server_url"

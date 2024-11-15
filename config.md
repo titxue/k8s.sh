@@ -512,14 +512,14 @@
 
 - 类型：`String`
 - 说明：`Metrics Server` 安装时，拼接生成 `metrics-server-url`，
-  拼接规则：`$metrics_server_mirror/$metrics_server_version/components.yaml`
+  拼接规则：`metrics_server_url=$metrics_server_mirror/$metrics_server_version/components.yaml`
 - 默认值：`v0.7.2`
 
 ### metrics-server-mirror {id=metrics-server-mirror}
 
 - 类型：`String`
 - 说明：`Metrics Server` 安装时，拼接生成 `metrics-server-url`，
-  拼接规则：`$metrics_server_mirror/$metrics_server_version/components.yaml`
+  拼接规则：`metrics_server_url=$metrics_server_mirror/$metrics_server_version/components.yaml`
 - 默认值：https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes-sigs/metrics-server
 
 ### metrics-server-image {id=metrics-server-image}
