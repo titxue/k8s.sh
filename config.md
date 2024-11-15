@@ -492,3 +492,49 @@
 - 说明：配置 `Ingress Nginx` 使用宿主机网络
 - 用途：`Ingress Nginx` 使用宿主机的 `80`、`443` 端口
 - 相关：请确保 `Kubernetes` 工作节点的宿主机 `80`、`443` 端口 没有被其他应用占用
+
+### metrics-server-install {id=metrics-server-install}
+
+- 类型：`Boolean`
+- 说明：安装 `Metrics Server`
+- 用途：支持 `Kubernetes` 运行 `kubectl top node`、`kubectl top pod` 命令
+
+### metrics-server-url {id=metrics-server-url}
+
+- 类型：`String`
+- 说明：`Metrics Server` 安装时，使用的 `manifests` 文件 `URL`
+- 默认值：空
+- 相关：优先级高于 `metrics-server-mirror`、`metrics-server-version`
+
+### metrics-server-version {id=metrics-server-version}
+
+- 类型：`String`
+- 说明：`Metrics Server` 安装时，拼接生成 `metrics-server-url`，
+  拼接规则：`$metrics_server_mirror/$metrics_server_version/components.yaml`
+- 默认值：`v0.7.2`
+
+### metrics-server-mirror {id=metrics-server-mirror}
+
+- 类型：`String`
+- 说明：`Metrics Server` 安装时，拼接生成 `metrics-server-url`，
+  拼接规则：`$metrics_server_mirror/$metrics_server_version/components.yaml`
+- 默认值：https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes-sigs/metrics-server
+
+### metrics-server-image {id=metrics-server-image}
+
+- 类型：`String`
+- 说明：`Metrics Server` 需要使用的镜像 `registry.k8s.io/metrics-server/metrics-server` 下载地址
+- 默认值：`registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/metrics-server`
+- 可选值：
+    - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/metrics-server`
+    - `registry.k8s.io/metrics-server/metrics-server`
+
+### metrics-server-secure-tls {id=metrics-server-secure-tls}
+
+- 类型：`Boolean`
+- 说明：使用 `安全` 的 `Kubernetes` 的 `apiserver` 接口的 `TLS` 证书，`强烈不推荐配置此选项`，
+  这里涉及 `Kubernetes` 需要使用 `权威机构` 颁发的证书，
+  并且 `Metrics Server` 容器内还要包含、信任该证书的证书链（根证书）
+- 相关：`Metrics Server` 官方默认配置情况下需要使用 `安全` 的 `TLS` 证书，
+  这将导致 `Metrics Server` 无法正常连接到 `Kubernetes` 的 `apiserver`，所以安装时存在默认行为：
+  忽略 `TLS` 证书验证 `--kubelet-insecure-tls` 
