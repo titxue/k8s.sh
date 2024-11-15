@@ -452,6 +452,24 @@
 - 说明：启用 shell 自动补全功能
 - 用途：使用 `kubectl` 命令时，按 `Tab` 键可快速补充命令
 
+### ingress-nginx-install {id=ingress-nginx-install}
+
+- 类型：`Boolean`
+- 说明：安装 `Ingress Nginx`
+- 用途：用于在 `Kubernetes` 中使用 `Nginx` 代理 `Service`
+
+### ingress-nginx-version {id=ingress-nginx-version}
+
+- 类型：`String`
+- 说明：`Ingress Nginx` 安装时，拼接生成 `ingress-nginx-url`，
+  拼接规则：`ingress_nginx_url=$ingress_nginx_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml`
+- 默认值：`v1.11.3`
+- 可选择：
+    - 查看 https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/tags?search=controller
+      中名称包含 `controller` 的标签
+    - 查看 https://github.com/kubernetes/ingress-nginx/tags 中名称包含 `controller` 的标签
+- 相关：优先级低于 `ingress-nginx-url`
+
 ### ingress-nginx-url {id=ingress-nginx-url}
 
 - 类型：`String`
@@ -468,18 +486,6 @@
 - 可选择：
     1. https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw
     2. https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/tags
-- 相关：优先级低于 `ingress-nginx-url`
-
-### ingress-nginx-version {id=ingress-nginx-version}
-
-- 类型：`String`
-- 说明：`Ingress Nginx` 安装时，拼接生成 `ingress-nginx-url`，
-  拼接规则：`ingress_nginx_url=$ingress_nginx_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml`
-- 默认值：`v1.11.3`
-- 可选择：
-    - 查看 https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/tags?search=controller
-      中名称包含 `controller` 的标签
-    - 查看 https://github.com/kubernetes/ingress-nginx/tags 中名称包含 `controller` 的标签
 - 相关：优先级低于 `ingress-nginx-url`
 
 ### ingress-nginx-controller-image {id=ingress-nginx-controller-image}
@@ -500,12 +506,6 @@
 - 可选值：
     - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen`
     - `registry.k8s.io/ingress-nginx/kube-webhook-certgen`
-
-### ingress-nginx-install {id=ingress-nginx-install}
-
-- 类型：`Boolean`
-- 说明：安装 `Ingress Nginx`
-- 用途：用于在 `Kubernetes` 中使用 `Nginx` 代理 `Service`
 
 ### ingress-nginx-host-network {id=ingress-nginx-host-network}
 
