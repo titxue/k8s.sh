@@ -1,4 +1,4 @@
-# 参数配置 {id=config}
+# 参数配置 {id=parameter-config}
 
 [[toc]]
 
