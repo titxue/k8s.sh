@@ -763,6 +763,12 @@ _selinux_disabled() {
 while [[ $# -gt 0 ]]; do
   case "$1" in
 
+  config=* | -config=* | --config=*)
+    config="${1#*=}"
+    echo '启用了配置文件: $config'
+    source $config
+    ;;
+
   standalone | -standalone | --standalone)
     standalone=true
     ;;
