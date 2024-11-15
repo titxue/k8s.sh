@@ -93,8 +93,13 @@
 
 - 类型：`String`
 - 默认值：无
-- 说明：配置文件模式
+- 说明：配置文件模式，指定配置文件位置，配置文件内容必须是合法的键值对
 - 相关：用于高度自定义时配置参数
+- 示例：
+    1. `String` 类型：指定 `Kubernetes` 版本的参数 `kubernetes-version=v1.30.3` 转为
+       配置文件的键值对是 `kubernetes_version=v1.30.3`
+    2. `Boolean` 类型：启用 `Ingress Nginx` 安装的参数 `ingress-nginx-install` 转为
+       配置文件的键值对是 `ingress-nginx-install=true`
 
 ### dpkg-lock-timeout {id=dpkg-lock-timeout}
 
