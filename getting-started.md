@@ -6,7 +6,7 @@
 
 ::: warning 警告
 
-1. `单机模式`、`集群模式` 会删除旧版 `Docker`
+1. `单机模式`、`集群模式` 会卸载 `旧版 Docker`
     - `旧版 Docker`: `docker.io`
     - `新版 Docker`: `docker-ce`
 
@@ -32,10 +32,6 @@
     <el-option v-for="item in sources" :key="item.value" :label="item.label" :value="item.value" />
 </el-select>
 
-<el-select v-model="branch" size="large" style="width: 240px; margin-top: 20px;">
-    <el-option v-for="item in branchs" :key="item.value" :label="item.label" :value="item.value" />
-</el-select>
-
 <div class="language-shell vp-adaptive-theme">
   <button title="Copy Code" class="copy"></button><span class="lang">shell</span>
   <div id="standalone-code"></div>
@@ -53,10 +49,6 @@
     <el-option v-for="item in sources" :key="item.value" :label="item.label" :value="item.value" />
 </el-select>
 
-<el-select v-model="branch" size="large" style="width: 240px; margin-top: 20px;">
-    <el-option v-for="item in branchs" :key="item.value" :label="item.label" :value="item.value" />
-</el-select>
-
 <div class="language-shell vp-adaptive-theme">
   <button title="Copy Code" class="copy"></button><span class="lang">shell</span>
   <div id="cluster-code"></div>
@@ -72,10 +64,6 @@
 
 <el-select v-model="source" size="large" style="width: 240px; margin-top: 20px;">
     <el-option v-for="item in sources" :key="item.value" :label="item.label" :value="item.value" />
-</el-select>
-
-<el-select v-model="branch" size="large" style="width: 240px; margin-top: 20px;">
-    <el-option v-for="item in branchs" :key="item.value" :label="item.label" :value="item.value" />
 </el-select>
 
 <div class="language-shell vp-adaptive-theme">
@@ -96,48 +84,43 @@ import 'element-plus/dist/index.css'
 
 const md = markdownit()
 
-const source = ref('https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw')
+const source = ref('https://k8s-sh.xuxiaowei.com.cn/k8s.sh')
 
 const sources = [
   {
-    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw',
+    value: 'https://k8s-sh.xuxiaowei.com.cn/k8s.sh',
+    label: 'k8s-sh.xuxiaowei.com.cn',
+  },
+  {
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.0/k8s.sh',
     label: 'gitlab.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw',
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.0/k8s.sh',
     label: 'gitee.com',
   },
   {
-    value: 'https://raw.githubusercontent.com/xuxiaowei-com-cn/k8s.sh/refs/heads',
+    value: 'https://raw.githubusercontent.com/xuxiaowei-com-cn/k8s.sh/refs/heads/SNAPSHOT/2.0.0/k8s.sh',
     label: 'github.com',
-  }
-]
-
-const branch = ref('SNAPSHOT/2.0.0')
-
-const branchs = [
-  {
-    value: 'SNAPSHOT/2.0.0',
-    label: 'SNAPSHOT/2.0.0',
   }
 ]
 
 const command = function () {
 
   const standaloneResult = md.render(`
-    curl -k -o k8s.sh ${source.value}/${branch.value}/k8s.sh
+    curl -k -o k8s.sh ${source.value}
     chmod +x k8s.sh
     sudo ./k8s.sh standalone
   `, { lang: 'shell' })
 
   const clusterResult = md.render(`
-    curl -k -o k8s.sh ${source.value}/${branch.value}/k8s.sh
+    curl -k -o k8s.sh ${source.value}
     chmod +x k8s.sh
     sudo ./k8s.sh cluster
   `, { lang: 'shell' })
 
   const nodeResult = md.render(`
-    curl -k -o k8s.sh ${source.value}/${branch.value}/k8s.sh
+    curl -k -o k8s.sh ${source.value}
     chmod +x k8s.sh
     sudo ./k8s.sh node
   `, { lang: 'shell' })
@@ -151,7 +134,7 @@ onMounted(async () => {
   command()
 })
 
-watch(() => [ source.value, branch.value ], () => {
+watch(() => [ source.value ], () => {
   command()
 })
 </script>
