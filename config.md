@@ -438,13 +438,13 @@
 - 类型：`String`
 - 说明：`Ingress Nginx` 安装时，使用的 `manifests` 文件 `URL`
 - 默认值：空
-- 相关：优先级高于 `ingress-nginx-manifests-mirror`、`ingress-nginx-version`
+- 相关：优先级高于 `ingress-nginx-mirror`、`ingress-nginx-version`
 
-### ingress-nginx-manifests-mirror {id=ingress-nginx-manifests-mirror}
+### ingress-nginx-mirror {id=ingress-nginx-mirror}
 
 - 类型：`String`
 - 说明：`Ingress Nginx` 安装时，拼接生成 `ingress-nginx-url`，
-  拼接规则：`ingress_nginx_url=$ingress_nginx_manifests_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml`
+  拼接规则：`ingress_nginx_url=$ingress_nginx_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml`
 - 默认值：https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw
 - 可选择：
     1. https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw
@@ -455,7 +455,7 @@
 
 - 类型：`String`
 - 说明：`Ingress Nginx` 安装时，拼接生成 `ingress-nginx-url`，
-  拼接规则：`ingress_nginx_url=$ingress_nginx_manifests_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml`
+  拼接规则：`ingress_nginx_url=$ingress_nginx_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml`
 - 默认值：`v1.11.3`
 - 可选择：
     - 查看 https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/tags?search=controller

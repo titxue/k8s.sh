@@ -121,8 +121,8 @@ calico_cni_image=${calico_cni_images[0]}
 calico_kube_controllers_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-kube-controllers" "docker.io/calico/kube-controllers")
 calico_kube_controllers_image=${calico_kube_controllers_images[0]}
 
-ingress_nginx_manifests_mirrors=("https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw" "https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/tags")
-ingress_nginx_manifests_mirror=${ingress_nginx_manifests_mirrors[0]}
+ingress_nginx_mirrors=("https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw" "https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/tags")
+ingress_nginx_mirror=${ingress_nginx_mirrors[0]}
 ingress_nginx_version=v1.11.3
 ingress_nginx_controller_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-controller" "registry.k8s.io/ingress-nginx/controller")
 ingress_nginx_controller_image=${ingress_nginx_controller_images[0]}
@@ -706,7 +706,7 @@ _calico_install() {
 
 _ingress_nginx_install() {
   if ! [[ $ingress_nginx_url ]]; then
-    ingress_nginx_url="$ingress_nginx_manifests_mirror"/controller-"$ingress_nginx_version"/deploy/static/provider/cloud/deploy.yaml
+    ingress_nginx_url="$ingress_nginx_mirror"/controller-"$ingress_nginx_version"/deploy/static/provider/cloud/deploy.yaml
   fi
   echo "ingress nginx manifests url: $ingress_nginx_url"
   curl -k -o deploy.yaml $ingress_nginx_url
@@ -984,8 +984,8 @@ while [[ $# -gt 0 ]]; do
     ingress_nginx_url="${1#*=}"
     ;;
 
-  ingress-nginx-manifests-mirror=* | -ingress-nginx-manifests-mirror=* | --ingress-nginx-manifests-mirror=*)
-    ingress_nginx_manifests_mirror="${1#*=}"
+  ingress-nginx-mirror=* | -ingress-nginx-mirror=* | --ingress-nginx-mirror=*)
+    ingress_nginx_mirror="${1#*=}"
     ;;
 
   ingress-nginx-version=* | -ingress-nginx-version=* | --ingress-nginx-version=*)
