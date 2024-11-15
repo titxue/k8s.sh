@@ -13,6 +13,9 @@ hero:
     - theme: alt
       text: 参数说明
       link: /config
+    - theme: alt
+      text: 镜像文件
+      link: /mirrors
 
 features:
   - title: Kubernetes
