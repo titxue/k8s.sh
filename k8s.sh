@@ -284,6 +284,7 @@ _containerd_install() {
 
 }
 
+# 容器运行时
 # https://kubernetes.io/zh-cn/docs/setup/production-environment/container-runtimes/
 # https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/
 _containerd_config() {
@@ -632,6 +633,8 @@ _bash_completion() {
   fi
 }
 
+# kubectl 的可选配置和插件
+# 启用 shell 自动补全功能
 # https://kubernetes.io/zh-cn/docs/tasks/tools/install-kubectl-linux/#optional-kubectl-configurations
 # https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/tasks/tools/install-kubectl-linux/#optional-kubectl-configurations
 _enable_shell_autocompletion() {
@@ -838,6 +841,7 @@ while [[ $# -gt 0 ]]; do
     ;;
 
   service-cidr=* | -service-cidr=* | --service-cidr=*)
+    # kubeadm init
     # --service-cidr string     默认值："10.96.0.0/12"
     # https://kubernetes.io/zh-cn/docs/reference/setup-tools/kubeadm/kubeadm-init/
     # https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/reference/setup-tools/kubeadm/kubeadm-init/
