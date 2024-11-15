@@ -514,6 +514,42 @@
 - 用途：`Ingress Nginx` 使用宿主机的 `80`、`443` 端口
 - 相关：请确保 `Kubernetes` 工作节点的宿主机 `80`、`443` 端口 没有被其他应用占用
 
+### ingress-nginx-allow-snippet-annotations {id=ingress-nginx-allow-snippet-annotations}
+
+::: danger 危险
+
+- `Ingress Nginx` 正常情况下只代理到 `Service`，无需手写代理，不用增加此配置
+- 如果要手写代理，需要增加此配置，此时要严格管理 `Kubernetes` 的 `Ingress` 权限，避免敏感信息泄露，
+  参见：CVE-2021-25742：https://github.com/kubernetes/kubernetes/issues/126811
+
+:::
+
+- 类型：`Boolean`
+- 说明：允许 `Ingress Nginx` 使用 `代码片段`
+- 用途：允许在 `Ingress Nginx` 中使用自定义代理，如：
+    ```yaml
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      annotations:
+        nginx.ingress.kubernetes.io/server-snippet: |
+          location ~ /(.*) {
+            rewrite ^/(.*) /$1 break;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+            proxy_set_header X-real-ip $remote_addr;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_pass http://10.97.34.18:8080;
+            proxy_connect_timeout 60s;
+            proxy_read_timeout 3600s;
+            proxy_send_timeout 3600s;
+          }
+    
+    ...
+    
+    ```
+
 ### metrics-server-install {id=metrics-server-install}
 
 - 类型：`Boolean`

@@ -723,6 +723,14 @@ _ingress_nginx_host_network() {
   kubectl -n ingress-nginx patch deployment ingress-nginx-controller --patch '{"spec": {"template": {"spec": {"hostNetwork": true}}}}'
 }
 
+# https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#allow-snippet-annotations
+# https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#stream-snippet
+# https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#configuration-snippet
+# CVE-2021-25742：https://github.com/kubernetes/kubernetes/issues/126811
+_ingress_nginx_allow_snippet_annotations() {
+  kubectl -n ingress-nginx patch configmap ingress-nginx-controller --type merge -p '{"data":{"allow-snippet-annotations":"true"}}'
+}
+
 _metrics_server_install() {
 
   if ! [[ $metrics_server_url ]]; then
@@ -1006,6 +1014,10 @@ while [[ $# -gt 0 ]]; do
     ingress_nginx_kube_webhook_certgen_image="${1#*=}"
     ;;
 
+  ingress-nginx-allow-snippet-annotations | -ingress-nginx-allow-snippet-annotations | --ingress-nginx-allow-snippet-annotations)
+    ingress_nginx_allow_snippet_annotations=true
+    ;;
+
   metrics-server-install | -metrics-server-install | --metrics-server-install)
     metrics_server_install=true
     ;;
@@ -1167,6 +1179,10 @@ else
 
   if [[ $ingress_nginx_host_network == true ]]; then
     _ingress_nginx_host_network
+  fi
+
+  if [[ $ingress_nginx_allow_snippet_annotations == true ]]; then
+    _ingress_nginx_allow_snippet_annotations
   fi
 
   if [[ $metrics_server_install == true ]]; then
