@@ -74,6 +74,8 @@ include:
   - .gitlab/ci/openkylin-1.0.yml
   - .gitlab/ci/openkylin-2.0.yml
   - .gitlab/ci/pages.yml
+  - .gitlab/ci/rocky-8.10.yml
+  - .gitlab/ci/rocky-9.4.yml
   - .gitlab/ci/sync.yml
   - .gitlab/ci/ubuntu-18.04.yml
   - .gitlab/ci/ubuntu-20.04.yml
