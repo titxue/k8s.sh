@@ -50,6 +50,8 @@
 | OpenKylin 1.0.1 yangtze | ✅    |      |      |      |      |      |      |      |
 | OpenKylin 1.0.2 yangtze | ✅    |      |      |      |      |      |      |      |
 | OpenKylin 2.0 nile      | ✅    |      |      |      |      |      |      |      |
+| Rocky 8.10              | ✅    |      |      |      |      |      |      |      |
+| Rocky 9.4               | ✅    |      |      |      |      |      |      |      |
 | Ubuntu 18.04 bionic     | ✅    |      |      |      |      |      |      |      |
 | Ubuntu 20.04 focal      | ✅    |      |      |      |      |      |      |      |
 | Ubuntu 22.04 jammy      | ✅    |      |      |      |      |      |      |      |
