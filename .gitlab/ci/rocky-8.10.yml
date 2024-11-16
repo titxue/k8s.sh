@@ -1,4 +1,4 @@
-rocky-9.4:env:
+rocky-8.10:env:
   stage: env
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
@@ -45,16 +45,16 @@ rocky-9.4:env:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/rocky-9.4.yml
+          - .gitlab/ci/rocky-8.10.yml
           - k8s.sh
   tags:
     - g150s-docker
   when: manual
 
-rocky-9.4:install:
+rocky-8.10:install:
   stage: install
   needs:
-    - rocky-9.4:env
+    - rocky-8.10:env
   hooks:
     pre_get_sources_script:
       - yum clean all
@@ -73,7 +73,7 @@ rocky-9.4:install:
         exit 1;
       fi
     - |
-      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "9.4" ]] ; then
+      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "8.10" ]] ; then
         echo "系统版本正确";
       else
         echo "系统版本不正确";
@@ -122,16 +122,16 @@ rocky-9.4:install:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/rocky-9.4.yml
+          - .gitlab/ci/rocky-8.10.yml
           - k8s.sh
   tags:
-    - GitLab-CICD-Rocky-9.4
+    - GitLab-CICD-Rocky-8.10
   environment: kubernetes/v1.31
 
-rocky-9.4:shutdown:
+rocky-8.10:shutdown:
   stage: shutdown
   needs:
-    - rocky-9.4:install
+    - rocky-8.10:install
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $ROCKY_8_10_QEMU_ID
@@ -156,7 +156,7 @@ rocky-9.4:shutdown:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/rocky-9.4.yml
+          - .gitlab/ci/rocky-8.10.yml
           - k8s.sh
   tags:
     - g150s-docker

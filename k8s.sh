@@ -105,7 +105,7 @@ container_selinux_rpm=https://mirrors.aliyun.com/centos-altarch/7.9.2009/extras/
 # Docker 仓库类型
 docker_repo_name=$os_type
 case "$os_type" in
-anolis | almalinux | openEuler)
+anolis | almalinux | openEuler | rocky)
   docker_repo_name='centos'
   ;;
 kylin | openkylin)
@@ -144,7 +144,7 @@ case "$os_type" in
 ubuntu | debian | kylin | openkylin)
   package_type=apt
   ;;
-centos | anolis | almalinux | openEuler)
+centos | anolis | almalinux | openEuler | rocky)
   package_type=yum
   ;;
 *)
