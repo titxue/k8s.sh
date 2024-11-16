@@ -11,7 +11,7 @@ const githubToken = process.env.GITHUB_TOKEN
 // 支持配置代理，如：socks5://127.0.0.1:1080
 const proxyUrl = process.env.HTTP_PROXY || process.env.HTTPS_PROXY
 
-const folderName = path.resolve(__dirname, '../mirrors/prometheus-operator/kube-prometheus')
+const folderName = path.resolve(__dirname, '../../mirrors/prometheus-operator/kube-prometheus')
 
 async function tags(page, per_page) {
     const tagUrl = `https://api.github.com/repos/prometheus-operator/kube-prometheus/tags?page=${page}&per_page=${per_page}`
