@@ -43,6 +43,7 @@
 | Debian 11.7.0 bullseye    | ✅    |      |      |      |      |      |      |      |
 | Debian 12.4.0 bookworm    | ✅    |      |      |      |      |      |      |      |
 | Debian 12.7.0 bookworm    | ✅    |      |      |      |      |      |      |      |
+| Deepin 20.9 apricot       | ✅    |      |      |      |      |      |      |      |
 | OpenEuler 20.03           | ✅    |      |      |      |      |      |      |      |
 | OpenEuler 22.03           | ✅    |      |      |      |      |      |      |      |
 | OpenEuler 24.03           | ✅    |      |      |      |      |      |      |      |
