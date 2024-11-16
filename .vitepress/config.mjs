@@ -144,6 +144,7 @@ export default defineConfig({
         text: '问题',
         collapsed: false,
         items: [
+          { text: '如何使用 node 角色加入集群？', link: '/question/how-to-join-a-cluster-using-the-node-role' },
           { text: '历史分支', link: '/history' },
           { text: 'Kubernetes 重置', link: '/question/kubeadm-reset' },
           { text: '为什么 失败了？', link: '/question/why-did-it-fail' },
