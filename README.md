@@ -19,43 +19,43 @@
     2. [GitHub](https://github.com/xuxiaowei-com-cn/k8s.sh/issues)
 - 按照名称排序、按照版本倒叙
 
-| Linux/Kubernetes        | 1.31 | 1.30 | 1.29 | 1.28 | 1.27 | 1.26 | 1.25 | 1.24 |
-|-------------------------|------|------|------|------|------|------|------|------|
-| AlmaLinux 8.10          | ✅    |      |      |      |      |      |      |      |
-| AlmaLinux 9.4           | ✅    |      |      |      |      |      |      | ✅    |
-| AnolisOS 7.7            | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    |
-| AnolisOS 7.9            | ✅    |      |      |      |      |      |      | ✅    |
-| AnolisOS 8.2            | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 8.4            | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 8.6            | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 8.8            | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 8.9            | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 23.0           | ✅    |      |      |      |      |      |      |      |
-| AnolisOS 23.1           | ✅    |      |      |      |      |      |      |      |
-| CentOS 7.9              | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.1              | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.2              | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.3              | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.4              | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.5              | ✅    |      |      |      |      |      |      |      |
-| CentOS 9-20241028.0     | ✅    |      |      |      |      |      |      | ✅    |
-| Debian 10.10.0 buster   | ✅    |      |      |      |      |      |      | ✅    |
-| Debian 11.7.0 bullseye  | ✅    |      |      |      |      |      |      |      |
-| Debian 12.4.0 bookworm  | ✅    |      |      |      |      |      |      |      |
-| Debian 12.7.0 bookworm  | ✅    |      |      |      |      |      |      |      |
-| OpenEuler 20.03         | ✅    |      |      |      |      |      |      |      |
-| OpenEuler 22.03         | ✅    |      |      |      |      |      |      |      |
-| OpenEuler 24.03         | ✅    |      |      |      |      |      |      |      |
-| OpenKylin 1.0 yangtze   | ✅    |      |      |      |      |      |      |      |
-| OpenKylin 1.0.1 yangtze | ✅    |      |      |      |      |      |      |      |
-| OpenKylin 1.0.2 yangtze | ✅    |      |      |      |      |      |      |      |
-| OpenKylin 2.0 nile      | ✅    |      |      |      |      |      |      |      |
-| Rocky 8.10              | ✅    |      |      |      |      |      |      |      |
-| Rocky 9.4               | ✅    |      |      |      |      |      |      |      |
-| Ubuntu 18.04 bionic     | ✅    |      |      |      |      |      |      |      |
-| Ubuntu 20.04 focal      | ✅    |      |      |      |      |      |      |      |
-| Ubuntu 22.04 jammy      | ✅    |      |      |      |      |      |      |      |
-| Ubuntu 24.04 noble      | ✅    |      |      |      |      |      |      | ✅    |
+| Linux/Kubernetes          | 1.31 | 1.30 | 1.29 | 1.28 | 1.27 | 1.26 | 1.25 | 1.24 |
+|---------------------------|------|------|------|------|------|------|------|------|
+| AlmaLinux 8.10            | ✅    |      |      |      |      |      |      |      |
+| AlmaLinux 9.4             | ✅    |      |      |      |      |      |      | ✅    |
+| AnolisOS 7.7              | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    |
+| AnolisOS 7.9              | ✅    |      |      |      |      |      |      | ✅    |
+| AnolisOS 8.2              | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.4              | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.6              | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.8              | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 8.9              | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 23.0             | ✅    |      |      |      |      |      |      |      |
+| AnolisOS 23.1             | ✅    |      |      |      |      |      |      |      |
+| CentOS 7.9                | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.1                | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.2                | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.3                | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.4                | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.5                | ✅    |      |      |      |      |      |      |      |
+| CentOS 9-20241028.0       | ✅    |      |      |      |      |      |      | ✅    |
+| Debian 10.10.0 buster     | ✅    |      |      |      |      |      |      | ✅    |
+| Debian 11.7.0 bullseye    | ✅    |      |      |      |      |      |      |      |
+| Debian 12.4.0 bookworm    | ✅    |      |      |      |      |      |      |      |
+| Debian 12.7.0 bookworm    | ✅    |      |      |      |      |      |      |      |
+| OpenEuler 20.03           | ✅    |      |      |      |      |      |      |      |
+| OpenEuler 22.03           | ✅    |      |      |      |      |      |      |      |
+| OpenEuler 24.03           | ✅    |      |      |      |      |      |      |      |
+| OpenKylin 1.0 yangtze     | ✅    |      |      |      |      |      |      |      |
+| OpenKylin 1.0.1 yangtze   | ✅    |      |      |      |      |      |      |      |
+| OpenKylin 1.0.2 yangtze   | ✅    |      |      |      |      |      |      |      |
+| OpenKylin 2.0 nile        | ✅    |      |      |      |      |      |      |      |
+| Rocky 8.10 Green Obsidian | ✅    |      |      |      |      |      |      |      |
+| Rocky 9.4 Blue Onyx       | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 18.04 bionic       | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 20.04 focal        | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 22.04 jammy        | ✅    |      |      |      |      |      |      |      |
+| Ubuntu 24.04 noble        | ✅    |      |      |      |      |      |      | ✅    |
 
 | kubernetes 版本 | 流水线环境                                                                                                                |
 |---------------|----------------------------------------------------------------------------------------------------------------------|
