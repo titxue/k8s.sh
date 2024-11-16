@@ -18,6 +18,11 @@ variables:
   CENTOS_STREAM_SIGS_URL: http://172.25.25.14:48081/repository/centos-stream-SIGs
   UBUNTU_URL: http://172.25.25.14:48081/repository/ubuntu
   OPENEULER_URL: http://172.25.25.14:48081/repository/openeuler
+  OPENKYLIN_URL: http://172.25.25.14:48081/repository/openkylin
+  OPENKYLIN_ANYTHING_URL: http://172.25.25.14:48081/repository/openkylin-anything
+  OPENKYLIN_ANYTHING_2_0_URL: http://172.25.25.14:48081/repository/openkylin-anything2.0
+  OPENKYLIN_SOFTWARE_URL: http://172.25.25.14:48081/repository/openkylin-software
+  OPENKYLIN_SOFTWARE_YANGTZE_URL: http://172.25.25.14:48081/repository/openkylin-software-yangtze
 
 # 嵌入
 include:

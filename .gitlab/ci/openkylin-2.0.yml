@@ -57,6 +57,18 @@ openkylin-2.0:install:
     - openkylin-2.0:env
   hooks:
     pre_get_sources_script:
+      - echo $OPENKYLIN_URL
+      - cat /etc/apt/sources.list
+      - sed -i "s#http://archive.build.openkylin.top/openkylin#$OPENKYLIN_URL#" -i.bak /etc/apt/sources.list
+      - cat /etc/apt/sources.list
+      - echo $OPENKYLIN_ANYTHING_2_0_URL
+      - cat /etc/apt/sources.list.d/openkylin-anything.list
+      - sed -i "s#http://ppa.build.openkylin.top/kylinsoft/anything2.0/openkylin#$OPENKYLIN_ANYTHING_2_0_URL#" -i.bak /etc/apt/sources.list.d/openkylin-anything.list
+      - cat /etc/apt/sources.list.d/openkylin-anything.list
+      - echo $OPENKYLIN_SOFTWARE_URL
+      - cat /etc/apt/sources.list.d/openkylin-software.list
+      - sed -i "s#http://software.openkylin.top/openkylin#$OPENKYLIN_SOFTWARE_URL#" -i.bak /etc/apt/sources.list.d/openkylin-software.list
+      - cat /etc/apt/sources.list.d/openkylin-software.list
       - apt-get -o Dpkg::Lock::Timeout=120 update
       - apt-get -o Dpkg::Lock::Timeout=120 install -y sudo
       - sudo apt-get -o Dpkg::Lock::Timeout=120 install -y git
