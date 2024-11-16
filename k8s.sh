@@ -15,6 +15,9 @@
 # 自动化测试流水线：
 # https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/pipelines
 #
+# 环境：
+# https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/folders/kubernetes
+#
 # 如果发现脚本不能正常运行，可尝试执行：sed -i 's/\r$//' k8s.sh
 #
 # 代码格式使用：
@@ -571,6 +574,13 @@ _kubernetes_config() {
   if [[ $os_type == 'centos' ]]; then
     case "$centos_os_version" in
     '8.1' | '8.2' | '8.3' | '8.4' | '8.5')
+      sudo yum install -y iproute-tc
+      ;;
+    *) ;;
+    esac
+  elif [[ $os_type == 'rocky' ]]; then
+    case "$os_version" in
+    '8.10')
       sudo yum install -y iproute-tc
       ;;
     *) ;;
