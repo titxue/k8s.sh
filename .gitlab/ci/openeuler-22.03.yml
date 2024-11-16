@@ -57,6 +57,10 @@ openeuler-22.03:install:
     - openeuler-22.03:env
   hooks:
     pre_get_sources_script:
+      - echo $OPENEULER_URL
+      - cat /etc/yum.repos.d/openEuler.repo
+      - sed -i "s#http://repo.openeuler.org#$OPENEULER_URL#" -i.bak /etc/yum.repos.d/openEuler*.repo
+      - cat /etc/yum.repos.d/openEuler.repo
       - yum clean all
       - yum makecache
       - yum install -y git

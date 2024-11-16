@@ -17,6 +17,7 @@ variables:
   CENTOS_STREAM_URL: http://172.25.25.14:48081/repository/centos-stream
   CENTOS_STREAM_SIGS_URL: http://172.25.25.14:48081/repository/centos-stream-SIGs
   UBUNTU_URL: http://172.25.25.14:48081/repository/ubuntu
+  OPENEULER_URL: http://172.25.25.14:48081/repository/openeuler
 
 # 嵌入
 include:
