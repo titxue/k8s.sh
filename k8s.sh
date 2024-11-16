@@ -601,6 +601,10 @@ _kubernetes_init() {
     kubernetes_init_node_name="--node-name=$kubernetes_init_node_name"
   fi
 
+  if [[ $control_plane_endpoint ]]; then
+    control_plane_endpoint="--control-plane-endpoint=$control_plane_endpoint"
+  fi
+
   if [[ $service_cidr ]]; then
     service_cidr="--service-cidr=$service_cidr"
   fi
@@ -609,7 +613,7 @@ _kubernetes_init() {
     pod_network_cidr="--pod-network-cidr=$pod_network_cidr"
   fi
 
-  kubeadm init --image-repository="$kubernetes_images" $kubernetes_init_node_name $service_cidr $pod_network_cidr --kubernetes-version="$kubernetes_version"
+  kubeadm init --image-repository=$kubernetes_images $control_plane_endpoint $kubernetes_init_node_name $service_cidr $pod_network_cidr --kubernetes-version=$kubernetes_version
 
   KUBECONFIG=$(grep -w "KUBECONFIG" /etc/profile | cut -d'=' -f2)
   if [[ $KUBECONFIG != '/etc/kubernetes/admin.conf' ]]; then
@@ -912,6 +916,13 @@ while [[ $# -gt 0 ]]; do
 
   kubernetes-init-node-name=* | -kubernetes-init-node-name=* | --kubernetes-init-node-name=*)
     kubernetes_init_node_name="${1#*=}"
+    ;;
+
+  control-plane-endpoint=* | -control-plane-endpoint=* | --control-plane-endpoint=*)
+    # 关于 apiserver-advertise-address 和 ControlPlaneEndpoint 的注意事项
+    # https://kubernetes.io/zh-cn/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#considerations-about-apiserver-advertise-address-and-controlplaneendpoint
+    # https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#considerations-about-apiserver-advertise-address-and-controlplaneendpoint
+    control_plane_endpoint="${1#*=}"
     ;;
 
   service-cidr=* | -service-cidr=* | --service-cidr=*)
