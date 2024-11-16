@@ -134,6 +134,22 @@ ubuntu-24.04:install:custom-config:
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
     - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
+    - kubectl -n kube-system get cm kubeadm-config -o yaml > kubeadm-config.yml
+    - cat kubeadm-config.yml
+    - |
+      if grep -q "serviceSubnet: $SERVICE_CIDR" "kubeadm-config.yml"; then
+        echo "使用了自定义 Service CIDR";
+      else
+        echo "未使用自定义 Service CIDR";
+        exit 1;
+      fi
+    - |
+      if grep -q "podSubnet: $POD_NETWORK_CIDR" "kubeadm-config.yml"; then
+        echo "使用了自定义 Pod CIDR";
+      else
+        echo "未使用自定义 Pod CIDR";
+        exit 1;
+      fi
     - cat /etc/kubernetes/manifests/kube-apiserver.yaml
     - |
       if grep -q "service-cluster-ip-range=$SERVICE_CIDR" "/etc/kubernetes/manifests/kube-apiserver.yaml"; then
