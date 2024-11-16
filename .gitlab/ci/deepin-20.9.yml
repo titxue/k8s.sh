@@ -65,7 +65,7 @@ deepin-20.9:install:
     - cat /etc/os-release
     - ip addr | grep 'inet '
     - |
-      if [[ $(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "deepin" ]] ; then
+      if [[ $(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "Deepin" ]] ; then
         echo "系统正确";
       else
         echo "系统不正确";
