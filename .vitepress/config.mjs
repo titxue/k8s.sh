@@ -146,6 +146,7 @@ export default defineConfig({
         items: [
           { text: '历史分支', link: '/history' },
           { text: 'Kubernetes 重置', link: '/question/kubeadm-reset' },
+          { text: '为什么 流水线 安装 Git？', link: '/question/why-install-git' },
           { text: '为什么 不使用 Docker？', link: '/question/why-not-use-docker' },
           { text: '为什么 跳过 流水线？', link: '/question/why-skip-pipelines' },
         ]
