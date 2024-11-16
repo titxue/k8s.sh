@@ -76,7 +76,7 @@ if [[ $os_type == 'centos' && $os_version == '8' ]]; then
   echo "CentOS 系统具体版本: $centos_os_version"
 fi
 
-if [[ $os_type == 'debian' ]]; then
+if [ -e "/etc/debian_version" ]; then
   readonly debian_os_version=$(cat /etc/debian_version)
   echo "Debian 系统具体版本: $debian_os_version"
 fi
@@ -111,7 +111,7 @@ case "$os_type" in
 anolis | almalinux | openEuler | rocky)
   docker_repo_name='centos'
   ;;
-kylin | openkylin)
+kylin | openkylin | Deepin)
   docker_repo_name='debian'
   ;;
 *) ;;
@@ -144,7 +144,7 @@ metrics_server_image=${metrics_server_images[0]}
 # 包管理类型
 package_type=
 case "$os_type" in
-ubuntu | debian | kylin | openkylin)
+ubuntu | debian | kylin | openkylin | Deepin)
   package_type=apt
   ;;
 centos | anolis | almalinux | openEuler | rocky)
@@ -212,11 +212,17 @@ EOF
 
     if [[ $os_type == 'openkylin' ]]; then
       case "$code_name" in
-      nile)
-        sed -i 's#nile#bookworm#' /etc/apt/sources.list.d/docker.list
+      yangtze | nile)
+        sed -i "s#$code_name#bookworm#" /etc/apt/sources.list.d/docker.list
         ;;
-      yangtze)
-        sed -i 's#yangtze#bookworm#' /etc/apt/sources.list.d/docker.list
+      *) ;;
+      esac
+    fi
+
+    if [[ $os_type == 'Deepin' ]]; then
+      case "$code_name" in
+      apricot)
+        sed -i "s#$code_name#buster#" /etc/apt/sources.list.d/docker.list
         ;;
       *) ;;
       esac
@@ -255,6 +261,13 @@ _remove_apt_ord_docker() {
     if [[ $os_version == '10' ]]; then
       for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     elif [[ $os_version == '11' ]]; then
+      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
+    else
+      for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
+    fi
+    ;;
+  Deepin)
+    if [[ $os_version == '20.9' ]]; then
       for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     else
       for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done

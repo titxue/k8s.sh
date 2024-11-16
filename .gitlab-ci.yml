@@ -66,6 +66,7 @@ include:
   - .gitlab/ci/debian-11.7.0.yml
   - .gitlab/ci/debian-12.4.0.yml
   - .gitlab/ci/debian-12.7.0.yml
+  - .gitlab/ci/deepin-20.9.yml
   - .gitlab/ci/openeuler-20.03.yml
   - .gitlab/ci/openeuler-22.03.yml
   - .gitlab/ci/openeuler-24.03.yml
