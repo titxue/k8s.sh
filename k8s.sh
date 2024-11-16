@@ -620,6 +620,9 @@ _kubernetes_init() {
   # 此处兼容 AnolisOS 23.1，防止退出
   source /etc/profile || true
 
+  # 查看集群配置
+  kubectl -n kube-system get cm kubeadm-config -o yaml
+
   kubectl get node -o wide
   kubectl get svc -o wide
   kubectl get pod -A -o wide
