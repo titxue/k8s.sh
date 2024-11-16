@@ -10,7 +10,7 @@
 - 需要加入集群的现有 `控制节点`（`控制平面`）初始化时，必须有 `--control-plane-endpoint` 参数
 - 相关内容
     - 参数配置：[control-plane-endpoint](../config.md#control-plane-endpoint)
-    - 关于 apiserver-advertise-address 和 ControlPlaneEndpoint 的注意事项：
+    - 关于 `apiserver-advertise-address` 和 `ControlPlaneEndpoint` 的注意事项：
         1. [官方中文文档](https://kubernetes.io/zh-cn/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#considerations-about-apiserver-advertise-address-and-controlplaneendpoint)
         2. [作者国内镜像中文文档](https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#considerations-about-apiserver-advertise-address-and-controlplaneendpoint)
 
