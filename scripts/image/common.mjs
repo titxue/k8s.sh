@@ -1,5 +1,9 @@
 import axios from 'axios'
 
+const sleep = function(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 const wwwAuthenticate = async (image, tag, config = {}) => {
   const url = new URL('https://' + image)
   url.pathname = `/v2${url.pathname}/manifests/${tag}`
@@ -35,7 +39,15 @@ const imageInfo = async function (image, tag, config = {}) {
     .then(response => response.data)
 }
 
+// async function main() {
+//   const info = await imageInfo('registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kube-scheduler', 'v1.28.13')
+//   console.log(info)
+// }
+//
+// main()
+
 export {
+  sleep,
   wwwAuthenticate,
   tokenMap,
   imageInfo

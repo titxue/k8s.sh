@@ -1,7 +1,7 @@
 import axios from 'axios'
 import semver from 'semver'
 import { SocksProxyAgent } from 'socks-proxy-agent'
-import { imageInfo } from './common.mjs'
+import { sleep, imageInfo } from './common.mjs'
 import https from 'https'
 
 // 配置 GitHub Token 作为环境变量，否则将限速
@@ -10,10 +10,6 @@ const githubToken = process.env.GITHUB_TOKEN
 const gitlabToken = process.env.GITLAB_TOKEN
 // 支持配置代理，如：socks5://127.0.0.1:1080
 const proxyUrl = process.env.HTTP_PROXY || process.env.HTTPS_PROXY
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 async function tags(page, per_page) {
   const tagUrl = `https://api.github.com/repos/kubernetes/kubernetes/tags?page=${page}&per_page=${per_page}`
@@ -56,15 +52,21 @@ async function tags(page, per_page) {
       continue
     }
 
+    // 版本号规则（最小长度：7）：v1.24.0
+    if (name.length < 7) {
+      continue
+    }
+
     if (semver.gte(name, minimumVersion)) {
       for (let i = 0; i < images.length; i++) {
         const image = images[i]
         try {
           await imageInfo(image, name)
+          console.log(`已存在镜像 ${image}:${name}`)
         } catch (Exception) {
           console.log(`缺少 ${image}:${name} 镜像`)
           if (gitlabToken) {
-            await sleep(5000)
+            await sleep(5_000)
             await axios.post(`${gitlabRepositoryBranchesUrl}${k8sImages[i]}/${name}`, {}, {
               headers: {
                 'PRIVATE-TOKEN': gitlabToken,
@@ -88,8 +90,6 @@ async function tags(page, per_page) {
           }
         }
       }
-    } else {
-      break
     }
   }
 
@@ -103,7 +103,6 @@ async function main() {
   do {
     total = await tags(page++, per_page)
   } while (total === per_page)
-  await tags(1, 6)
 }
 
 main()
