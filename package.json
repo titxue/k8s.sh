@@ -11,7 +11,8 @@
     "mirrors:ingress-nginx": "node scripts/mirrors/ingress-nginx.js",
     "mirrors:kube-prometheus": "node scripts/mirrors/kube-prometheus.js",
     "mirrors:metrics-server": "node scripts/mirrors/metrics-server.js",
-    "image:kubernetes": "node scripts/image/kubernetes.mjs"
+    "image:kubernetes": "node scripts/image/kubernetes.mjs",
+    "image:metrics-server": "node scripts/image/metrics-server.mjs"
   },
   "author": "徐晓伟 <xuxiaowei@xuxiaowei.com.cn>",
   "license": "Apache-2.0",
