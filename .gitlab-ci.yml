@@ -90,4 +90,5 @@ include:
   - .gitlab/ci/ubuntu-24.04-custom-cidr.yml
   - .gitlab/ci/ubuntu-24.04-custom-config.yml
   - .gitlab/ci/ubuntu-24.04-custom-control-plane-endpoint.yml
+  - .gitlab/ci/ubuntu-24.04-custom-local-yaml.yml
   - .gitlab/ci/ubuntu-24.04-kubernetes-v1.24.yml
