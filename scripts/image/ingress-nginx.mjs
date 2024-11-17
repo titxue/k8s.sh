@@ -13,6 +13,8 @@ const proxyUrl = process.env.HTTP_PROXY || process.env.HTTPS_PROXY
 
 async function tags(page, per_page) {
   const tagUrl = `https://api.github.com/repos/kubernetes/ingress-nginx/tags?page=${page}&per_page=${per_page}`
+  const yamlUrl = 'https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/tags/controller-'
+  const regex = /registry.k8s.io\/ingress-nginx\/kube-webhook-certgen:([^:]+)(?=@)/;
   const ref = 'registry.k8s.io/ingress-nginx/controller/v1.3.1'
   // https://gitlab.xuxiaowei.com.cn/hub.docker.com/github.com/kubernetes/ingress-nginx 项目 ID: 230
   const gitlabRepositoryBranchesUrl = `https://gitlab.xuxiaowei.com.cn/api/v4/projects/230/repository/branches?ref=${ref}&branch=`
@@ -81,6 +83,47 @@ async function tags(page, per_page) {
             console.log('缺少 GitLab Token，不创建分支')
           }
         }
+
+        await axios.get(`${yamlUrl}${name.replace('controller-', '')}/deploy/static/provider/cloud/deploy.yaml`, axiosConfig).then(async (resp) => {
+          const match = resp.data.match(regex)
+          if (match) {
+            const kubeWebhookCertgenImage = match[0]
+            const split = kubeWebhookCertgenImage.split(':')
+
+            try {
+              await imageInfo('registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen', split[1])
+              console.log(`已存在镜像 registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen:${split[1]}`)
+            } catch (Exception) {
+              console.log(`缺少 registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-kube-webhook-certgen:${split[1]} 镜像`)
+              if (gitlabToken) {
+                await sleep(5_000)
+                await axios.post(`${gitlabRepositoryBranchesUrl}registry.k8s.io/ingress-nginx/kube-webhook-certgen/${split[1]}`, {}, {
+                  headers: {
+                    'PRIVATE-TOKEN': gitlabToken,
+                  },
+                  httpsAgent: new https.Agent({
+                    rejectUnauthorized: false
+                  })
+                }).then((resp) => {
+                  console.log(`分支 registry.k8s.io/ingress-nginx/kube-webhook-certgen/${split[1]} 已创建完成`, resp.data)
+                }).catch((error) => {
+                  if (error.status === 400) {
+                    console.log(`创建分支 registry.k8s.io/ingress-nginx/kube-webhook-certgen/${split[1]}`, error.response.data)
+                  } else if (error.status === 401) {
+                    console.log(`创建分支 registry.k8s.io/ingress-nginx/kube-webhook-certgen/${split[1]}`, error.response.data)
+                  } else {
+                    console.log(error)
+                  }
+                })
+              } else {
+                console.log('缺少 GitLab Token，不创建分支')
+              }
+            }
+
+          }
+        }).catch((error) => {
+          console.log('获取 yaml 异常', error)
+        })
       }
     }
   }
