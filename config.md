@@ -402,7 +402,7 @@
 ### calico-url {id=calico-url}
 
 - 类型：`String`
-- 说明：`calico` 安装（初始化）时，使用的 `manifests` 文件 `URL`
+- 说明：`calico` 安装（初始化）时，使用的 `manifests` 文件 `URL`，支持本地文件
 - 默认值：空
 - 相关：优先级高于 `calico-mirror`、`calico-version`
 
@@ -497,7 +497,7 @@
 ### ingress-nginx-url {id=ingress-nginx-url}
 
 - 类型：`String`
-- 说明：`Ingress Nginx` 安装时，使用的 `manifests` 文件 `URL`
+- 说明：`Ingress Nginx` 安装时，使用的 `manifests` 文件 `URL`，支持本地文件
 - 默认值：空
 - 相关：优先级高于 `ingress-nginx-mirror`、`ingress-nginx-version`
 
@@ -583,7 +583,7 @@
 ### metrics-server-url {id=metrics-server-url}
 
 - 类型：`String`
-- 说明：`Metrics Server` 安装时，使用的 `manifests` 文件 `URL`
+- 说明：`Metrics Server` 安装时，使用的 `manifests` 文件 `URL`，支持本地文件
 - 默认值：空
 - 相关：优先级高于 `metrics-server-mirror`、`metrics-server-version`
 

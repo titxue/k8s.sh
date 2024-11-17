@@ -738,18 +738,28 @@ _calico_install() {
     calico_url=$calico_mirror/$calico_version/manifests/calico.yaml
   fi
   echo "calico manifests url: $calico_url"
-  curl -k -o calico.yaml $calico_url
 
-  _interface_name
+  calico_local_path=calico.yaml
+  if [[ $calico_url =~ ^https?:// ]]; then
+    curl -k -o $calico_local_path $calico_url
+  else
+    calico_local_path=$calico_url
+  fi
 
-  sed -i '/k8s,bgp/a \            - name: IP_AUTODETECTION_METHOD\n              value: "interface=INTERFACE_NAME"' calico.yaml
-  sed -i "s#INTERFACE_NAME#$interface_name#g" calico.yaml
+  if grep -q "interface=" "$calico_local_path"; then
+    echo "已配置 calico 使用的网卡，脚本跳过网卡配置"
+  else
+    _interface_name
 
-  sed -i "s#${calico_node_images[-1]}#$calico_node_image#g" calico.yaml
-  sed -i "s#${calico_cni_images[-1]}#$calico_cni_image#g" calico.yaml
-  sed -i "s#${calico_kube_controllers_images[-1]}#$calico_kube_controllers_image#g" calico.yaml
+    sed -i '/k8s,bgp/a \            - name: IP_AUTODETECTION_METHOD\n              value: "interface=INTERFACE_NAME"' $calico_local_path
+    sed -i "s#INTERFACE_NAME#$interface_name#g" $calico_local_path
+  fi
 
-  kubectl apply -f calico.yaml
+  sed -i "s#${calico_node_images[-1]}#$calico_node_image#g" $calico_local_path
+  sed -i "s#${calico_cni_images[-1]}#$calico_cni_image#g" $calico_local_path
+  sed -i "s#${calico_kube_controllers_images[-1]}#$calico_kube_controllers_image#g" $calico_local_path
+
+  kubectl apply -f $calico_local_path
   kubectl get pod -A -o wide
   if [[ $cluster != true ]]; then
     kubectl wait --for=condition=Ready --all pods -A --timeout=300s || true
@@ -761,13 +771,19 @@ _ingress_nginx_install() {
     ingress_nginx_url=$ingress_nginx_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml
   fi
   echo "ingress nginx manifests url: $ingress_nginx_url"
-  curl -k -o deploy.yaml $ingress_nginx_url
 
-  sudo sed -i 's/@.*$//' deploy.yaml
-  sudo sed -i "s#${ingress_nginx_controller_images[-1]}#$ingress_nginx_controller_image#g" deploy.yaml
-  sudo sed -i "s#${ingress_nginx_kube_webhook_certgen_images[-1]}#$ingress_nginx_kube_webhook_certgen_image#g" deploy.yaml
+  ingress_nginx_local_path=ingress_nginx.yaml
+  if [[ $ingress_nginx_url =~ ^https?:// ]]; then
+    curl -k -o $ingress_nginx_local_path $ingress_nginx_url
+  else
+    ingress_nginx_local_path=$ingress_nginx_url
+  fi
 
-  kubectl apply -f deploy.yaml
+  sudo sed -i 's/@.*$//' $ingress_nginx_local_path
+  sudo sed -i "s#${ingress_nginx_controller_images[-1]}#$ingress_nginx_controller_image#g" $ingress_nginx_local_path
+  sudo sed -i "s#${ingress_nginx_kube_webhook_certgen_images[-1]}#$ingress_nginx_kube_webhook_certgen_image#g" $ingress_nginx_local_path
+
+  kubectl apply -f $ingress_nginx_local_path
   kubectl get pod -A -o wide
 }
 
@@ -788,17 +804,22 @@ _metrics_server_install() {
   if ! [[ $metrics_server_url ]]; then
     metrics_server_url=$metrics_server_mirror/$metrics_server_version/components.yaml
   fi
-
   echo "metrics server manifests url: $metrics_server_url"
-  curl -k -o components.yaml $metrics_server_url
 
-  sudo sed -i "s#${metrics_server_images[-1]}#$metrics_server_image#g" components.yaml
-
-  if [[ $metrics_server_secure_tls != true ]]; then
-    sed -i '/- args:/a \ \ \ \ \ \ \ \ - --kubelet-insecure-tls' components.yaml
+  metrics_server_local_path=metrics_server.yaml
+  if [[ $metrics_server_url =~ ^https?:// ]]; then
+    curl -k -o $metrics_server_local_path $metrics_server_url
+  else
+    metrics_server_local_path=$metrics_server_url
   fi
 
-  kubectl apply -f components.yaml
+  sudo sed -i "s#${metrics_server_images[-1]}#$metrics_server_image#g" $metrics_server_local_path
+
+  if [[ $metrics_server_secure_tls != true ]]; then
+    sed -i '/- args:/a \ \ \ \ \ \ \ \ - --kubelet-insecure-tls' $metrics_server_local_path
+  fi
+
+  kubectl apply -f $metrics_server_local_path
   kubectl get pod -A -o wide
 }
 
