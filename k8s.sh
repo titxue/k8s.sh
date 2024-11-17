@@ -127,7 +127,7 @@ calico_cni_image=${calico_cni_images[0]}
 calico_kube_controllers_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/calico-kube-controllers" "docker.io/calico/kube-controllers")
 calico_kube_controllers_image=${calico_kube_controllers_images[0]}
 
-ingress_nginx_mirrors=("https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw" "https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/tags")
+ingress_nginx_mirrors=("https://k8s-sh.xuxiaowei.com.cn/mirrors/kubernetes/ingress-nginx" "https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw" "https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/tags")
 ingress_nginx_mirror=${ingress_nginx_mirrors[0]}
 ingress_nginx_version=v1.11.3
 ingress_nginx_controller_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/ingress-nginx-controller" "registry.k8s.io/ingress-nginx/controller")
