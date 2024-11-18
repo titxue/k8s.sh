@@ -1130,6 +1130,15 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
+if ! command -v 'sudo' &>/dev/null; then
+  if [[ $package_type == 'apt' ]]; then
+    echo "sudo 未安装，正在安装..."
+    apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
+    apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y sudo
+    echo "sudo 安装完成"
+  fi
+fi
+
 _node() {
   _swap_off
   _curl
