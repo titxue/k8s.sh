@@ -586,7 +586,7 @@ _kubernetes_config() {
 
   if [[ $os_type == 'centos' ]]; then
     case "$centos_os_version" in
-    '8.1' | '8.2' | '8.3' | '8.4' | '8.5')
+    '8.1.1911' | '8.2.2004' | '8.3.2011' | '8.4.2105' | '8.5.2111')
       sudo yum install -y iproute-tc
       ;;
     *) ;;
