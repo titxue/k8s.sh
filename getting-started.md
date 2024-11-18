@@ -111,18 +111,27 @@ const command = function () {
     curl -k -o k8s.sh ${source.value}
     chmod +x k8s.sh
     sudo ./k8s.sh standalone
+    
+    # 等效命令
+    # sudo ./k8s.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo containerd-install containerd-config kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init kubernetes-init-node-name=k8s-1 calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network metrics-server-install enable-shell-autocompletion print-join-command
   `, { lang: 'shell' })
 
   const clusterResult = md.render(`
     curl -k -o k8s.sh ${source.value}
     chmod +x k8s.sh
     sudo ./k8s.sh cluster
+    
+    # 等效命令
+    # sudo ./k8s.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo containerd-install containerd-config kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init kubernetes-init-node-name=k8s-1 calico-install ingress-nginx-install ingress-nginx-host-network metrics-server-install enable-shell-autocompletion print-join-command
   `, { lang: 'shell' })
 
   const nodeResult = md.render(`
     curl -k -o k8s.sh ${source.value}
     chmod +x k8s.sh
     sudo ./k8s.sh node
+    
+    # 等效命令
+    # sudo ./k8s.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo containerd-install containerd-config kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config
   `, { lang: 'shell' })
 
   document.getElementById('standalone-code').innerHTML = standaloneResult
