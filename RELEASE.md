@@ -50,3 +50,4 @@
 12. 更新 [package.json](package.json) 中的 【version】 等
 13. 更新 [pages.yml](.gitlab/ci/pages.yml) 中的 【sed】 等
 14. 更新 [README.md](README.md) 中的 【国内镜像支持的范围】 中的 链接 等
+15. 更新 [CHANGELOG.md](CHANGELOG.md) 中的当前版本为正式版
