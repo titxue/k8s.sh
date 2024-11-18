@@ -60,6 +60,7 @@ ubuntu-kylin-22.04.5:install:
       - echo $UBUNTU_URL
       - cat /etc/apt/sources.list
       - sed -i "s#http://cn.archive.ubuntu.com/ubuntu#$UBUNTU_URL#" /etc/apt/sources.list
+      - sed -i "s#http://security.ubuntu.com/ubuntu#$UBUNTU_URL#" /etc/apt/sources.list
       - cat /etc/apt/sources.list
       - sudo apt-get -o Dpkg::Lock::Timeout=120 update
       - sudo apt-get -o Dpkg::Lock::Timeout=120 install -y git
