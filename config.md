@@ -339,6 +339,12 @@
 - 用途：用于`控制节点`（`控制平面`）初始化时自定义当前节点的名称
 - 相关：如果未定义，将使用宿主机的名称作为节点名称。整个集群唯一。
 
+### kubernetes-init-congrats {id=kubernetes-init-congrats}
+
+- 类型：`Boolean`
+- 说明：初始化完成后的提示
+- 用途：用于提示 `刷新环境变量` 或 `SSH 重新连接` 后，才能正常控制 `Kubernetes`
+
 ### control-plane-endpoint {id=control-plane-endpoint}
 
 ::: warning 警告
