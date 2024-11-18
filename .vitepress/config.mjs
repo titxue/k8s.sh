@@ -138,6 +138,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: '镜像文件', link: '/mirrors' },
+          { text: '命令', link: '/feature/command' },
         ]
       },
       {
