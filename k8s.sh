@@ -609,6 +609,22 @@ _kubernetes_config() {
 
 }
 
+_kubernetes_init_congrats() {
+  echo
+  echo
+  echo
+  echo -e "${COLOR_BLUE}${EMOJI_CONGRATS}${EMOJI_CONGRATS}${EMOJI_CONGRATS}${COLOR_RESET}"
+  echo -e "${COLOR_BLUE}Kubernetes 已完成安装${COLOR_RESET}"
+  echo
+  echo -e "${COLOR_BLUE}请选择下列方式之一，重载环境变量后，即可直接控制 Kubernetes${COLOR_RESET}"
+  echo
+  echo -e "${COLOR_BLUE}1. 执行命令刷新环境变量: ${COLOR_GREEN}source /etc/profile${COLOR_RESET}"
+  echo -e "${COLOR_BLUE}2. 重新连接 SSH${COLOR_RESET}"
+  echo
+  echo
+  echo
+}
+
 _kubernetes_init() {
   if [[ $kubernetes_init_node_name ]]; then
     kubernetes_init_node_name="--node-name=$kubernetes_init_node_name"
@@ -644,19 +660,18 @@ _kubernetes_init() {
   kubectl get svc -o wide
   kubectl get pod -A -o wide
 
-  echo
-  echo
-  echo
-  echo -e "${COLOR_BLUE}${EMOJI_CONGRATS}${EMOJI_CONGRATS}${EMOJI_CONGRATS}${COLOR_RESET}"
-  echo -e "${COLOR_BLUE}Kubernetes 已完成安装${COLOR_RESET}"
-  echo
-  echo -e "${COLOR_BLUE}请选择下列方式之一，重载环境变量后，即可直接控制 Kubernetes${COLOR_RESET}"
-  echo
-  echo -e "${COLOR_BLUE}1. 执行命令刷新环境变量: ${COLOR_GREEN}source /etc/profile${COLOR_RESET}"
-  echo -e "${COLOR_BLUE}2. 重新连接 SSH${COLOR_RESET}"
-  echo
-  echo
-  echo
+  if [[ $standalone == true ]]; then
+    # 单机模式，在下方 $standalone == true 时执行 _kubernetes_init_congrats
+    echo
+  elif [[ $cluster == true ]]; then
+    # 集群模式，在下方 $cluster == true 时执行 _kubernetes_init_congrats
+    echo
+  elif [[ $node == true ]]; then
+    # 工作节点准备，不执行 _kubernetes_init_congrats
+    echo
+  else
+    _kubernetes_init_congrats
+  fi
 }
 
 _kubernetes_taint() {
@@ -948,6 +963,10 @@ while [[ $# -gt 0 ]]; do
     kubernetes_init=true
     ;;
 
+  kubernetes-init-congrats | -kubernetes-init-congrats | --kubernetes-init-congrats)
+    kubernetes_init_congrats=true
+    ;;
+
   kubernetes-init-node-name=* | -kubernetes-init-node-name=* | --kubernetes-init-node-name=*)
     kubernetes_init_node_name="${1#*=}"
     ;;
@@ -1170,6 +1189,7 @@ if [[ $standalone == true ]]; then
   _metrics_server_install
   _enable_shell_autocompletion
   _print_join_command
+  _kubernetes_init_congrats
 elif [[ $cluster == true ]]; then
   # 集群模式
 
@@ -1184,10 +1204,26 @@ elif [[ $cluster == true ]]; then
   _metrics_server_install
   _enable_shell_autocompletion
   _print_join_command
+  _kubernetes_init_congrats
 elif [[ $node == true ]]; then
   # 工作节点准备
 
   _node
+
+  echo
+  echo
+  echo
+  echo -e "${COLOR_BLUE}${EMOJI_CONGRATS}${EMOJI_CONGRATS}${EMOJI_CONGRATS}${COLOR_RESET}"
+  echo -e "${COLOR_BLUE}Kubernetes 节点已配置完成${COLOR_RESET}"
+  echo
+  echo -e "${COLOR_BLUE}请选择下列方式之一：${COLOR_RESET}"
+  echo
+  echo -e "${COLOR_BLUE}1. 初始化为控制节点（控制平面）${COLOR_RESET}"
+  echo -e "${COLOR_BLUE}2. 作为工作节点加入集群${COLOR_RESET}"
+  echo
+  echo
+  echo
+
 else
 
   if [[ $swap_off == true ]]; then
@@ -1281,4 +1317,9 @@ else
   if [[ $print_join_command == true ]]; then
     _print_join_command
   fi
+
+  if [[ $kubernetes_init_congrats == true ]]; then
+    _kubernetes_init_congrats
+  fi
+
 fi
