@@ -62,6 +62,9 @@ ubuntu-kylin-18.04.5:install:
       - sed -i "s#http://cn.archive.ubuntu.com/ubuntu#$UBUNTU_URL#" /etc/apt/sources.list
       - sed -i "s#http://security.ubuntu.com/ubuntu#$UBUNTU_URL#" /etc/apt/sources.list
       - cat /etc/apt/sources.list
+      - cat /etc/apt/sources.list.d/ubuntukylin.list
+      - echo '无法访问 http://archive.ubuntukylin.com:10006'
+      - rm /etc/apt/sources.list.d/ubuntukylin.list -rf
       - sudo apt-get -o Dpkg::Lock::Timeout=120 update
       - sudo apt-get -o Dpkg::Lock::Timeout=120 install -y git
       - git config --global http.sslVerify false
