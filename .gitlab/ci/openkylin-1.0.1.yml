@@ -70,8 +70,7 @@ openkylin-1.0.1:install:
       - sed -i "s#http://software.openkylin.top/openkylin/yangtze#$OPENKYLIN_SOFTWARE_YANGTZE_URL#" -i.bak /etc/apt/sources.list.d/openkylin-software.list
       - cat /etc/apt/sources.list.d/openkylin-software.list
       - apt-get -o Dpkg::Lock::Timeout=120 update
-      - apt-get -o Dpkg::Lock::Timeout=120 install -y sudo
-      - sudo apt-get -o Dpkg::Lock::Timeout=120 install -y git
+      - apt-get -o Dpkg::Lock::Timeout=120 install -y git
       - git config --global http.sslVerify false
   before_script:
     - cat /etc/os-release

@@ -66,8 +66,7 @@ debian-12.7.0:install:
       - echo 'deb http://172.25.25.14:48081/repository/debian/ bookworm-backports main non-free contrib' >> /etc/apt/sources.list
       - cat /etc/apt/sources.list
       - apt-get -o Dpkg::Lock::Timeout=120 update
-      - apt-get -o Dpkg::Lock::Timeout=120 install -y sudo
-      - sudo apt-get -o Dpkg::Lock::Timeout=120 install -y git
+      - apt-get -o Dpkg::Lock::Timeout=120 install -y git
       - git config --global http.sslVerify false
   before_script:
     - cat /etc/os-release

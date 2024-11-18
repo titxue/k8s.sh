@@ -58,8 +58,7 @@ deepin-20.9:install:
   hooks:
     pre_get_sources_script:
       - apt-get -o Dpkg::Lock::Timeout=120 update
-      - apt-get -o Dpkg::Lock::Timeout=120 install -y sudo
-      - sudo apt-get -o Dpkg::Lock::Timeout=120 install -y git
+      - apt-get -o Dpkg::Lock::Timeout=120 install -y git
       - git config --global http.sslVerify false
   before_script:
     - cat /etc/os-release
