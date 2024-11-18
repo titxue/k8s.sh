@@ -1,1 +1,20 @@
 # 更新日志
+
+## SNAPSHOT/2.0.0
+
+### ⭐ New Features | 新功能
+
+1. 支持安装的 Kubernetes 版本: 1.24/1.25/1.26/1.27/1.28/1.29/1.30/1.31
+2. 支持系统:
+    
+    | 系统        | 系统版本                                                           |
+    |-----------|----------------------------------------------------------------|
+    | AlmaLinux | 8.10/9.4                                                       |
+    | AnolisOS  | 7.7/7.9/8.2/8.4/8.6/8.8/8.9/23.0/23.1                          |
+    | CentOS    | 7.9/8.1/8.2/8.3/8.4/8.5/9-20241028.0                           |
+    | Debian    | 10.10.0 buster/11.7.0 bullseye/12.4.0 bookworm/12.7.0 bookworm |
+    | Deepin    | 20.9 apricot                                                   |
+    | OpenEuler | 20.03/22.03/24.03                                              |
+    | OpenKylin | 1.0 yangtze/1.0.1 yangtze/1.0.2 yangtze/2.0 nile               |
+    | Rocky     | 8.10 Green Obsidian/9.4 Blue Onyx                              |
+    | Ubuntu    | 18.04 bionic/20.04 focal/22.04 jammy/24.04 noble               |
