@@ -37,6 +37,7 @@ readonly COLOR_YELLOW='\033[93m'
 
 # 定义表情
 readonly EMOJI_CONGRATS="\U0001F389"
+readonly EMOJI_FAILURE="\U0001F61E"
 
 # 查看系统类型、版本、内核
 hostnamectl || true
@@ -1173,6 +1174,34 @@ _node() {
   _kubernetes_images_pull
   _kubernetes_config
 }
+
+# 三者互斥
+
+count=0
+
+if [[ $standalone == true ]]; then
+  count=$(expr $count + 1)
+fi
+
+if [[ $cluster == true ]]; then
+  count=$(expr $count + 1)
+fi
+
+if [[ $node == true ]]; then
+  count=$(expr $count + 1)
+fi
+
+if [[ $count -gt 1 ]]; then
+  echo ''
+  echo ''
+  echo ''
+  echo -e "${COLOR_RED}${EMOJI_FAILURE}${EMOJI_FAILURE}${EMOJI_FAILURE}${COLOR_RESET}"
+  echo -e "${COLOR_RED}参数 standalone、cluster、node 三者互斥${COLOR_RESET}"
+  echo ''
+  echo ''
+  echo ''
+  exit 1
+fi
 
 if [[ $standalone == true ]]; then
   # 单机模式
