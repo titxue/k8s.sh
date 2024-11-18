@@ -92,6 +92,7 @@ include:
   - .gitlab/ci/ubuntu-24.04-custom-control-plane-endpoint.yml
   - .gitlab/ci/ubuntu-24.04-custom-local-yaml.yml
   - .gitlab/ci/ubuntu-24.04-kubernetes-v1.24.yml
+  - .gitlab/ci/ubuntu-kylin-18.04.5.yml
   - .gitlab/ci/ubuntu-kylin-20.04.6.yml
   - .gitlab/ci/ubuntu-kylin-22.04.5.yml
   - .gitlab/ci/ubuntu-kylin-24.04.1.yml
