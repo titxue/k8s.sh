@@ -1,0 +1,180 @@
+ubuntu-kylin-24.04.1:env:
+  stage: env
+  image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
+  variables:
+    QEMU_ID: $UBUNTU_KYLIN_24_04_1_QEMU_ID
+    SNAPSHOT: $UBUNTU_KYLIN_24_04_1_SNAPSHOT
+  before_script:
+    - echo $PVE_ADDRESS
+    - echo $UBUNTU_KYLIN_24_04_1_QEMU_ID
+    - echo $QEMU_ID
+    - echo $UBUNTU_KYLIN_24_04_1_SNAPSHOT
+    - echo $SNAPSHOT
+  script:
+    # 获取凭证
+    - |
+      response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/access/ticket" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "username=$PVE_USERNAME" --data-urlencode "password=$PVE_PASSWORD" --data-urlencode 'realm=pam' --data-urlencode 'new-format=1')
+    - echo $response | jq -r '.success'
+    # 解析凭证
+    - token=$(echo $response | jq -r '.data.CSRFPreventionToken')
+    - ticket=$(echo $response | jq -r '.data.ticket')
+    # 还原服务器快照
+    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/snapshot/$SNAPSHOT/rollback" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+    - echo $response | jq -r '.success'
+    # 休眠一段时间，等待服务器还原快照
+    - sleep 30
+    # 开机
+    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/status/start" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+    - echo $response | jq -r '.success'
+    - |
+      while true; do
+        # 查看状态
+        response=$(curl -k --request GET --url "$PVE_ADDRESS/api2/json/nodes/pve/qemu/$QEMU_ID/status/current" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+        status=$(echo "$response" | jq -r '.data.status')
+        if [ "$status" = "running" ]; then
+          echo "服务器已运行";
+          break
+        else
+          echo '等待服务器运行';
+          sleep 1;
+        fi
+      done
+    - echo '等待一段时间，待服务器完全启动'
+    - sleep 30
+  timeout: 180s
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/ubuntu-kylin-24.04.1.yml
+          - k8s.sh
+  tags:
+    - g150s-docker
+  when: manual
+
+ubuntu-kylin-24.04.1:install:
+  stage: install
+  needs:
+    - ubuntu-kylin-24.04.1:env
+  hooks:
+    pre_get_sources_script:
+      - echo $UBUNTU_URL
+      - cat /etc/apt/sources.list
+      - cat /etc/apt/sources.list.d/ubuntu.sources
+      - sed -i "s#http://cn.archive.ubuntu.com/ubuntu#$UBUNTU_URL#" /etc/apt/sources.list.d/ubuntu.sources
+      - sed -i "s#http://security.ubuntu.com/ubuntu#$UBUNTU_URL#" /etc/apt/sources.list.d/ubuntu.sources
+      - cat /etc/apt/sources.list.d/ubuntu.sources
+      - sudo apt-get -o Dpkg::Lock::Timeout=120 update
+      - sudo apt-get -o Dpkg::Lock::Timeout=120 install -y git
+      - git config --global http.sslVerify false
+  before_script:
+    - cat /etc/os-release
+    - ip addr | grep 'inet '
+    - |
+      if [[ $(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "ubuntu" ]] ; then
+        echo "系统正确";
+      else
+        echo "系统不正确";
+        exit 1;
+      fi
+    - |
+      if [[ $(grep -w "NAME" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "Ubuntu Kylin" ]] ; then
+        echo "系统正确";
+      else
+        echo "系统不正确";
+        exit 1;
+      fi
+    - |
+      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "24.04" ]] ; then
+        echo "系统版本正确";
+      else
+        echo "系统版本不正确";
+        exit 1;
+      fi
+    - |
+      if [[ $(grep -w "VERSION" /etc/os-release | cut -d'=' -f2 | tr -d '"' | awk '{print $1}') == "24.04.1" ]] ; then
+        echo "系统版本正确";
+      else
+        echo "系统版本不正确";
+        exit 1;
+      fi
+  script:
+    - chmod +x k8s.sh
+    - ./k8s.sh standalone
+    - export KUBECONFIG=/etc/kubernetes/admin.conf
+    - kubectl get node -o wide
+    - kubectl get svc -A -o wide
+    - kubectl get pod -A -o wide
+    - |
+      while true; do
+        pod_status=$(kubectl get pods --all-namespaces -o jsonpath="{range .items[*]}{.status.phase}{'\n'}{end}" | sort | uniq);
+        echo $pod_status
+        if echo "$pod_status" | grep -q "Pending"; then
+          echo '等待 pod 运行';
+          sleep 5;
+        else
+          break;
+        fi
+      done
+    - sleep 30
+    - kubectl apply -f https://gitee.com/xuxiaowei-com-cn/java/raw/main/deploy/deploy-service-ingress.yaml
+    - |
+      while true; do
+        pod_status=$(kubectl get pods --all-namespaces -o jsonpath="{range .items[*]}{.status.phase}{'\n'}{end}" | sort | uniq);
+        echo $pod_status
+        if echo "$pod_status" | grep -q "Pending"; then
+          echo '等待 pod 运行';
+          sleep 5;
+        else
+          break;
+        fi
+      done
+    - sleep 30
+    - kubectl get node -o wide
+    - kubectl top node
+    - kubectl get svc -A -o wide
+    - kubectl get pod -A -o wide
+    - kubectl top pod -A
+    - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
+    - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
+    - curl --resolve java.resp-2.localdev.me:80:127.0.0.1 http://java.resp-2.localdev.me && echo
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/ubuntu-kylin-24.04.1.yml
+          - k8s.sh
+  tags:
+    - GitLab-CICD-Ubuntu-Kylin-24.04.1
+  environment: kubernetes/v1.31
+
+ubuntu-kylin-24.04.1:shutdown:
+  stage: shutdown
+  needs:
+    - ubuntu-kylin-24.04.1:install
+  image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
+  variables:
+    QEMU_ID: $UBUNTU_KYLIN_24_04_1_QEMU_ID
+    SNAPSHOT: $UBUNTU_KYLIN_24_04_1_SNAPSHOT
+  before_script:
+    - echo $PVE_ADDRESS
+    - echo $UBUNTU_KYLIN_24_04_1_QEMU_ID
+    - echo $QEMU_ID
+    - echo $UBUNTU_KYLIN_24_04_1_SNAPSHOT
+    - echo $SNAPSHOT
+  script:
+    # 获取凭证
+    - |
+      response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/access/ticket" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "username=$PVE_USERNAME" --data-urlencode "password=$PVE_PASSWORD" --data-urlencode 'realm=pam' --data-urlencode 'new-format=1')
+    - echo $response | jq -r '.success'
+    # 解析凭证
+    - token=$(echo $response | jq -r '.data.CSRFPreventionToken')
+    - ticket=$(echo $response | jq -r '.data.ticket')
+    # 关机
+    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/status/shutdown" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+    - echo $response | jq -r '.success'
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/ubuntu-kylin-24.04.1.yml
+          - k8s.sh
+  tags:
+    - g150s-docker
