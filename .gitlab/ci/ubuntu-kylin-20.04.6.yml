@@ -83,7 +83,7 @@ ubuntu-kylin-20.04.6:install:
         exit 1;
       fi
     - |
-      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "22.04" ]] ; then
+      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "20.04" ]] ; then
         echo "系统版本正确";
       else
         echo "系统版本不正确";
