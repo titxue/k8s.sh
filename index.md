@@ -11,6 +11,9 @@ hero:
       text: 快速开始
       link: /getting-started
     - theme: alt
+      text: 简介
+      link: /README
+    - theme: alt
       text: 参数说明
       link: /config
     - theme: alt
