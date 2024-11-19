@@ -29,6 +29,7 @@ include:
   - .gitlab/ci/almalinux-8.10.yml
   - .gitlab/ci/almalinux-9.4.yml
   - .gitlab/ci/almalinux-9.4-kubernetes-v1.24.yml
+  - .gitlab/ci/almalinux-9.5.yml
   - .gitlab/ci/anolis-7.7.yml
   - .gitlab/ci/anolis-7.7-kubernetes-v1.24.yml
   - .gitlab/ci/anolis-7.7-kubernetes-v1.25.yml
