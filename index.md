@@ -24,9 +24,9 @@ features:
   - title: Kubernetes
     details: 支持从 1.24 到 1.31 的所有版本，使用国内镜像加速安装配置
   - title: 操作系统
-    details: 支持主流操作系统，支持国产操作系统（龙蜥 AnolisOS、欧拉 OpenEuler、麒麟 OpenKylin、优麒麟 Ubuntu Kylin、深度 Deepin 等）
+    details: 支持主流操作系统，支持国产操作系统（龙蜥 AnolisOS、欧拉 OpenEuler、银河麒麟 Kylin、开放麒麟 OpenKylin、优麒麟 Ubuntu Kylin、深度 Deepin 等）
   - title: 自动化测试
-    details: 现已支持超过 43+ 种不同系统版本，提供超过 71+ 个不同流水线配置自动化测试 Kubernetes 安装
+    details: 现已支持超过 44+ 种不同系统版本，提供超过 72+ 个不同流水线配置自动化测试 Kubernetes 安装
   - title: Containerd
     details: 使用 Containerd 作为容器运行时，使用国内镜像加速安装配置
   - title: Calico
