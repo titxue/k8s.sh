@@ -87,6 +87,13 @@ centos-7.9:install:
         echo "系统版本不正确";
         exit 1;
       fi
+    - |
+      if [[ $(uname -v) == "#1 SMP Mon Oct 19 16:18:59 UTC 2020" ]] ; then
+        echo "系统内核构建时间正确";
+      else
+        echo "系统内核构建时间不正确";
+        exit 1;
+      fi
   script:
     - chmod +x k8s.sh
     - ./k8s.sh standalone

@@ -81,10 +81,17 @@ centos-7.9-2207:install:
         exit 1;
       fi
     - |
-      if [[ $(cat /etc/redhat-release | awk '{print $4}') == "7.9.2207" ]] ; then
+      if [[ $(cat /etc/redhat-release | awk '{print $4}') == "7.9.2009" ]] ; then
         echo "系统版本正确";
       else
         echo "系统版本不正确";
+        exit 1;
+      fi
+    - |
+      if [[ $(uname -v) == "#1 SMP Tue Jun 28 15:37:28 UTC 2022" ]] ; then
+        echo "系统内核构建时间正确";
+      else
+        echo "系统内核构建时间不正确";
         exit 1;
       fi
   script:
