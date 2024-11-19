@@ -21,9 +21,9 @@
 
 | Linux/Kubernetes                | 1.31 | 1.30 | 1.29 | 1.28 | 1.27 | 1.26 | 1.25 | 1.24 |
 |---------------------------------|------|------|------|------|------|------|------|------|
-| AlmaLinux 8.10                  | ✅    |      |      |      |      |      |      |      |
-| AlmaLinux 9.4                   | ✅    |      |      |      |      |      |      | ✅    |
-| AlmaLinux 9.5                   | ✅    |      |      |      |      |      |      |      |
+| AlmaLinux 8.10 Cerulean Leopard | ✅    |      |      |      |      |      |      |      |
+| AlmaLinux 9.4 Seafoam Ocelot    | ✅    |      |      |      |      |      |      | ✅    |
+| AlmaLinux 9.5 Teal Serval       | ✅    |      |      |      |      |      |      |      |
 | 龙蜥 AnolisOS 7.7                 | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    |
 | 龙蜥 AnolisOS 7.9                 | ✅    |      |      |      |      |      |      | ✅    |
 | 龙蜥 AnolisOS 8.2                 | ✅    |      |      |      |      |      |      |      |
