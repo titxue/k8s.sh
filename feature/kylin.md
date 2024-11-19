@@ -1,6 +1,6 @@
 # 银河麒麟操作系统专区 {id=kylin}
 
-- 由于银河麒麟的安全限制，需要做到以下 `四点` 才能安装 `Kubernetes`
+- 由于银河麒麟的安全限制，`Kylin Linux Desktop V10 (SP1) 2403` 需要做到以下 `四点` 才能安装 `Kubernetes`
 
 [[toc]]
 
