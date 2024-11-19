@@ -16,6 +16,6 @@
     | 深度 Deepin        | 20.9 apricot                                                                |
     | 欧拉 OpenEuler     | 20.03/22.03/24.03                                                           |
     | 开放麒麟 OpenKylin   | 1.0 yangtze/1.0.1 yangtze/1.0.2 yangtze/2.0 nile                            |
-    | Rocky            | 8.10 Green Obsidian/9.4 Blue Onyx                                           |
+    | Rocky            | 8.10 Green Obsidian/9.4 Blue Onyx/9.5 Blue Onyx                             |
     | 乌班图 Ubuntu       | 18.04 bionic/20.04 focal/22.04 jammy/24.04 noble                            |
     | 优麒麟 Ubuntu Kylin | 18.04.5 bionic/20.04.6 focal/22.04.5 jammy/24.04.1 noble                    |

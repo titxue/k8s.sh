@@ -55,6 +55,7 @@
 | 开放麒麟 OpenKylin 2.0 nile         | ✅    |      |      |      |      |      |      |      |
 | Rocky 8.10 Green Obsidian       | ✅    |      |      |      |      |      |      |      |
 | Rocky 9.4 Blue Onyx             | ✅    |      |      |      |      |      |      |      |
+| Rocky 9.5 Blue Onyx             | ✅    |      |      |      |      |      |      |      |
 | 乌班图 Ubuntu 18.04 bionic         | ✅    |      |      |      |      |      |      |      |
 | 乌班图 Ubuntu 20.04 focal          | ✅    |      |      |      |      |      |      |      |
 | 乌班图 Ubuntu 22.04 jammy          | ✅    |      |      |      |      |      |      |      |
