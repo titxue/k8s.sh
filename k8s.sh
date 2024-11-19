@@ -220,6 +220,15 @@ EOF
       esac
     fi
 
+    if [[ $os_type == 'kylin' ]]; then
+      case "$os_version" in
+      v10)
+        sed -i "s#$code_name#bullseye#" /etc/apt/sources.list.d/docker.list
+        ;;
+      *) ;;
+      esac
+    fi
+
     if [[ $os_type == 'Deepin' ]]; then
       case "$code_name" in
       apricot)
@@ -269,6 +278,13 @@ _remove_apt_ord_docker() {
     ;;
   Deepin)
     if [[ $os_version == '20.9' ]]; then
+      for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
+    else
+      for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
+    fi
+    ;;
+  kylin)
+    if [[ $os_version == 'v10' ]]; then
       for pkg in docker.io docker-doc docker-compose containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
     else
       for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout remove -y $pkg; done
