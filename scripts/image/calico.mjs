@@ -11,6 +11,8 @@ const gitlabToken = process.env.GITLAB_TOKEN
 // 支持配置代理，如：socks5://127.0.0.1:1080
 const proxyUrl = process.env.HTTP_PROXY || process.env.HTTPS_PROXY
 
+let sum = 0
+
 async function tags(page, per_page) {
   const tagUrl = `https://api.github.com/repos/projectcalico/calico/tags?page=${page}&per_page=${per_page}`
   const ref = 'calico/cni/v3.24.0'
@@ -52,6 +54,9 @@ async function tags(page, per_page) {
 
     if (semver.gte(name, minimumVersion)) {
       for (let i = 0; i < images.length; i++) {
+
+        sum++
+
         const image = images[i]
         try {
           await imageInfo(image, name)
@@ -96,6 +101,7 @@ async function main() {
   do {
     total = await tags(page++, per_page)
   } while (total === per_page)
+  console.log(sum)
 }
 
 main()

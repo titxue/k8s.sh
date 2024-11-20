@@ -30,3 +30,12 @@
     | https://github.com/kubernetes-sigs/metrics-server      | v0.4.0/v0.4.1/v0.4.2/v0.4.3/v0.4.4/v0.4.5/v0.5.0/v0.5.1/v0.5.2/v0.6.0/v0.6.1/v0.6.2/v0.6.3/v0.6.4/v0.7.0/v0.7.1/v0.7.2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
     | https://github.com/projectcalico/calico                | v3.24.0/v3.24.1/v3.24.2/v3.24.3/v3.24.4/v3.24.5/v3.24.6/v3.25.0/v3.25.1/v3.25.2/v3.26.0/v3.26.1/v3.26.2/v3.26.3/v3.26.4/v3.26.5/v3.27.0/v3.27.1/v3.27.2/v3.27.3/v3.27.4/v3.28.0/v3.28.1/v3.28.2/v3.29.0                                                                                                                                                                                                                                                                                                                                                                                                     |
     | https://github.com/prometheus-operator/kube-prometheus | v0.11.0/v0.12.0/v0.13.0/v0.14.0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+
+4. 同步 Docker 镜像
+
+    | 仓库                                                     | 数量  |
+    |--------------------------------------------------------|-----|
+    | https://github.com/kubernetes/ingress-nginx            | 32  |
+    | https://github.com/kubernetes/kubernetes               | 420 |
+    | https://github.com/kubernetes-sigs/metrics-server      | 17  |
+    | https://github.com/projectcalico/calico                | 75  |
