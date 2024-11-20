@@ -888,7 +888,7 @@ _helm_install() {
       echo "tar 未安装，正在安装..."
       sudo yum install -y tar
       echo "tar 安装完成"
-    else if [[ $package_type == 'apt' ]]; then
+    elif [[ $package_type == 'apt' ]]; then
       echo "tar 未安装，正在安装..."
       apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
       apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y apt
