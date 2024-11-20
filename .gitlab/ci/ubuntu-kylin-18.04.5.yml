@@ -102,6 +102,7 @@ ubuntu-kylin-18.04.5:install:
   script:
     - chmod +x k8s.sh
     - ./k8s.sh standalone
+    - helm version
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -A -o wide

@@ -142,6 +142,11 @@ metrics_server_mirror=${metrics_server_mirrors[0]}
 metrics_server_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/metrics-server" "registry.k8s.io/metrics-server/metrics-server")
 metrics_server_image=${metrics_server_images[0]}
 
+helm_version=v3.16.3
+# https://mirrors.huaweicloud.com/helm/v3.16.3/helm-v3.16.3-linux-amd64.tar.gz
+# https://get.helm.sh/helm-v3.16.3-linux-amd64.tar.gz
+helm_mirrors=("https://mirrors.huaweicloud.com/helm" "https://get.helm.sh")
+
 # 包管理类型
 package_type=
 case "$os_type" in
@@ -855,6 +860,37 @@ _metrics_server_install() {
   kubectl get pod -A -o wide
 }
 
+_helm_install() {
+
+  if ! [[ $helm_url ]]; then
+    case "$helm_repo_type" in
+    "" | huawei)
+      helm_url=${helm_mirrors[0]}/$helm_version/helm-$helm_version-linux-amd64.tar.gz
+      ;;
+    helm)
+      helm_url=${helm_mirrors[-1]}/helm-$helm_version-linux-amd64.tar.gz
+      ;;
+    *) ;;
+    esac
+  fi
+  echo "helm url: $helm_url"
+
+  helm_local_path=helm-$helm_version-linux-amd64.tar.gz
+  helm_local_folder=helm-$helm_version-linux-amd64
+  if [[ $helm_url =~ ^https?:// ]]; then
+    curl -k -o $helm_local_path $helm_url
+  else
+    helm_local_path=$helm_url
+  fi
+
+  mkdir -p $helm_local_folder
+  tar -zxvf $helm_local_path --strip-components=1 -C $helm_local_folder
+
+  $helm_local_folder/helm version
+  mv $helm_local_folder/helm /usr/local/bin/helm
+  helm version
+}
+
 _firewalld_stop() {
   if [[ $package_type == 'yum' ]]; then
     sudo systemctl stop firewalld.service
@@ -1158,6 +1194,29 @@ while [[ $# -gt 0 ]]; do
     metrics_server_secure_tls=true
     ;;
 
+  helm-install | -helm-install | --helm-install)
+    helm_install=true
+    ;;
+
+  helm-version=* | -helm-version=* | --helm-version=*)
+    helm_version="${1#*=}"
+    ;;
+
+  helm-url=* | -helm-url=* | --helm-url=*)
+    helm_url="${1#*=}"
+    ;;
+
+  helm-repo-type=* | -helm-repo-type=* | --helm-repo-type=*)
+    helm_repo_type="${1#*=}"
+    case "$helm_repo_type" in
+    "" | huawei | helm) ;;
+    *)
+      echo -e "${COLOR_RED}helm-repo-type 参数值: $1 无效，合法值: 空、huawei、helm，或者使用 helm-url 自定义 helm 下载地址，退出程序${COLOR_RESET}"
+      exit 1
+      ;;
+    esac
+    ;;
+
   *)
     echo -e "${COLOR_RED}无效参数: $1，退出程序${COLOR_RESET}"
     exit 1
@@ -1227,6 +1286,7 @@ if [[ $standalone == true ]]; then
   fi
   _node
   _kubernetes_init
+  _helm_install
   _calico_install
   _kubernetes_taint
   _ingress_nginx_install
@@ -1243,6 +1303,7 @@ elif [[ $cluster == true ]]; then
   fi
   _node
   _kubernetes_init
+  _helm_install
   _calico_install
   _ingress_nginx_install
   _ingress_nginx_host_network
@@ -1329,6 +1390,10 @@ else
 
   if [[ $kubernetes_init == true ]]; then
     _kubernetes_init
+  fi
+
+  if [[ $helm_install == true ]]; then
+    _helm_install
   fi
 
   if [[ $calico_install == true ]]; then

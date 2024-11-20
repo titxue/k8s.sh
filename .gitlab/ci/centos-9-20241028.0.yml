@@ -90,6 +90,7 @@ centos-9-20241028.0:install:
   script:
     - chmod +x k8s.sh
     - ./k8s.sh standalone
+    - helm version
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -A -o wide

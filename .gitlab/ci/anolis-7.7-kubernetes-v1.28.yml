@@ -98,6 +98,7 @@ anolis-7.7:install:kubernetes:1.28:
   script:
     - chmod +x k8s.sh
     - ./k8s.sh standalone kubernetes-version=$KUBERNETES_VERSION kubernetes-repo-type=$KUBERNETES_REPO_TYPE docker-repo-type=$DOCKER_REPO_TYPE
+    - helm version
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -A -o wide

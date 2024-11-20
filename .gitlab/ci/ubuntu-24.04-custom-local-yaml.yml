@@ -109,6 +109,7 @@ ubuntu-24.04:install:custom-local-yaml:
   script:
     - chmod +x k8s.sh
     - ./k8s.sh standalone calico-url=$CALICO_LOCAL_PATH ingress-nginx-url=$INGRESS_NGINX_LOCAL_PATH metrics-server-url=$METRICS_SERVER_LOCAL_PATH
+    - helm version
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -A -o wide

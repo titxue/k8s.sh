@@ -98,6 +98,7 @@ kylin-v10-sp1-hwe-2303:install:
     - echo '3. 关闭【应用联网控制】'
     - chmod +x k8s.sh
     - ./k8s.sh standalone
+    - helm version
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -A -o wide

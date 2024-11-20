@@ -89,6 +89,7 @@ ubuntu-24.04:install:custom-control-plane-endpoint:
     - echo $CONTROL_PLANE_ENDPOINT
     - chmod +x k8s.sh
     - ./k8s.sh standalone control-plane-endpoint=$CONTROL_PLANE_ENDPOINT
+    - helm version
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -A -o wide

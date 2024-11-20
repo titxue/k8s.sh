@@ -91,6 +91,7 @@ ubuntu-24.04:install:custom-cidr:
   script:
     - chmod +x k8s.sh
     - ./k8s.sh standalone service-cidr=$SERVICE_CIDR pod-network-cidr=$POD_NETWORK_CIDR
+    - helm version
     - export KUBECONFIG=/etc/kubernetes/admin.conf
     - kubectl get node -o wide
     - kubectl get svc -A -o wide
