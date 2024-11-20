@@ -57,6 +57,11 @@ rocky-9.5:install:
     - rocky-9.5:env
   hooks:
     pre_get_sources_script:
+      - |
+        sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+          -e 's|^#baseurl=http://dl.rockylinux.org/$contentdir|baseurl=http://172.25.25.14:48081/repository/rockylinux|g' \
+          -i.bak \
+          /etc/yum.repos.d/rocky*.repo
       - yum clean all
       - yum makecache
       - yum install -y git
