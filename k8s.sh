@@ -883,6 +883,19 @@ _helm_install() {
     helm_local_path=$helm_url
   fi
 
+  if ! command -v 'tar' &>/dev/null; then
+    if [[ $package_type == 'yum' ]]; then
+      echo "tar 未安装，正在安装..."
+      sudo yum install -y tar
+      echo "tar 安装完成"
+    else if [[ $package_type == 'apt' ]]; then
+      echo "tar 未安装，正在安装..."
+      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
+      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y apt
+      echo "tar 安装完成"
+    fi
+  fi
+
   mkdir -p $helm_local_folder
   tar -zxvf $helm_local_path --strip-components=1 -C $helm_local_folder
 
