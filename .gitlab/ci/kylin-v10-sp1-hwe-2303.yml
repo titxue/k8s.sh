@@ -85,7 +85,7 @@ kylin-v10-sp1-hwe-2303:install:
         exit 1;
       fi
     - |
-      if [[ $(grep -w "KYLIN_RELEASE_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "2403" ]] ; then
+      if [[ $(grep -w "KYLIN_RELEASE_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "2303" ]] ; then
         echo "系统版本正确";
       else
         echo "系统版本不正确";
