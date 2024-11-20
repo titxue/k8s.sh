@@ -57,7 +57,7 @@ kylin-v10-sp1-hwe-2303:install:
     - kylin-v10-sp1-hwe-2303:env
   hooks:
     pre_get_sources_script:
-      - sudo apt-get -o Dpkg::Lock::Timeout=120 update
+      - sudo apt-get -o Dpkg::Lock::Timeout=120 update || sudo apt-get -o Dpkg::Lock::Timeout=120 update
       - sudo apt-get -o Dpkg::Lock::Timeout=120 install -y git
       - git config --global http.sslVerify false
   before_script:
