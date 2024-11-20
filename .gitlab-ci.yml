@@ -1,8 +1,6 @@
 stages:
   - env
   - install
-  - shutdown
-  - stop
   - pages
   - docker:build
   - docker:deploy
