@@ -137,7 +137,7 @@ anolis-7.9:install:custom-k8s-version:
         echo "未找到版本带有 $KUBERNETES_VERSION 的镜像";
         exit 1;
       fi
-    - shutdown -r +1
+    - shutdown -h -t 1
   rules:
     - changes:
         paths:

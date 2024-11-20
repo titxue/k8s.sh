@@ -167,7 +167,7 @@ ubuntu-24.04:install:custom-config:
         echo "未使用自定义 Pod CIDR";
         exit 1;
       fi
-    - shutdown -r +1
+    - shutdown -h -t 1
   rules:
     - changes:
         paths:

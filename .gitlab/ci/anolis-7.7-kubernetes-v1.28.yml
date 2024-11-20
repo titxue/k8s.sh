@@ -162,7 +162,7 @@ anolis-7.7:install:kubernetes:1.28:
         echo "未使用自定义 docker 源";
         exit 1;
       fi
-    - shutdown -r +1
+    - shutdown -h -t 1
   rules:
     - changes:
         paths:

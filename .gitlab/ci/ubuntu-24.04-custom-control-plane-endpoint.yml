@@ -136,7 +136,7 @@ ubuntu-24.04:install:custom-control-plane-endpoint:
         echo "未使用自定义 --control-plane-endpoint";
         exit 1;
       fi
-    - shutdown -r +1
+    - shutdown -h -t 1
   rules:
     - changes:
         paths:

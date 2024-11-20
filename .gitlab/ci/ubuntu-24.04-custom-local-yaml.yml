@@ -174,7 +174,7 @@ ubuntu-24.04:install:custom-local-yaml:
         echo "未使用自定义 metrics server 本地 yaml 文件";
         exit 1;
       fi
-    - shutdown -r +1
+    - shutdown -h -t 1
   rules:
     - changes:
         paths:

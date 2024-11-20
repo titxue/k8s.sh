@@ -94,7 +94,7 @@ ubuntu-22.04:install:custom-pause-image:
         echo "未使用自定义 pause 镜像";
         exit 1;
       fi
-    - shutdown -r +1
+    - shutdown -h -t 1
   rules:
     - changes:
         paths:

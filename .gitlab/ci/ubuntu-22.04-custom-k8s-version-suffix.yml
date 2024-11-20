@@ -100,7 +100,7 @@ ubuntu-22.04:install:custom-k8s-version-suffix:
         echo "版本不匹配";
         exit 1;
       fi
-    - shutdown -r +1
+    - shutdown -h -t 1
   rules:
     - changes:
         paths:
