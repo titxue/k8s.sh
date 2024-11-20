@@ -70,6 +70,7 @@ include:
   - .gitlab/ci/debian-12.7.0.yml
   - .gitlab/ci/deepin-20.9.yml
   - .gitlab/ci/kylin-v10-sp1-2403-20240430.yml
+  - .gitlab/ci/kylin-v10-sp1-hwe-2303.yml
   - .gitlab/ci/openeuler-20.03.yml
   - .gitlab/ci/openeuler-22.03.yml
   - .gitlab/ci/openeuler-24.03.yml
