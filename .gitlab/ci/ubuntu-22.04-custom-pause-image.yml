@@ -1,5 +1,5 @@
 ubuntu-22.04:env:custom-pause-image:
-  stage: env
+  stage: env:custom
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $UBUNTU_22_04_QEMU_ID
@@ -52,7 +52,7 @@ ubuntu-22.04:env:custom-pause-image:
   when: manual
 
 ubuntu-22.04:install:custom-pause-image:
-  stage: install
+  stage: install:custom
   needs:
     - ubuntu-22.04:env:custom-pause-image
   variables:

@@ -1,6 +1,8 @@
 stages:
   - env
   - install
+  - env:custom
+  - install:custom
   - pages
   - docker:build
   - docker:deploy

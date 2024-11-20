@@ -1,5 +1,5 @@
 ubuntu-22.04:env:custom-docker-repo-type-private:
-  stage: env
+  stage: env:custom
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $UBUNTU_22_04_QEMU_ID
@@ -52,7 +52,7 @@ ubuntu-22.04:env:custom-docker-repo-type-private:
   when: manual
 
 ubuntu-22.04:install:custom-docker-repo-type-private:
-  stage: install
+  stage: install:custom
   needs:
     - ubuntu-22.04:env:custom-docker-repo-type-private
   variables:

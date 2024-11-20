@@ -1,5 +1,5 @@
 ubuntu-24.04:env:custom-local-yaml:
-  stage: env
+  stage: env:custom
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $UBUNTU_24_04_QEMU_ID
@@ -52,7 +52,7 @@ ubuntu-24.04:env:custom-local-yaml:
   when: manual
 
 ubuntu-24.04:install:custom-local-yaml:
-  stage: install
+  stage: install:custom
   needs:
     - ubuntu-24.04:env:custom-local-yaml
   variables:

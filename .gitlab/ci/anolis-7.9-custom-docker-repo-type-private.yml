@@ -1,5 +1,5 @@
-anolis-7.9:env:docker-repo-type-private:
-  stage: env
+anolis-7.9:env:custom-docker-repo-type-private:
+  stage: env:custom
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $ANOLISOS_7_9_QEMU_ID
@@ -51,10 +51,10 @@ anolis-7.9:env:docker-repo-type-private:
     - g150s-docker
   when: manual
 
-anolis-7.9:install:docker-repo-type-private:
-  stage: install
+anolis-7.9:install:custom-docker-repo-type-private:
+  stage: install:custom
   needs:
-    - anolis-7.9:env:docker-repo-type-private
+    - anolis-7.9:env:custom-docker-repo-type-private
   variables:
     DOCKER_REPO_TYPE: http://172.25.25.14:48081/repository/docker-yum
   hooks:
