@@ -46,6 +46,7 @@
 | Debian 12.4.0 bookworm          | ✅    |      |      |      |      |      |      |      |
 | Debian 12.7.0 bookworm          | ✅    |      |      |      |      |      |      |      |
 | 深度 Deepin 20.9 apricot          | ✅    |      |      |      |      |      |      |      |
+| 银河麒麟 Kylin v10 sp1 2303         | ✅    |      |      |      |      |      |      |      |
 | 银河麒麟 Kylin v10 sp1 2403         | ✅    |      |      |      |      |      |      |      |
 | 欧拉 OpenEuler 20.03              | ✅    |      |      |      |      |      |      |      |
 | 欧拉 OpenEuler 22.03              | ✅    |      |      |      |      |      |      |      |

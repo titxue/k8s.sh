@@ -14,7 +14,7 @@
     | CentOS           | 7.9.2009/7.9.2207/8.1.1911/8.2.2004/8.3.2011/8.4.2105/8.5.2111/9-20241028.0 |
     | Debian           | 10.10.0 buster/11.7.0 bullseye/12.4.0 bookworm/12.7.0 bookworm              |
     | 深度 Deepin        | 20.9 apricot                                                                |
-    | 银河麒麟 Kylin       | v10 sp1 2403                                                                |
+    | 银河麒麟 Kylin       | v10 sp1 2303/v10 sp1 2403                                                   |
     | 欧拉 OpenEuler     | 20.03/22.03/24.03                                                           |
     | 开放麒麟 OpenKylin   | 1.0 yangtze/1.0.1 yangtze/1.0.2 yangtze/2.0 nile                            |
     | Rocky            | 8.10 Green Obsidian/9.4 Blue Onyx/9.5 Blue Onyx                             |
