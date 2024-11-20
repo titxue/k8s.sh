@@ -13,6 +13,7 @@
     "mirrors:metrics-server": "node scripts/mirrors/metrics-server.js",
     "image:calico": "node scripts/image/calico.mjs",
     "image:ingress-nginx": "node scripts/image/ingress-nginx.mjs",
+    "image:kube-prometheus": "node scripts/image/kube-prometheus.mjs",
     "image:kubernetes": "node scripts/image/kubernetes.mjs",
     "image:metrics-server": "node scripts/image/metrics-server.mjs"
   },
@@ -47,6 +48,7 @@
   "devDependencies": {
     "axios": "1.7.7",
     "fs-extra": "11.2.0",
+    "js-yaml": "4.1.0",
     "semver": "7.6.3",
     "socks-proxy-agent": "8.0.4",
     "vitepress": "1.5.0"
