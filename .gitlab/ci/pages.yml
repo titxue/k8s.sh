@@ -37,12 +37,12 @@ pages:
           - "**.md"
           - "**/*.md"
           - public
-          - "!scripts/**/*"
           - static
           - .npmrc
           - docker-compose.yml
           - Dockerfile
           - package.json
+          - "!scripts/**/*"
 
 docker:build:
   stage: docker:build
@@ -84,12 +84,12 @@ docker:build:
           - "**.md"
           - "**/*.md"
           - public
-          - "!scripts/**/*"
           - static
           - .npmrc
           - docker-compose.yml
           - Dockerfile
           - package.json
+          - "!scripts/**/*"
   tags:
     - 911k-docker
 
@@ -116,11 +116,11 @@ docker:deploy:
           - "**.md"
           - "**/*.md"
           - public
-          - "!scripts/**/*"
           - static
           - .npmrc
           - docker-compose.yml
           - Dockerfile
           - package.json
+          - "!scripts/**/*"
   tags:
     - lighthouse-docker
