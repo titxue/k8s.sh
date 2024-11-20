@@ -1,5 +1,7 @@
 # 银河麒麟操作系统专区 {id=kylin}
 
+- 由于银河麒麟的安全限制，`Kylin Linux Desktop V10 (SP1) 2303` 需要做到以下前 `三点` 才能安装 `Kubernetes`，
+  未检查 Shell 脚本的来源
 - 由于银河麒麟的安全限制，`Kylin Linux Desktop V10 (SP1) 2403` 需要做到以下 `四点` 才能安装 `Kubernetes`
 
 [[toc]]
@@ -25,7 +27,8 @@
 
 ## 4. 银河麒麟限制可执行 Shell 脚本的来源，使用下列方式绕过系统检查 {id=4}
 
-- `银河麒麟` 限制非当前系统创建的文件，无法 `增加`、`修改` `/etc` 目录下的文件，如：`/etc/fstab`（交换空间）、`/etc/apt`（包管理器配置文件夹） 等
+- `银河麒麟` 限制非当前系统创建的文件，无法 `增加`、`修改` `/etc` 目录下的文件，
+  如：`/etc/fstab`（交换空间）、`/etc/apt`（包管理器配置文件夹） 等
 
 ```shell
 curl -k -o tmp.sh https://k8s-sh.xuxiaowei.com.cn/k8s.sh
