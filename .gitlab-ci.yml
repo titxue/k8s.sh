@@ -3,6 +3,8 @@ stages:
   - install
   - env:custom
   - install:custom
+  - env:kubernetes:1.24
+  - install:kubernetes:1.24
   - pages
   - docker:build
   - docker:deploy

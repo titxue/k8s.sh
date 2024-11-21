@@ -1,5 +1,5 @@
 anolis-7.9:env:kubernetes:1.24:
-  stage: env
+  stage: env:kubernetes:1.24
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $ANOLISOS_7_9_QEMU_ID
@@ -52,7 +52,7 @@ anolis-7.9:env:kubernetes:1.24:
   when: manual
 
 anolis-7.9:install:kubernetes:1.24:
-  stage: install
+  stage: install:kubernetes:1.24
   needs:
     - anolis-7.9:env:kubernetes:1.24
   variables:

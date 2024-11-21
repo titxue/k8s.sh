@@ -1,5 +1,5 @@
 centos-9-20241028.0:env:kubernetes:1.24:
-  stage: env
+  stage: env:kubernetes:1.24
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $CENTOS_9_20241028_0_QEMU_ID
@@ -52,7 +52,7 @@ centos-9-20241028.0:env:kubernetes:1.24:
   when: manual
 
 centos-9-20241028.0:install:kubernetes:1.24:
-  stage: install
+  stage: install:kubernetes:1.24
   needs:
     - centos-9-20241028.0:env:kubernetes:1.24
   variables:
