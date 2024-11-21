@@ -36,6 +36,6 @@
     | 仓库                                                     | 数量  |
     |--------------------------------------------------------|-----|
     | https://github.com/kubernetes/ingress-nginx            | 32  |
-    | https://github.com/kubernetes/kubernetes               | 420 |
+    | https://github.com/kubernetes/kubernetes               | 424 |
     | https://github.com/kubernetes-sigs/metrics-server      | 17  |
     | https://github.com/projectcalico/calico                | 75  |
