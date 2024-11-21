@@ -1,7 +1,7 @@
 import axios from 'axios'
 import semver from 'semver'
 import { SocksProxyAgent } from 'socks-proxy-agent'
-import { sleep, imageInfo } from './common.mjs'
+import { imageInfo, sleep } from './common.mjs'
 import https from 'https'
 
 // 配置 GitHub Token 作为环境变量，否则将限速
@@ -11,20 +11,21 @@ const gitlabToken = process.env.GITLAB_TOKEN
 // 支持配置代理，如：socks5://127.0.0.1:1080
 const proxyUrl = process.env.HTTP_PROXY || process.env.HTTPS_PROXY
 
-let sum = 0
+const tagUrl = 'https://api.github.com/repos/kubernetes-sigs/metrics-server/tags'
+const ref = 'registry.k8s.io/metrics-server/metrics-server/v0.4.0'
+// https://gitlab.xuxiaowei.com.cn/hub.docker.com/github.com/kubernetes-sigs/metrics-server 项目 ID: 248
+const gitlabRepositoryBranchesUrl = 'https://gitlab.xuxiaowei.com.cn/api/v4/projects/248/repository/branches'
+const minimumVersion = 'v0.4.0'
+const sourceImages = [
+  'registry.k8s.io/metrics-server/metrics-server'
+]
+const targetImages = [
+  'registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/metrics-server',
+]
+
+const images = new Set();
 
 async function tags(page, per_page) {
-  const tagUrl = `https://api.github.com/repos/kubernetes-sigs/metrics-server/tags?page=${page}&per_page=${per_page}`
-  const ref = 'registry.k8s.io/metrics-server/metrics-server/v0.4.0'
-  // https://gitlab.xuxiaowei.com.cn/hub.docker.com/github.com/kubernetes-sigs/metrics-server 项目 ID: 248
-  const gitlabRepositoryBranchesUrl = `https://gitlab.xuxiaowei.com.cn/api/v4/projects/248/repository/branches?ref=${ref}&branch=`
-  const minimumVersion = 'v0.4.0'
-  const k8sImages = [
-    'registry.k8s.io/metrics-server/metrics-server'
-  ]
-  const images = [
-    'registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/metrics-server',
-  ]
 
   const headers = {}
   if (githubToken) {
@@ -38,7 +39,7 @@ async function tags(page, per_page) {
     axiosConfig.httpsAgent = agent
   }
 
-  const response = await axios.get(tagUrl, axiosConfig)
+  const response = await axios.get(`${tagUrl}?page=${page}&per_page=${per_page}`, axiosConfig)
   const data = response.data
 
   for (const item of data) {
@@ -49,19 +50,20 @@ async function tags(page, per_page) {
     }
 
     if (semver.gte(name, minimumVersion)) {
-      for (let i = 0; i < images.length; i++) {
+      for (let i = 0; i < targetImages.length; i++) {
 
-        sum++
+        const image = targetImages[i]
 
-        const image = images[i]
+        images.add(`${image}:${name}`)
+
         try {
           await imageInfo(image, name)
           console.log(`已存在镜像 ${image}:${name}`)
-        } catch (Exception) {
-          console.log(`缺少 ${image}:${name} 镜像`)
+        } catch {
+          console.log(`缺少 ${image}:${name} 镜像，准备创建分支 ${sourceImages[i]}/${name}`)
           if (gitlabToken) {
             await sleep(5_000)
-            await axios.post(`${gitlabRepositoryBranchesUrl}${k8sImages[i]}/${name}`, {}, {
+            await axios.post(`${gitlabRepositoryBranchesUrl}?ref=${ref}&branch=${sourceImages[i]}/${name}`, {}, {
               headers: {
                 'PRIVATE-TOKEN': gitlabToken,
               },
@@ -69,18 +71,18 @@ async function tags(page, per_page) {
                 rejectUnauthorized: false
               })
             }).then((resp) => {
-              console.log(`分支 ${k8sImages[i]}/${name} 已创建完成`, resp.data)
+              console.log(`分支 ${sourceImages[i]}/${name} 已创建完成`, resp.data)
             }).catch((error) => {
               if (error.status === 400) {
-                console.log(`创建分支 ${k8sImages[i]}/${name}`, error.response.data)
+                console.log(`创建分支 ${sourceImages[i]}/${name}`, error.response.data)
               } else if (error.status === 401) {
-                console.log(`创建分支 ${k8sImages[i]}/${name}`, error.response.data)
+                console.log(`创建分支 ${sourceImages[i]}/${name}`, error.response.data)
               } else {
                 console.log(error)
               }
             })
           } else {
-            console.log('缺少 GitLab Token，不创建分支')
+            console.log(`缺少 GitLab Token，不创建分支 ${sourceImages[i]}/${name}`)
           }
         }
       }
@@ -97,7 +99,7 @@ async function main() {
   do {
     total = await tags(page++, per_page)
   } while (total === per_page)
-  console.log(sum)
+  console.log(images.size)
 }
 
 main()

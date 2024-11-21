@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const sleep = function(ms) {
+const sleep = function (ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -33,7 +33,7 @@ const imageInfo = async function (image, tag, config = {}) {
   if (config.headers) {
     config.headers.Authorization = `Bearer ${map.token}`
   } else {
-    config.headers = { Authorization: `Bearer ${map.token}` }
+    config.headers = {Authorization: `Bearer ${map.token}`}
   }
   return await axios.get(url.toString(), config)
     .then(response => response.data)
@@ -47,8 +47,5 @@ const imageInfo = async function (image, tag, config = {}) {
 // main()
 
 export {
-  sleep,
-  wwwAuthenticate,
-  tokenMap,
-  imageInfo
+  sleep, wwwAuthenticate, tokenMap, imageInfo
 }

@@ -4,18 +4,20 @@
   "scripts": {
     "pre:npm": "npm install --registry https://registry.npmmirror.com || npm install --registry https://registry.npmjs.org",
     "docs:dev": "vitepress dev",
+    "docs:build:only": "vitepress build",
     "docs:build": "vitepress build && node .vitepress/copy.js",
     "docs:preview": "vitepress preview",
-    "mirrors:calico": "node scripts/mirrors/calico.js",
-    "mirrors:dashboard": "node scripts/mirrors/dashboard.js",
-    "mirrors:ingress-nginx": "node scripts/mirrors/ingress-nginx.js",
-    "mirrors:kube-prometheus": "node scripts/mirrors/kube-prometheus.js",
-    "mirrors:metrics-server": "node scripts/mirrors/metrics-server.js",
+    "mirrors:calico": "node scripts/mirrors/calico.mjs",
+    "mirrors:dashboard": "node scripts/mirrors/dashboard.mjs",
+    "mirrors:ingress-nginx": "node scripts/mirrors/ingress-nginx.mjs",
+    "mirrors:kube-prometheus": "node scripts/mirrors/kube-prometheus.mjs",
+    "mirrors:metrics-server": "node scripts/mirrors/metrics-server.mjs",
     "image:calico": "node scripts/image/calico.mjs",
     "image:ingress-nginx": "node scripts/image/ingress-nginx.mjs",
     "image:kube-prometheus": "node scripts/image/kube-prometheus.mjs",
     "image:kubernetes": "node scripts/image/kubernetes.mjs",
-    "image:metrics-server": "node scripts/image/metrics-server.mjs"
+    "image:metrics-server": "node scripts/image/metrics-server.mjs",
+    "lint": "eslint . --fix scripts/**/*.mjs"
   },
   "author": "徐晓伟 <xuxiaowei@xuxiaowei.com.cn>",
   "license": "Apache-2.0",
@@ -46,8 +48,11 @@
     "vitepress"
   ],
   "devDependencies": {
+    "@eslint/js": "9.15.0",
     "axios": "1.7.7",
+    "eslint": "9.15.0",
     "fs-extra": "11.2.0",
+    "globals": "15.12.0",
     "js-yaml": "4.1.0",
     "semver": "7.6.3",
     "socks-proxy-agent": "8.0.4",
