@@ -3,6 +3,7 @@ import { SocksProxyAgent } from 'socks-proxy-agent'
 import fs from 'fs'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
+import yaml from 'js-yaml'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,6 +12,8 @@ const __dirname = dirname(__filename);
 const proxyUrl = process.env.HTTP_PROXY || process.env.HTTPS_PROXY
 
 const chartsUrl = 'https://kubernetes.github.io/dashboard/index.yaml'
+const downloadUrl = 'https://github.com/kubernetes/dashboard/releases/download'
+const mirrorsUrl = 'http://k8s-sh.xuxiaowei.com.cn/charts/kubernetes/dashboard'
 const folderName = path.resolve(__dirname, '../../charts/kubernetes/dashboard')
 const filePath = path.join(folderName, 'index.yaml')
 
@@ -29,8 +32,33 @@ async function main() {
     fs.mkdirSync(dirPath, {recursive: true})
   }
 
-  await axios.get(chartsUrl, axiosConfig).then((response) => {
-    fs.writeFileSync(filePath, response.data)
+  await axios.get(chartsUrl, axiosConfig).then(async (response) => {
+    const data = response.data
+    const dataJson = yaml.load(data)
+    for (const item of dataJson.entries['kubernetes-dashboard']) {
+      for (const url of item.urls) {
+        if (url.startsWith(downloadUrl)) {
+
+          console.log(url)
+
+          const downloadFileName = url.replace(downloadUrl, folderName)
+          const downloadFileDirPath = path.dirname(downloadFileName)
+          if (!fs.existsSync(downloadFileDirPath)) {
+            fs.mkdirSync(downloadFileDirPath, {recursive: true})
+          }
+
+          await axios({url, method: 'GET', responseType: 'stream', ...axiosConfig}).then((response) => {
+            const writeStream = fs.createWriteStream(downloadFileName)
+            response.data.pipe(writeStream).on('finish', () => {
+            })
+          }).catch((error) => {
+            console.log(error)
+          })
+        }
+      }
+    }
+
+    fs.writeFileSync(filePath, data.replaceAll(downloadUrl, mirrorsUrl))
   })
 
 }
