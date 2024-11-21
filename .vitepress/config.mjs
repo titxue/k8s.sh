@@ -39,6 +39,7 @@ export default defineConfig({
   lastUpdated: true,
   srcExclude: [
     '.gitlab/**',
+    'charts',
     'deploy',
     'etc/**',
     'mirrors/**',
