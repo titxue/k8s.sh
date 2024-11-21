@@ -345,6 +345,33 @@
 - 说明：初始化完成后的提示
 - 用途：用于提示 `刷新环境变量` 或 `SSH 重新连接` 后，才能正常控制 `Kubernetes`
 
+### helm-install
+
+- 类型：`Boolean`
+- 说明：是否安装 `helm`
+- 安装路径：`/usr/local/bin/helm`
+
+### helm-url
+
+- 类型：`String`
+- 说明：安装 `helm` 时的下载地址
+- 相关：优先级高于 `helm-version`、`helm-repo-type`
+
+### helm-version
+
+- 类型：`String`
+- 说明：安装 `helm` 时下载的版本
+- 默认值：`v3.16.3`
+
+### helm-repo-type
+
+- 类型：`String`
+- 说明：安装 `helm` 时下载的仓库
+- 默认值：`huawei`
+- 可选值：
+    1. `huawei`：从 https://mirrors.huaweicloud.com/helm 下载
+    2. `helm`：从 https://get.helm.sh 下载
+
 ### control-plane-endpoint {id=control-plane-endpoint}
 
 ::: warning 警告

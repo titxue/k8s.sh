@@ -39,5 +39,5 @@ chmod +x k8s.sh
 ./k8s.sh standalone
 
 # 等效命令
-# sudo ./k8s.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo containerd-install containerd-config kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init kubernetes-init-node-name=k8s-1 calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network metrics-server-install enable-shell-autocompletion print-join-command kubernetes-init-congrats
+# sudo ./k8s.sh swap-off curl ca-certificates firewalld-stop selinux-disabled bash-completion docker-repo containerd-install containerd-config kubernetes-repo kubernetes-install kubernetes-images-pull kubernetes-config kubernetes-init helm-install kubernetes-init-node-name=k8s-1 calico-install kubernetes-taint ingress-nginx-install ingress-nginx-host-network metrics-server-install enable-shell-autocompletion print-join-command kubernetes-init-congrats
 ```
