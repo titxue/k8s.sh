@@ -34,6 +34,8 @@ pages:
         paths:
           - .gitlab/ci/pages.yml
           - .vitepress/**/*
+          - charts/**/*
+          - docker/**/*
           - "**.md"
           - "**/*.md"
           - public
@@ -81,6 +83,8 @@ docker:build:
         paths:
           - .gitlab/ci/pages.yml
           - .vitepress/**/*
+          - charts/**/*
+          - docker/**/*
           - "**.md"
           - "**/*.md"
           - public
@@ -113,6 +117,8 @@ docker:deploy:
         paths:
           - .gitlab/ci/pages.yml
           - .vitepress/**/*
+          - charts/**/*
+          - docker/**/*
           - "**.md"
           - "**/*.md"
           - public
