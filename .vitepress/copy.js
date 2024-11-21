@@ -3,6 +3,10 @@ const path = require('path')
 
 const data = [
     {
+        "source": "charts",
+        "target": "charts"
+    },
+    {
         "source": "deploy",
         "target": "deploy"
     },
