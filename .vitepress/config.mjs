@@ -137,6 +137,7 @@ export default defineConfig({
         text: '功能',
         collapsed: false,
         items: [
+          { text: '源码', link: '/feature/source' },
           { text: '镜像文件', link: '/mirrors' },
           { text: '命令', link: '/feature/command' },
           { text: '银河麒麟操作系统专区', link: '/feature/kylin' },
