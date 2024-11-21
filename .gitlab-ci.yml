@@ -3,6 +3,8 @@ stages:
   - install
   - env:custom
   - install:custom
+  - env:kubernetes:1.28
+  - install:kubernetes:1.28
   - env:kubernetes:1.27
   - install:kubernetes:1.27
   - env:kubernetes:1.26
