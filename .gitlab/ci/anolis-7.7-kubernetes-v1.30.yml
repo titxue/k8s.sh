@@ -1,5 +1,5 @@
 anolis-7.7:env:kubernetes:1.30:
-  stage: env
+  stage: env:kubernetes:1.30
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $ANOLISOS_7_7_QEMU_ID
@@ -52,7 +52,7 @@ anolis-7.7:env:kubernetes:1.30:
   when: manual
 
 anolis-7.7:install:kubernetes:1.30:
-  stage: install
+  stage: install:kubernetes:1.30
   needs:
     - anolis-7.7:env:kubernetes:1.30
   variables:
