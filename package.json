@@ -16,6 +16,7 @@
     "mirrors:kube-prometheus": "node scripts/mirrors/kube-prometheus.mjs",
     "mirrors:metrics-server": "node scripts/mirrors/metrics-server.mjs",
     "image:calico": "node scripts/image/calico.mjs",
+    "image:dashboard": "node scripts/image/dashboard.mjs",
     "image:ingress-nginx": "node scripts/image/ingress-nginx.mjs",
     "image:kube-prometheus": "node scripts/image/kube-prometheus.mjs",
     "image:kubernetes": "node scripts/image/kubernetes.mjs",
