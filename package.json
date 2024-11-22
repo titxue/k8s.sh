@@ -9,6 +9,7 @@
     "docs:preview": "vitepress preview",
     "charts:dashboard": "node scripts/charts/dashboard.mjs",
     "charts:ingress-nginx": "node scripts/charts/ingress-nginx.mjs",
+    "charts:metrics-server": "node scripts/charts/metrics-server.mjs",
     "mirrors:calico": "node scripts/mirrors/calico.mjs",
     "mirrors:dashboard": "node scripts/mirrors/dashboard.mjs",
     "mirrors:ingress-nginx": "node scripts/mirrors/ingress-nginx.mjs",
