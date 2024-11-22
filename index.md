@@ -27,6 +27,8 @@ features:
     details: 支持主流操作系统，支持国产操作系统（龙蜥 AnolisOS、欧拉 OpenEuler、银河麒麟 Kylin、开放麒麟 OpenKylin、优麒麟 Ubuntu Kylin、深度 Deepin 等）
   - title: 自动化测试
     details: 现已支持超过 45+ 种不同系统版本，提供超过 73+ 个不同流水线配置自动化测试 Kubernetes 安装
+  - title: 镜像文件与 charts 仓库
+    details: 提供常用的 Kubernetes 部署文件及 charts 仓库
   - title: Containerd
     details: 使用 Containerd 作为容器运行时，使用国内镜像加速安装配置
   - title: Calico
