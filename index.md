@@ -19,6 +19,9 @@ hero:
     - theme: alt
       text: 镜像文件
       link: /mirrors
+    - theme: alt
+      text: 镜像 charts
+      link: /charts
 
 features:
   - title: Kubernetes
