@@ -1,5 +1,7 @@
 # 镜像 charts {id=charts}
 
+[[toc]]
+
 ## kubernetes/dashboard
 
 - 源地址: https://kubernetes.github.io/dashboard
