@@ -59,6 +59,19 @@ async function main() {
     }
 
     fs.writeFileSync(filePath, data.replaceAll(downloadUrl, mirrorsUrl))
+
+    console.log()
+    console.log()
+    console.log()
+    console.log('| 版本 | 镜像地址 |')
+    console.log('|----|------|')
+    for (const item of dataJson.entries['metrics-server']) {
+      for (const url of item.urls) {
+        if (url.startsWith(downloadUrl)) {
+          console.log(`| ${url.split('/')[7]} | [${url.split('/')[8]}](${url.replaceAll(downloadUrl, mirrorsUrl)}) |`)
+        }
+      }
+    }
   })
 
 }
