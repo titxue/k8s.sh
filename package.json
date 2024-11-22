@@ -8,6 +8,7 @@
     "docs:build": "vitepress build && node .vitepress/copy.js",
     "docs:preview": "vitepress preview",
     "charts:dashboard": "node scripts/charts/dashboard.mjs",
+    "charts:ingress-nginx": "node scripts/charts/ingress-nginx.mjs",
     "mirrors:calico": "node scripts/mirrors/calico.mjs",
     "mirrors:dashboard": "node scripts/mirrors/dashboard.mjs",
     "mirrors:ingress-nginx": "node scripts/mirrors/ingress-nginx.mjs",
