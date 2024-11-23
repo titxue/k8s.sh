@@ -158,6 +158,7 @@ export default defineConfig({
           { text: '为什么 不使用 Docker？', link: '/question/why-not-use-docker' },
           { text: '为什么 流水线 安装 Git？', link: '/question/why-install-git' },
           { text: '为什么 流水线 跳过了？', link: '/question/why-skip-pipelines' },
+          { text: '二进制安装路径', link: '/question/binary-install-path' },
           { text: '自建 Nexus 仓库配置', link: '/question/nexus-repository' },
         ]
       }
