@@ -908,7 +908,8 @@ _helm_install() {
 
   $helm_local_folder/helm version
   mv $helm_local_folder/helm /usr/local/bin/helm
-  helm version
+  /usr/local/bin/helm version
+  /usr/local/bin/helm ls -A
 }
 
 _firewalld_stop() {
