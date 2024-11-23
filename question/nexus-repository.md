@@ -1,4 +1,4 @@
-# Nexus 仓库 {id=nexus-repository}
+# 自建 Nexus 仓库配置 {id=nexus-repository}
 
 ## 自建仓库代理地址 {id=nexus-repository-proxy}
 
