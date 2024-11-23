@@ -620,6 +620,13 @@ _kubernetes_config() {
       ;;
     *) ;;
     esac
+  elif [[ $os_type == 'almalinux' ]]; then
+    case "$os_version" in
+    '8.10')
+      sudo yum install -y iproute-tc
+      ;;
+    *) ;;
+    esac
   elif [[ $os_type == 'anolis' ]]; then
     case "$os_version" in
     '8.2' | '8.4' | '8.6' | '8.8' | '8.9')
