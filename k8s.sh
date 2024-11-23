@@ -147,6 +147,22 @@ helm_version=v3.16.3
 # https://get.helm.sh/helm-v3.16.3-linux-amd64.tar.gz
 helm_mirrors=("https://mirrors.huaweicloud.com/helm" "https://get.helm.sh")
 
+kubernetes_dashboard_charts=("http://k8s-sh.xuxiaowei.com.cn/charts/kubernetes/dashboard" "https://kubernetes.github.io/dashboard")
+kubernetes_dashboard_chart=${kubernetes_dashboard_charts[0]}
+kubernetes_dashboard_version=7.10.0
+kubernetes_dashboard_auth_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-auth" "docker.io/kubernetesui/dashboard-auth")
+kubernetes_dashboard_auth_image=${kubernetes_dashboard_auth_images[0]}
+kubernetes_dashboard_api_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-api" "docker.io/kubernetesui/dashboard-api")
+kubernetes_dashboard_api_image=${kubernetes_dashboard_api_images[0]}
+kubernetes_dashboard_web_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-web" "docker.io/kubernetesui/dashboard-web")
+kubernetes_dashboard_web_image=${kubernetes_dashboard_web_images[0]}
+kubernetes_dashboard_metrics_scraper_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-metrics-scraper" "docker.io/kubernetesui/dashboard-metrics-scraper")
+kubernetes_dashboard_metrics_scraper_image=${kubernetes_dashboard_metrics_scraper_images[0]}
+kubernetes_dashboard_kong_images=("registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kong" "docker.io/library/kong")
+kubernetes_dashboard_kong_image=${kubernetes_dashboard_kong_images[0]}
+kubernetes_dashboard_ingress_enabled=true
+kubernetes_dashboard_ingress_host=kubernetes.dashboard.xuxiaowei.com.cn
+
 # 包管理类型
 package_type=
 case "$os_type" in
@@ -912,6 +928,88 @@ _helm_install() {
   /usr/local/bin/helm ls -A
 }
 
+# https://github.com/kubernetes/dashboard?tab=readme-ov-file#installation
+# https://github.com/kubernetes/dashboard/blob/master/charts/kubernetes-dashboard/values.yaml
+# https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
+_helm_install_kubernetes_dashboard() {
+  helm repo remove kubernetes-dashboard || echo '本地未安装 kubernetes-dashboard 仓库'
+  helm repo add kubernetes-dashboard $kubernetes_dashboard_chart
+
+  cat <<EOF | sudo tee kubernetes_dashboard.yml
+app:
+  ingress:
+    enabled: $kubernetes_dashboard_ingress_enabled
+    hosts:
+      - localhost
+      - $kubernetes_dashboard_ingress_host
+    # Default: internal-nginx
+    ingressClassName: nginx
+auth:
+  image:
+    repository: $kubernetes_dashboard_auth_image
+api:
+  image:
+    repository: $kubernetes_dashboard_api_image
+web:
+  image:
+    repository: $kubernetes_dashboard_web_image
+metricsScraper:
+  image:
+    repository: $kubernetes_dashboard_metrics_scraper_image
+kong:
+  image:
+    repository: $kubernetes_dashboard_kong_image
+
+EOF
+
+  helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard --version $kubernetes_dashboard_version -f kubernetes_dashboard.yml
+
+  cat <<EOF | sudo tee kubernetes_dashboard_service_account.yml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+
+EOF
+
+  cat <<EOF | sudo tee kubernetes_dashboard_cluster_role_binding.yml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kubernetes-dashboard
+
+EOF
+
+  cat <<EOF | sudo tee kubernetes_dashboard_secret.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+  annotations:
+    kubernetes.io/service-account.name: "admin-user"
+type: kubernetes.io/service-account-token
+
+EOF
+
+  kubectl apply -f kubernetes_dashboard_service_account.yml
+  kubectl apply -f kubernetes_dashboard_cluster_role_binding.yml
+  kubectl apply -f kubernetes_dashboard_secret.yml
+
+  kubectl -n kubernetes-dashboard create token admin-user
+  kubectl -n kubernetes-dashboard get secret admin-user -o jsonpath={".data.token"} | base64 -d
+
+}
+
 _firewalld_stop() {
   if [[ $package_type == 'yum' ]]; then
     sudo systemctl stop firewalld.service
@@ -1238,6 +1336,10 @@ while [[ $# -gt 0 ]]; do
     esac
     ;;
 
+  helm-install-kubernetes-dashboard | -helm-install-kubernetes-dashboard | --helm-install-kubernetes-dashboard)
+    helm_install_kubernetes_dashboard=true
+    ;;
+
   *)
     echo -e "${COLOR_RED}无效参数: $1，退出程序${COLOR_RESET}"
     exit 1
@@ -1451,6 +1553,10 @@ else
 
   if [[ $kubernetes_init_congrats == true ]]; then
     _kubernetes_init_congrats
+  fi
+
+  if [[ $helm_install_kubernetes_dashboard == true ]]; then
+    _helm_install_kubernetes_dashboard
   fi
 
 fi
