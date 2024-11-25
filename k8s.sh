@@ -1380,6 +1380,45 @@ while [[ $# -gt 0 ]]; do
     helm_install_kubernetes_dashboard=true
     ;;
 
+  kubernetes-dashboard-chart=* | -kubernetes-dashboard-chart=* | --kubernetes-dashboard-chart=*)
+    kubernetes_dashboard_chart="${1#*=}"
+    ;;
+
+  kubernetes-dashboard-version=* | -kubernetes-dashboard-version=* | --kubernetes-dashboard-version=*)
+    kubernetes_dashboard_version="${1#*=}"
+    ;;
+
+  kubernetes-dashboard-auth-image=* | -kubernetes-dashboard-auth-image=* | --kubernetes-dashboard-auth-image=*)
+    kubernetes_dashboard_auth_image="${1#*=}"
+    ;;
+
+  kubernetes-dashboard-api-image=* | -kubernetes-dashboard-api-image=* | --kubernetes-dashboard-api-image=*)
+    kubernetes_dashboard_api_image="${1#*=}"
+    ;;
+
+  kubernetes-dashboard-web-image=* | -kubernetes-dashboard-web-image=* | --kubernetes-dashboard-web-image=*)
+    kubernetes_dashboard_web_image="${1#*=}"
+    ;;
+
+  kubernetes-dashboard-metrics-scraper-image=* | -kubernetes-dashboard-metrics-scraper-image=* | --kubernetes-dashboard-metrics-scraper-image=*)
+    kubernetes_dashboard_metrics_scraper_image="${1#*=}"
+    ;;
+
+  kubernetes-dashboard-kong-image=* | -kubernetes-dashboard-kong-image=* | --kubernetes-dashboard-kong-image=*)
+    kubernetes_dashboard_kong_image="${1#*=}"
+    ;;
+
+  kubernetes-dashboard-ingress-enabled=* | -kubernetes-dashboard-ingress-enabled=* | --kubernetes-dashboard-ingress-enabled=*)
+    kubernetes_dashboard_ingress_enabled="${1#*=}"
+    if [[ $kubernetes_dashboard_ingress_enabled != 'true' && $kubernetes_dashboard_ingress_enabled != 'false' ]]; then
+      echo -e "${COLOR_RED}无效参数: kubernetes-dashboard-ingress-enabled=$kubernetes_dashboard_ingress_enabled，合法值：true/false，退出程序${COLOR_RESET}"
+    fi
+    ;;
+
+  kubernetes-dashboard-ingress-host=* | -kubernetes-dashboard-ingress-host=* | --kubernetes-dashboard-ingress-host=*)
+    kubernetes_dashboard_ingress_host="${1#*=}"
+    ;;
+
   *)
     echo -e "${COLOR_RED}无效参数: $1，退出程序${COLOR_RESET}"
     exit 1

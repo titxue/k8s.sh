@@ -651,4 +651,85 @@
   并且 `Metrics Server` 容器内还要包含、信任该证书的证书链（根证书）
 - 相关：`Metrics Server` 官方默认配置情况下需要使用 `安全` 的 `TLS` 证书，
   这将导致 `Metrics Server` 无法正常连接到 `Kubernetes` 的 `apiserver`，所以安装时存在默认行为：
-  忽略 `TLS` 证书验证 `--kubelet-insecure-tls` 
+  忽略 `TLS` 证书验证 `--kubelet-insecure-tls`
+
+### helm-install-kubernetes-dashboard {id=helm-install-kubernetes-dashboard}
+
+- 类型：`Boolean`
+- 说明：是否启用 `helm` 安装 `Kubernetes Dashboard`
+- 默认值：`false`
+
+### kubernetes-dashboard-chart
+
+- 类型：`String`
+- 说明：`Kubernetes Dashboard` `chart` 仓库地址
+- 默认值：`http://k8s-sh.xuxiaowei.com.cn/charts/kubernetes/dashboard`
+- 可选择：
+    - http://k8s-sh.xuxiaowei.com.cn/charts/kubernetes/dashboard
+    - https://kubernetes.github.io/dashboard
+
+### kubernetes-dashboard-version
+
+- 类型：`String`
+- 说明：`Kubernetes Dashboard` `chart` 版本
+- 默认值：`7.10.0`
+
+### kubernetes-dashboard-auth-image
+
+- 类型：`String`
+- 说明：`Kubernetes Dashboard` 所需镜像
+- 默认值：`registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-auth`
+- 可选择：
+    - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-auth`
+    - `docker.io/kubernetesui/dashboard-auth`
+
+### kubernetes-dashboard-api-image
+
+- 类型：`String`
+- 说明：`Kubernetes Dashboard` 所需镜像
+- 默认值：`registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-api`
+- 可选择：
+    - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-api`
+    - `docker.io/kubernetesui/dashboard-api`
+
+### kubernetes-dashboard-web-image
+
+- 类型：`String`
+- 说明：`Kubernetes Dashboard` 所需镜像
+- 默认值：`registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-web`
+- 可选择：
+    - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-web`
+    - `docker.io/kubernetesui/dashboard-web`
+
+### kubernetes-dashboard-metrics-scraper-image
+
+- 类型：`String`
+- 说明：`Kubernetes Dashboard` 所需镜像
+- 默认值：`registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-metrics-scraper`
+- 可选择：
+    - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-metrics-scraper`
+    - `docker.io/kubernetesui/dashboard-metrics-scraper`
+
+### kubernetes-dashboard-kong-image
+
+- 类型：`String`
+- 说明：`Kubernetes Dashboard` 所需镜像
+- 默认值：`registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kong`
+- 可选择：
+    - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kong`
+    - `docker.io/library/kong`
+
+### kubernetes-dashboard-ingress-enabled
+
+- 类型：`String`
+- 说明：`Kubernetes Dashboard` 是否启用 `ingress`
+- 默认值：`true`
+- 可选择：
+    - `true`
+    - `false`
+
+### kubernetes-dashboard-ingress-host
+
+- 类型：`String`
+- 说明：`Kubernetes Dashboard` `ingress` 所需域名
+- 默认值：`kubernetes.dashboard.xuxiaowei.com.cn`
