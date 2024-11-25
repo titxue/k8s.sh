@@ -22,7 +22,7 @@
     "image:kube-prometheus": "node scripts/image/kube-prometheus.mjs",
     "image:kubernetes": "node scripts/image/kubernetes.mjs",
     "image:metrics-server": "node scripts/image/metrics-server.mjs",
-    "lint": "eslint . --fix scripts/**/*.mjs"
+    "lint": "eslint --fix scripts/**/*.mjs"
   },
   "author": "徐晓伟 <xuxiaowei@xuxiaowei.com.cn>",
   "license": "Apache-2.0",
