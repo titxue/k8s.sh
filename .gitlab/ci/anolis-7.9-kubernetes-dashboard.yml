@@ -98,9 +98,10 @@ anolis-7.9:install:kubernetes-dashboard:
   script:
     - chmod +x k8s.sh
     - ./k8s.sh standalone kubernetes-version=$KUBERNETES_VERSION kubernetes-repo-type=$KUBERNETES_REPO_TYPE docker-repo-type=$DOCKER_REPO_TYPE
-    - ./k8s.sh helm-install-kubernetes-dashboard
     - helm version
     - export KUBECONFIG=/etc/kubernetes/admin.conf
+    - helm ls -A
+    - ./k8s.sh helm-install-kubernetes-dashboard
     - kubectl get node -o wide
     - kubectl get svc -A -o wide
     - kubectl get pod -A -o wide
