@@ -210,7 +210,7 @@ EOF
       '23')
         anolis_docker_version=8
         echo -e "${COLOR_BLUE}$os_type $os_version 使用 $docker_repo_name $anolis_docker_version Docker 安装包${COLOR_RESET}"
-        sudo sed "s#\$releasever#$anolis_docker_version#" /etc/yum.repos.d/docker-ce.repo
+        sudo sed -i "s#\$releasever#$anolis_docker_version#" /etc/yum.repos.d/docker-ce.repo
         ;;
       *) ;;
       esac
@@ -221,7 +221,7 @@ EOF
       '20.03' | '22.03' | '24.03')
         openEuler_docker_version=8
         echo -e "${COLOR_BLUE}$os_type $os_version 使用 $docker_repo_name $openEuler_docker_version Docker 安装包${COLOR_RESET}"
-        sudo sed "s#\$releasever#$openEuler_docker_version#" /etc/yum.repos.d/docker-ce.repo
+        sudo sed -i "s#\$releasever#$openEuler_docker_version#" /etc/yum.repos.d/docker-ce.repo
         ;;
       *) ;;
       esac
