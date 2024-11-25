@@ -959,9 +959,12 @@ _helm_install() {
 # https://github.com/kubernetes/dashboard/blob/master/charts/kubernetes-dashboard/values.yaml
 # https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
 _helm_install_kubernetes_dashboard() {
-  helm repo remove kubernetes-dashboard || echo '本地未安装 kubernetes-dashboard 仓库'
+  echo -e "${COLOR_BLUE}准备清理已存在的 kubernetes-dashboard charts 仓库 ...${COLOR_RESET}"
+  helm repo remove kubernetes-dashboard || echo -e "${COLOR_BLUE}本地未安装 kubernetes-dashboard 仓库${COLOR_RESET}"
+  echo -e "${COLOR_BLUE}准备安装 kubernetes-dashboard charts 仓库: ${COLOR_GREEN}$kubernetes_dashboard_chart${COLOR_RESET}"
   helm repo add kubernetes-dashboard $kubernetes_dashboard_chart
 
+  echo -e "${COLOR_BLUE}准备生成 kubernetes-dashboard charts 仓库安装配置 ...${COLOR_RESET}"
   cat <<EOF | sudo tee kubernetes_dashboard.yml
 app:
   ingress:
@@ -989,8 +992,10 @@ kong:
 
 EOF
 
+  echo -e "${COLOR_BLUE}准备使用自定义配置安装 kubernetes-dashboard charts ...${COLOR_RESET}"
   helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard --version $kubernetes_dashboard_version -f kubernetes_dashboard.yml
 
+  echo -e "${COLOR_BLUE}准备生成 kubernetes-dashboard service account yml ...${COLOR_RESET}"
   cat <<EOF | sudo tee kubernetes_dashboard_service_account.yml
 apiVersion: v1
 kind: ServiceAccount
@@ -1000,6 +1005,7 @@ metadata:
 
 EOF
 
+  echo -e "${COLOR_BLUE}准备生成 kubernetes-dashboard cluster role binding yml ...${COLOR_RESET}"
   cat <<EOF | sudo tee kubernetes_dashboard_cluster_role_binding.yml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1016,6 +1022,7 @@ subjects:
 
 EOF
 
+  echo -e "${COLOR_BLUE}准备生成 kubernetes-dashboard secret yml ...${COLOR_RESET}"
   cat <<EOF | sudo tee kubernetes_dashboard_secret.yml
 apiVersion: v1
 kind: Secret
@@ -1028,13 +1035,19 @@ type: kubernetes.io/service-account-token
 
 EOF
 
+  echo -e "${COLOR_BLUE}准备创建 kubernetes-dashboard service account yml ...${COLOR_RESET}"
   kubectl apply -f kubernetes_dashboard_service_account.yml
+  echo -e "${COLOR_BLUE}准备创建 kubernetes-dashboard cluster role binding yml ...${COLOR_RESET}"
   kubectl apply -f kubernetes_dashboard_cluster_role_binding.yml
+  echo -e "${COLOR_BLUE}准备创建 kubernetes-dashboard secret yml ...${COLOR_RESET}"
   kubectl apply -f kubernetes_dashboard_secret.yml
 
+  echo -e "${COLOR_BLUE}准备创建 kubernetes-dashboard token（默认有效期 1h） ...${COLOR_RESET}"
+  echo -e "${COLOR_BLUE}使用: ${COLOR_GREEN}kubectl -n kubernetes-dashboard create token admin-user --duration=86400s ${COLOR_BLUE}创建指定有效时间的 token${COLOR_RESET}"
+  echo -e "${COLOR_BLUE}使用: ${COLOR_GREEN}kubectl -n kubernetes-dashboard get secret admin-user -o jsonpath={".data.token"} | base64 -d ${COLOR_BLUE}获取长期 token${COLOR_RESET}"
+  echo ''
   kubectl -n kubernetes-dashboard create token admin-user
-  kubectl -n kubernetes-dashboard get secret admin-user -o jsonpath={".data.token"} | base64 -d
-
+  echo ''
 }
 
 _firewalld_stop() {
