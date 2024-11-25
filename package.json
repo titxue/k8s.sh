@@ -18,6 +18,7 @@
     "image:calico": "node scripts/image/calico.mjs",
     "image:dashboard": "node scripts/image/dashboard.mjs",
     "image:ingress-nginx": "node scripts/image/ingress-nginx.mjs",
+    "image:kong": "node scripts/image/kong.mjs",
     "image:kube-prometheus": "node scripts/image/kube-prometheus.mjs",
     "image:kubernetes": "node scripts/image/kubernetes.mjs",
     "image:metrics-server": "node scripts/image/metrics-server.mjs",
