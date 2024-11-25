@@ -52,7 +52,7 @@ hostnamectl || true
 # ubuntu
 # uos
 readonly os_type=$(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"')
-echo "系统类型: $os_type"
+echo -e "${COLOR_BLUE}系统类型: ${COLOR_GREEN}$os_type${COLOR_RESET}"
 
 # 当前系统版本，可能的值:
 # AlmaLinux: 8.10、9.4
@@ -64,22 +64,27 @@ echo "系统类型: $os_type"
 # Ubuntu: 18.04、20.04、22.04、24.04
 # UOS:
 readonly os_version=$(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"')
-echo "系统版本: $os_version"
+echo -e "${COLOR_BLUE}系统版本: ${COLOR_GREEN}$os_version${COLOR_RESET}"
+
+readonly kylin_release_id=$(grep -w "KYLIN_RELEASE_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"')
+if [[ $kylin_release_id ]]; then
+  echo -e "${COLOR_BLUE}银河麒麟代码版本: ${COLOR_GREEN}$kylin_release_id${COLOR_RESET}"
+fi
 
 # 代码版本
 readonly code_name=$(grep -w "VERSION_CODENAME" /etc/os-release | cut -d'=' -f2 | tr -d '"')
 if [[ $code_name ]]; then
-  echo "代码版本: $code_name"
+  echo -e "${COLOR_BLUE}代码版本: ${COLOR_GREEN}$code_name${COLOR_RESET}"
 fi
 
-if [[ $os_type == 'centos' && $os_version == '8' ]]; then
+if [[ $os_type == 'centos' ]]; then
   readonly centos_os_version=$(cat /etc/redhat-release | awk '{print $4}')
-  echo "CentOS 系统具体版本: $centos_os_version"
+  echo -e "${COLOR_BLUE}CentOS 系统具体版本: ${COLOR_GREEN}$centos_os_version${COLOR_RESET}"
 fi
 
 if [ -e "/etc/debian_version" ]; then
   readonly debian_os_version=$(cat /etc/debian_version)
-  echo "Debian 系统具体版本: $debian_os_version"
+  echo -e "${COLOR_BLUE}Debian 系统具体版本: ${COLOR_GREEN}$debian_os_version${COLOR_RESET}"
 fi
 
 # apt 锁超时时间
@@ -173,7 +178,7 @@ centos | anolis | almalinux | openEuler | rocky)
   package_type=yum
   ;;
 *)
-  echo "不支持的发行版: $os_type"
+  echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type${COLOR_RESET}"
   exit 1
   ;;
 esac
@@ -203,7 +208,9 @@ EOF
     if [[ $os_type == 'anolis' ]]; then
       case "$os_version" in
       '23')
-        sudo sed -i 's/$releasever/8/g' /etc/yum.repos.d/docker-ce.repo
+        anolis_docker_version=8
+        echo -e "${COLOR_BLUE}$os_type $os_version 使用 $docker_repo_name $anolis_docker_version Docker 安装包${COLOR_RESET}"
+        sudo sed "s#\$releasever#$anolis_docker_version#" /etc/yum.repos.d/docker-ce.repo
         ;;
       *) ;;
       esac
@@ -212,7 +219,9 @@ EOF
     if [[ $os_type == 'openEuler' ]]; then
       case "$os_version" in
       '20.03' | '22.03' | '24.03')
-        sudo sed -i 's/$releasever/8/g' /etc/yum.repos.d/docker-ce.repo
+        openEuler_docker_version=8
+        echo -e "${COLOR_BLUE}$os_type $os_version 使用 $docker_repo_name $openEuler_docker_version Docker 安装包${COLOR_RESET}"
+        sudo sed "s#\$releasever#$openEuler_docker_version#" /etc/yum.repos.d/docker-ce.repo
         ;;
       *) ;;
       esac
@@ -235,7 +244,9 @@ EOF
     if [[ $os_type == 'openkylin' ]]; then
       case "$code_name" in
       yangtze | nile)
-        sed -i "s#$code_name#bookworm#" /etc/apt/sources.list.d/docker.list
+        openkylin_docker_version=bookworm
+        echo -e "${COLOR_BLUE}$os_type $os_version $code_name 使用 $docker_repo_name $openkylin_docker_version Docker 安装包${COLOR_RESET}"
+        sed -i "s#$code_name#$openkylin_docker_version#" /etc/apt/sources.list.d/docker.list
         ;;
       *) ;;
       esac
@@ -244,7 +255,9 @@ EOF
     if [[ $os_type == 'kylin' ]]; then
       case "$os_version" in
       v10)
-        sed -i "s#$code_name#bullseye#" /etc/apt/sources.list.d/docker.list
+        kylin_docker_version=bullseye
+        echo -e "${COLOR_BLUE}$os_type $os_version $code_name 使用 $docker_repo_name $kylin_docker_version Docker 安装包${COLOR_RESET}"
+        sed -i "s#$code_name#$kylin_docker_version#" /etc/apt/sources.list.d/docker.list
         ;;
       *) ;;
       esac
@@ -253,7 +266,9 @@ EOF
     if [[ $os_type == 'Deepin' ]]; then
       case "$code_name" in
       apricot)
-        sed -i "s#$code_name#buster#" /etc/apt/sources.list.d/docker.list
+        deepin_docker_version=bullseye
+        echo -e "${COLOR_BLUE}$os_type $code_name $os_version 使用 $docker_repo_name $deepin_docker_version Docker 安装包${COLOR_RESET}"
+        sed -i "s#$code_name#$deepin_docker_version#" /etc/apt/sources.list.d/docker.list
         ;;
       *) ;;
       esac
@@ -263,7 +278,7 @@ EOF
 
   else
 
-    echo "不支持的发行版: $os_type 配置 Docker 源"
+    echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}配置 Docker 源${COLOR_RESET}"
     exit 1
 
   fi
@@ -312,7 +327,7 @@ _remove_apt_ord_docker() {
     fi
     ;;
   *)
-    echo "不支持的发行版: $os_type 卸载旧版 Docker"
+    echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}卸载旧版 Docker${COLOR_RESET}"
     exit 1
     ;;
   esac
@@ -324,6 +339,7 @@ _containerd_install() {
     sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
 
     if [[ $os_type == 'openEuler' && $os_version == '20.03' ]]; then
+      echo -e "${COLOR_BLUE}$os_type $os_version 安装 ${COLOR_GREEN}$container_selinux_rpm${COLOR_RESET}"
       sudo yum install -y $container_selinux_rpm
     fi
 
@@ -336,7 +352,7 @@ _containerd_install() {
 
   else
 
-    echo "不支持的发行版: $os_type 安装 Containerd"
+    echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 Containerd${COLOR_RESET}"
     exit 1
 
   fi
@@ -352,15 +368,21 @@ _containerd_install() {
 # https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/container-runtimes/
 _containerd_config() {
   sudo mkdir -p /etc/containerd
-  sudo cp /etc/containerd/config.toml /etc/containerd/config.toml.$(date +%Y%m%d%H%M%S) || true
+  containerd_config_backup_path=/etc/containerd/config.toml.$(date +%Y%m%d%H%M%S)
+  echo -e "${COLOR_BLUE}containerd 备份历史配置路径: ${COLOR_GREEN}$containerd_config_backup_path${COLOR_RESET}"
+  sudo cp /etc/containerd/config.toml $containerd_config_backup_path || true
   sudo containerd config default | sudo tee /etc/containerd/config.toml
 
   # 兼容 OpenKylin 2.0，防止在 /etc/containerd/config.toml 生成无关配置
   if [[ $os_type == 'openkylin' && $os_version == '2.0' ]]; then
+    echo -e "${COLOR_BLUE}$os_type $os_version 注释 /etc/containerd/config.toml 无用配置${COLOR_RESET}"
     sudo sed -i 's/^User/#&/' /etc/containerd/config.toml
   fi
 
+  echo -e "${COLOR_BLUE}containerd 配置中，registry.k8s.io/pause 使用: ${COLOR_GREEN}$pause_image ${COLOR_BLUE}镜像${COLOR_RESET}"
   sudo sed -i "s#registry.k8s.io/pause#$pause_image#g" /etc/containerd/config.toml
+
+  echo -e "${COLOR_BLUE}containerd 配置中，SystemdCgroup 设置为: ${COLOR_GREEN}true ${COLOR_RESET}"
   sudo sed -i "s#SystemdCgroup = false#SystemdCgroup = true#g" /etc/containerd/config.toml
 
   sudo systemctl restart containerd
@@ -374,7 +396,7 @@ _docker_install() {
     sudo yum remove -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine
 
     if [[ $os_type == 'openEuler' && $os_version == '20.03' ]]; then
-      sudo yum install -y $container_selinux_rpm
+      echo -e "${COLOR_BLUE}$os_type $os_version 安装 ${COLOR_GREEN}$container_selinux_rpm${COLOR_RESET}"
     fi
 
     sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
@@ -386,7 +408,7 @@ _docker_install() {
 
   else
 
-    echo "不支持的发行版: $os_type 安装 Docker"
+    echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 Docker${COLOR_RESET}"
     exit 1
 
   fi
@@ -415,7 +437,7 @@ _socat() {
 
   else
 
-    echo "不支持的发行版: $os_type 安装 socat"
+    echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 socat${COLOR_RESET}"
     exit 1
 
   fi
@@ -431,9 +453,12 @@ _kubernetes_repo() {
     kubernetes_gpgcheck=0
     case "$kubernetes_repo_type" in
     "" | aliyun | tsinghua | kubernetes)
+      echo -e "${COLOR_BLUE}开启了 gpg 检查${COLOR_RESET}"
       kubernetes_gpgcheck=1
       ;;
-    *) ;;
+    *)
+      echo -e "${COLOR_BLUE}未开启 gpg 检查${COLOR_RESET}"
+      ;;
     esac
 
     sudo tee /etc/yum.repos.d/kubernetes.repo <<EOF
@@ -474,7 +499,7 @@ EOF
 
   else
 
-    echo "不支持的发行版: $os_type 配置 Kubernetes 源"
+    echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}配置 Kubernetes 源${COLOR_RESET}"
     exit 1
 
   fi
@@ -502,7 +527,7 @@ _curl() {
 
   else
 
-    echo "不支持的发行版: $os_type 安装 curl"
+    echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 curl${COLOR_RESET}"
     exit 1
 
   fi
@@ -521,7 +546,7 @@ _ca_certificates() {
 
   else
 
-    echo "不支持的发行版: $os_type 安装 ca-certificates"
+    echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 ca-certificates${COLOR_RESET}"
     exit 1
 
   fi
@@ -537,7 +562,7 @@ _kubernetes_install() {
     sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y kubelet="$version"-$kubernetes_version_suffix kubeadm="$version"-$kubernetes_version_suffix kubectl="$version"-$kubernetes_version_suffix
   else
 
-    echo "不支持的发行版: $os_type 安装 Kubernetes"
+    echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 Kubernetes${COLOR_RESET}"
     exit 1
 
   fi
@@ -557,12 +582,14 @@ _enable_ipv4_packet_forwarding() {
 
   ipv4_ip_forward=$(grep -w "net.ipv4.ip_forward" /etc/sysctl.conf | cut -d'=' -f2 | tr -d ' ')
   if [[ $ipv4_ip_forward == '0' ]]; then
+    echo -e "${COLOR_YELLOW}/etc/sysctl.conf 文件中关闭了 net.ipv4.ip_forward，将注释此配置${COLOR_RESET}"
     # 如果 IPv4 数据包转发 已关闭: 注释已存在的配置，防止冲突
     sudo sed -i 's|net.ipv4.ip_forward|#net.ipv4.ip_forward|g' /etc/sysctl.conf
   fi
 
   ipv4_ip_forward=$(grep -w "net.ipv4.ip_forward" /etc/sysctl.d/99-sysctl.conf | cut -d'=' -f2 | tr -d ' ')
   if [[ $ipv4_ip_forward == '0' ]]; then
+    echo -e "${COLOR_YELLOW}/etc/sysctl.d/99-sysctl.conf 文件中关闭了 net.ipv4.ip_forward，将注释此配置${COLOR_RESET}"
     # 如果 IPv4 数据包转发 已关闭: 注释已存在的配置，防止冲突
     sudo sed -i 's|net.ipv4.ip_forward|#net.ipv4.ip_forward|g' /etc/sysctl.d/99-sysctl.conf
   fi
@@ -774,7 +801,7 @@ _enable_shell_autocompletion() {
 
   else
 
-    echo "不支持的发行版: $os_type 启用 shell 自动补全功能"
+    echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}启用 shell 自动补全功能${COLOR_RESET}"
     exit 1
 
   fi
@@ -797,7 +824,7 @@ _calico_install() {
   if ! [[ $calico_url ]]; then
     calico_url=$calico_mirror/$calico_version/manifests/calico.yaml
   fi
-  echo "calico manifests url: $calico_url"
+  echo -e "${COLOR_BLUE}calico manifests url: ${COLOR_GREEN}$calico_url${COLOR_RESET}"
 
   calico_local_path=calico.yaml
   if [[ $calico_url =~ ^https?:// ]]; then
@@ -807,7 +834,7 @@ _calico_install() {
   fi
 
   if grep -q "interface=" "$calico_local_path"; then
-    echo "已配置 calico 使用的网卡，脚本跳过网卡配置"
+    echo -e "${COLOR_BLUE}已配置 calico 使用的网卡，脚本跳过网卡配置${COLOR_RESET}"
   else
     _interface_name
 
@@ -830,7 +857,7 @@ _ingress_nginx_install() {
   if ! [[ $ingress_nginx_url ]]; then
     ingress_nginx_url=$ingress_nginx_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml
   fi
-  echo "ingress nginx manifests url: $ingress_nginx_url"
+  echo -e "${COLOR_BLUE}ingress nginx manifests url: ${COLOR_GREEN}$ingress_nginx_url${COLOR_RESET}"
 
   ingress_nginx_local_path=ingress_nginx.yaml
   if [[ $ingress_nginx_url =~ ^https?:// ]]; then
@@ -864,7 +891,7 @@ _metrics_server_install() {
   if ! [[ $metrics_server_url ]]; then
     metrics_server_url=$metrics_server_mirror/$metrics_server_version/components.yaml
   fi
-  echo "metrics server manifests url: $metrics_server_url"
+  echo -e "${COLOR_BLUE}metrics server manifests url: ${COLOR_GREEN}$metrics_server_url${COLOR_RESET}"
 
   metrics_server_local_path=metrics_server.yaml
   if [[ $metrics_server_url =~ ^https?:// ]]; then
@@ -896,7 +923,7 @@ _helm_install() {
     *) ;;
     esac
   fi
-  echo "helm url: $helm_url"
+  echo -e "${COLOR_BLUE}helm url: ${COLOR_GREEN}$helm_url${COLOR_RESET}"
 
   helm_local_path=helm-$helm_version-linux-amd64.tar.gz
   helm_local_folder=helm-$helm_version-linux-amd64
@@ -908,14 +935,14 @@ _helm_install() {
 
   if ! command -v 'tar' &>/dev/null; then
     if [[ $package_type == 'yum' ]]; then
-      echo "tar 未安装，正在安装..."
+      echo -e "${COLOR_BLUE}tar 未安装，正在安装...${COLOR_RESET}"
       sudo yum install -y tar
-      echo "tar 安装完成"
+      echo -e "${COLOR_BLUE}tar 安装完成${COLOR_RESET}"
     elif [[ $package_type == 'apt' ]]; then
-      echo "tar 未安装，正在安装..."
+      echo -e "${COLOR_BLUE}tar 未安装，正在安装...${COLOR_RESET}"
       apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
       apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y apt
-      echo "tar 安装完成"
+      echo -e "${COLOR_BLUE}tar 安装完成${COLOR_RESET}"
     fi
   fi
 
@@ -1033,7 +1060,7 @@ while [[ $# -gt 0 ]]; do
 
   config=* | -config=* | --config=*)
     config="${1#*=}"
-    echo '启用了配置文件: $config'
+    echo -e "${COLOR_BLUE}启用了配置文件 ${COLOR_GREEN}$config${COLOR_RESET}"
     source $config
     ;;
 
@@ -1082,7 +1109,7 @@ while [[ $# -gt 0 ]]; do
       kubernetes_baseurl=${kubernetes_mirrors[-1]}
       ;;
     *)
-      echo "使用自定义 Kubernetes 仓库地址: $kubernetes_repo_type"
+      echo -e "${COLOR_BLUE}使用自定义 Kubernetes 仓库地址 ${COLOR_GREEN}$kubernetes_repo_type${COLOR_RESET}"
       kubernetes_baseurl=$kubernetes_repo_type
       ;;
     esac
@@ -1101,7 +1128,7 @@ while [[ $# -gt 0 ]]; do
       kubernetes_images=${kubernetes_images_mirrors[-1]}
       ;;
     *)
-      echo "不支持自定义 Kubernetes 镜像仓库: $kubernetes_images"
+      echo -e "${COLOR_RED}不支持自定义 Kubernetes 镜像仓库: ${COLOR_GREEN}$kubernetes_images${COLOR_RESET}"
       exit 1
       ;;
     esac
@@ -1199,7 +1226,7 @@ while [[ $# -gt 0 ]]; do
       docker_baseurl=${docker_mirrors[-1]}
       ;;
     *)
-      echo "使用自定义 Docker 仓库地址: $docker_repo_type"
+      echo -e "${COLOR_BLUE}使用自定义 Docker 仓库地址: ${COLOR_GREEN}$docker_repo_type${COLOR_RESET}"
       docker_baseurl=$docker_repo_type
       ;;
     esac
@@ -1330,7 +1357,7 @@ while [[ $# -gt 0 ]]; do
     case "$helm_repo_type" in
     "" | huawei | helm) ;;
     *)
-      echo -e "${COLOR_RED}helm-repo-type 参数值: $1 无效，合法值: 空、huawei、helm，或者使用 helm-url 自定义 helm 下载地址，退出程序${COLOR_RESET}"
+      echo -e "${COLOR_RED}helm-repo-type 参数值: ${COLOR_GREEN}$helm_repo_type${COLOR_RED} 无效，合法值: 空、huawei、helm，或者使用 helm-url 自定义 helm 下载地址，退出程序${COLOR_RESET}"
       exit 1
       ;;
     esac
@@ -1350,10 +1377,10 @@ done
 
 if ! command -v 'sudo' &>/dev/null; then
   if [[ $package_type == 'apt' ]]; then
-    echo "sudo 未安装，正在安装..."
+    echo -e "${COLOR_BLUE}sudo 未安装，正在安装...${COLOR_RESET}"
     apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
     apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y sudo
-    echo "sudo 安装完成"
+    echo -e "${COLOR_BLUE}sudo 安装完成${COLOR_RESET}"
   fi
 fi
 
