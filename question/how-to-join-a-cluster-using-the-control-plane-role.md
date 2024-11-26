@@ -8,6 +8,9 @@
 
 - [工作节点软件安装配置说明](how-to-join-a-cluster-using-the-node-role.md)
 - 需要加入集群的现有 `控制节点`（`控制平面`）初始化时，必须有 `--control-plane-endpoint` 参数
+- 无论后续节点加入集群的角色是 `工作节点` 还是 `控制节点`（`控制平面`），都不能进行初始化，区别在于加入集群时的参数不同
+- 无论后续节点加入集群的角色是 `工作节点` 还是 `控制节点`（`控制平面`），都不能进行初始化，区别在于加入集群时的参数不同
+- 无论后续节点加入集群的角色是 `工作节点` 还是 `控制节点`（`控制平面`），都不能进行初始化，区别在于加入集群时的参数不同
 - 相关内容
     - 参数配置：[control-plane-endpoint](../config.md#control-plane-endpoint)
     - 关于 `apiserver-advertise-address` 和 `ControlPlaneEndpoint` 的注意事项：
