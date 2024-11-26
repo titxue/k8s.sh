@@ -18,6 +18,10 @@
 4. 在 `控制节点`（`控制平面`）中运行 `kubeadm token create --print-join-command` 命令后，可得到 `工作节点` 加入集群的命令，
    也可以使用脚本参数 `./k8s.sh print-join-command` 生成
 
+5. `集群模式` 并不是 `高可用模式`，`高可用模式` 需要 `VIP`（`虚拟 IP`）
+   - 只有 `高可用模式`，才能将后续加点加入集群时，才能设置为 `控制节点`（`控制平面`）
+   - `高可用模式` 相关参数：[control-plane-endpoint](config.md#control-plane-endpoint)
+
 :::
 
 ### 单机模式 {id=standalone}
@@ -42,6 +46,9 @@
 ::: warning 警告
 
 1. `工作节点` 未加入集群时，`Kubernetes` 集群将无法正常使用
+2. `集群模式` 并不是 `高可用模式`，`高可用模式` 需要 `VIP`（`虚拟 IP`）
+    - 只有 `高可用模式`，才能将后续加点加入集群时，才能设置为 `控制节点`（`控制平面`）
+    - `高可用模式` 相关参数：[control-plane-endpoint](config.md#control-plane-endpoint)
 
 :::
 
