@@ -39,6 +39,11 @@ readonly COLOR_YELLOW='\033[93m'
 readonly EMOJI_CONGRATS="\U0001F389"
 readonly EMOJI_FAILURE="\U0001F61E"
 
+# 文档简介链接
+readonly DOCS_README_LINK=https://k8s-sh.xuxiaowei.com.cn/README.html
+# 文档配置链接
+readonly DOCS_CONFIG_LINK=https://k8s-sh.xuxiaowei.com.cn/config.html
+
 # 查看系统类型、版本、内核
 hostnamectl || true
 
@@ -179,6 +184,7 @@ centos | anolis | almalinux | openEuler | rocky)
   ;;
 *)
   echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type${COLOR_RESET}"
+  echo -e "${COLOR_RED}请阅读文档，查看已支持的发行版: ${COLOR_GREEN}$DOCS_README_LINK${COLOR_RESET}"
   exit 1
   ;;
 esac
@@ -279,6 +285,7 @@ EOF
   else
 
     echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}配置 Docker 源${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看已支持的发行版: ${COLOR_GREEN}$DOCS_README_LINK${COLOR_RESET}"
     exit 1
 
   fi
@@ -328,6 +335,7 @@ _remove_apt_ord_docker() {
     ;;
   *)
     echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}卸载旧版 Docker${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看已支持的发行版: ${COLOR_GREEN}$DOCS_README_LINK${COLOR_RESET}"
     exit 1
     ;;
   esac
@@ -353,6 +361,7 @@ _containerd_install() {
   else
 
     echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 Containerd${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看已支持的发行版: ${COLOR_GREEN}$DOCS_README_LINK${COLOR_RESET}"
     exit 1
 
   fi
@@ -409,6 +418,7 @@ _docker_install() {
   else
 
     echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 Docker${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看已支持的发行版: ${COLOR_GREEN}$DOCS_README_LINK${COLOR_RESET}"
     exit 1
 
   fi
@@ -438,6 +448,7 @@ _socat() {
   else
 
     echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 socat${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看已支持的发行版: ${COLOR_GREEN}$DOCS_README_LINK${COLOR_RESET}"
     exit 1
 
   fi
@@ -500,6 +511,7 @@ EOF
   else
 
     echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}配置 Kubernetes 源${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看已支持的发行版: ${COLOR_GREEN}$DOCS_README_LINK${COLOR_RESET}"
     exit 1
 
   fi
@@ -528,6 +540,7 @@ _curl() {
   else
 
     echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 curl${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看已支持的发行版: ${COLOR_GREEN}$DOCS_README_LINK${COLOR_RESET}"
     exit 1
 
   fi
@@ -547,6 +560,7 @@ _ca_certificates() {
   else
 
     echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 ca-certificates${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看已支持的发行版: ${COLOR_GREEN}$DOCS_README_LINK${COLOR_RESET}"
     exit 1
 
   fi
@@ -563,6 +577,7 @@ _kubernetes_install() {
   else
 
     echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}安装 Kubernetes${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看已支持的发行版: ${COLOR_GREEN}$DOCS_README_LINK${COLOR_RESET}"
     exit 1
 
   fi
@@ -802,6 +817,7 @@ _enable_shell_autocompletion() {
   else
 
     echo -e "${COLOR_RED}不支持的发行版: ${COLOR_GREEN}$os_type ${COLOR_RED}启用 shell 自动补全功能${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看已支持的发行版: ${COLOR_GREEN}$DOCS_README_LINK${COLOR_RESET}"
     exit 1
 
   fi
@@ -815,6 +831,7 @@ _interface_name() {
       echo -e "${COLOR_BLUE}上网网卡是 ${COLOR_RESET}${COLOR_GREEN}${interface_name}${COLOR_RESET}"
     else
       echo -e "${COLOR_RED}未找到上网网卡，停止安装${COLOR_RESET}"
+      echo -e "${COLOR_RED}请阅读文档，查看网卡配置 interface-name: ${COLOR_GREEN}${DOCS_CONFIG_LINK}#interface-name${COLOR_RESET}"
       exit 1
     fi
   fi
@@ -1142,6 +1159,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     *)
       echo -e "${COLOR_RED}不支持自定义 Kubernetes 镜像仓库: ${COLOR_GREEN}$kubernetes_images${COLOR_RESET}"
+      echo -e "${COLOR_RED}请阅读文档，查看 Kubernetes 镜像仓库配置 kubernetes-images: ${COLOR_GREEN}${DOCS_CONFIG_LINK}#kubernetes-images${COLOR_RESET}"
       exit 1
       ;;
     esac
@@ -1371,6 +1389,7 @@ while [[ $# -gt 0 ]]; do
     "" | huawei | helm) ;;
     *)
       echo -e "${COLOR_RED}helm-repo-type 参数值: ${COLOR_GREEN}$helm_repo_type${COLOR_RED} 无效，合法值: 空、huawei、helm，或者使用 helm-url 自定义 helm 下载地址，退出程序${COLOR_RESET}"
+      echo -e "${COLOR_RED}请阅读文档，查看 helm 仓库配置 helm-repo-type: ${COLOR_GREEN}${DOCS_CONFIG_LINK}#helm-repo-type${COLOR_RESET}"
       exit 1
       ;;
     esac
@@ -1421,6 +1440,7 @@ while [[ $# -gt 0 ]]; do
 
   *)
     echo -e "${COLOR_RED}无效参数: $1，退出程序${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看参数配置: ${COLOR_GREEN}$DOCS_CONFIG_LINK${COLOR_RESET}"
     exit 1
     ;;
   esac
@@ -1474,6 +1494,7 @@ if [[ $count -gt 1 ]]; then
   echo ''
   echo -e "${COLOR_RED}${EMOJI_FAILURE}${EMOJI_FAILURE}${EMOJI_FAILURE}${COLOR_RESET}"
   echo -e "${COLOR_RED}参数 standalone、cluster、node 三者互斥${COLOR_RESET}"
+  echo -e "${COLOR_RED}请阅读文档，查看配置: ${COLOR_GREEN}$DOCS_CONFIG_LINK${COLOR_RESET}"
   echo ''
   echo ''
   echo ''
