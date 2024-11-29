@@ -7,6 +7,7 @@
     "docs:build:only": "vitepress build",
     "docs:build": "vitepress build && node .vitepress/copy.js",
     "docs:preview": "vitepress preview",
+    "binary:kubeadm-100-year": "node scripts/binary/kubeadm-100-year.mjs",
     "charts:dashboard": "node scripts/charts/dashboard.mjs",
     "charts:ingress-nginx": "node scripts/charts/ingress-nginx.mjs",
     "charts:metrics-server": "node scripts/charts/metrics-server.mjs",
