@@ -91,10 +91,13 @@ async function tags(page, per_page) {
                 const url = `${gitlabJobUrl}/${resp.data[0].id}/artifacts/raw/kubernetes/_output/local/bin/linux/amd64/kubeadm`
                 console.log(url)
                 // 下载产物
-                await axios({url, method: 'GET', responseType: 'stream', ...axiosConfig}).then((response) => {
-                  const writeStream = fs.createWriteStream(`kubeadm-${name}`)
-                  response.data.pipe(writeStream).on('finish', () => {
-                  })
+                await axios({url, method: 'GET', responseType: 'stream', ...axiosConfig}).then(async (response) => {
+                  const writeStream = fs.createWriteStream(`kubeadm-${name}`);
+                  response.data.pipe(writeStream);
+                  await new Promise((resolve, reject) => {
+                    writeStream.on('finish', resolve);
+                    writeStream.on('error', reject);
+                  });
                 }).catch((error) => {
                   console.log(error)
                 })
