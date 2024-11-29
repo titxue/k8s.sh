@@ -38,6 +38,7 @@ pages:
           - docker/**/*
           - "**.md"
           - "**/*.md"
+          - mirrors/**/*
           - public
           - static
           - .npmrc
@@ -87,6 +88,7 @@ docker:build:
           - docker/**/*
           - "**.md"
           - "**/*.md"
+          - mirrors/**/*
           - public
           - static
           - .npmrc
@@ -121,6 +123,7 @@ docker:deploy:
           - docker/**/*
           - "**.md"
           - "**/*.md"
+          - mirrors/**/*
           - public
           - static
           - .npmrc
