@@ -713,28 +713,33 @@ _kubernetes_init_congrats() {
 }
 
 _kubernetes_init() {
-  if [[ $kubernetes_init_node_name ]]; then
-    kubernetes_init_node_name="--node-name=$kubernetes_init_node_name"
-  fi
+  local kubeadm_args=("--kubernetes-version=$kubernetes_version")
 
   if [[ $control_plane_endpoint ]]; then
-    control_plane_endpoint="--control-plane-endpoint=$control_plane_endpoint"
+    kubeadm_args+=("--control-plane-endpoint=$control_plane_endpoint")
   fi
 
   if [[ $service_cidr ]]; then
-    service_cidr="--service-cidr=$service_cidr"
+    kubeadm_args+=("--service-cidr=$service_cidr")
   fi
 
   if [[ $pod_network_cidr ]]; then
-    pod_network_cidr="--pod-network-cidr=$pod_network_cidr"
+    kubeadm_args+=("--pod-network-cidr=$pod_network_cidr")
   fi
 
+  if [[ $kubernetes_init_node_name ]]; then
+    kubeadm_args+=("--node-name=$kubernetes_init_node_name")
+  fi
+
+  # 如果启用了 etcd 配置，则生成配置文件并指定
   if [[ $etcd_endpoints && $etcd_cafile && $etcd_certfile && $etcd_keyfile ]]; then
-    etcd_config="--external-etcd-endpoints=$etcd_endpoints --external-etcd-cafile=$etcd_cafile --external-etcd-certfile=$etcd_certfile --external-etcd-keyfile=$etcd_keyfile"
+    _generate_etcd_config
+    kubeadm_args+=("--config=/tmp/kubeadm-etcd-config.yaml")
   fi
 
-  kubeadm init --image-repository=$kubernetes_images $control_plane_endpoint $kubernetes_init_node_name $service_cidr $pod_network_cidr $etcd_config --kubernetes-version=$kubernetes_version
-
+  # 执行 kubeadm init
+  kubeadm init "${kubeadm_args[@]}"
+  
   KUBECONFIG=$(grep -w "KUBECONFIG" /etc/profile | cut -d'=' -f2)
   if [[ $KUBECONFIG != '/etc/kubernetes/admin.conf' ]]; then
     sudo sed -i 's/.*KUBECONFIG.*/#&/' /etc/profile
@@ -1087,6 +1092,33 @@ _selinux_disabled() {
     sudo sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
     cat /etc/selinux/config
   fi
+}
+
+_generate_etcd_config() {
+  local etcd_config_file="/tmp/kubeadm-etcd-config.yaml"
+
+  cat <<EOF >$etcd_config_file
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+etcd:
+  external:
+    endpoints:
+EOF
+
+  # 添加 etcd endpoints
+  for endpoint in ${etcd_endpoints//,/ }; do
+    echo "    - $endpoint" >>$etcd_config_file
+  done
+
+  # 添加 etcd 证书路径
+  cat <<EOF >>$etcd_config_file
+    caFile: "$etcd_cafile"
+    certFile: "$etcd_certfile"
+    keyFile: "$etcd_keyfile"
+EOF
+
+  echo -e "${COLOR_BLUE}生成的 etcd 配置文件: ${COLOR_GREEN}$etcd_config_file${COLOR_RESET}"
+  cat $etcd_config_file
 }
 
 while [[ $# -gt 0 ]]; do
