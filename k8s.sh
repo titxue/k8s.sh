@@ -729,7 +729,11 @@ _kubernetes_init() {
     pod_network_cidr="--pod-network-cidr=$pod_network_cidr"
   fi
 
-  kubeadm init --image-repository=$kubernetes_images $control_plane_endpoint $kubernetes_init_node_name $service_cidr $pod_network_cidr --kubernetes-version=$kubernetes_version
+  if [[ $etcd_endpoints && $etcd_cafile && $etcd_certfile && $etcd_keyfile ]]; then
+    etcd_config="--external-etcd-endpoints=$etcd_endpoints --external-etcd-cafile=$etcd_cafile --external-etcd-certfile=$etcd_certfile --external-etcd-keyfile=$etcd_keyfile"
+  fi
+
+  kubeadm init --image-repository=$kubernetes_images $control_plane_endpoint $kubernetes_init_node_name $service_cidr $pod_network_cidr $etcd_config --kubernetes-version=$kubernetes_version
 
   KUBECONFIG=$(grep -w "KUBECONFIG" /etc/profile | cut -d'=' -f2)
   if [[ $KUBECONFIG != '/etc/kubernetes/admin.conf' ]]; then
@@ -1436,6 +1440,22 @@ while [[ $# -gt 0 ]]; do
 
   kubernetes-dashboard-ingress-host=* | -kubernetes-dashboard-ingress-host=* | --kubernetes-dashboard-ingress-host=*)
     kubernetes_dashboard_ingress_host="${1#*=}"
+    ;;
+    
+  etcd-endpoints=* | -etcd-endpoints=* | --etcd-endpoints=*)
+    etcd_endpoints="${1#*=}"
+    ;;
+
+  etcd-cafile=* | -etcd-cafile=* | --etcd-cafile=*)
+    etcd_cafile="${1#*=}"
+    ;;
+
+  etcd-certfile=* | -etcd-certfile=* | --etcd-certfile=*)
+    etcd_certfile="${1#*=}"
+    ;;
+
+  etcd-keyfile=* | -etcd-keyfile=* | --etcd-keyfile=*)
+    etcd_keyfile="${1#*=}"
     ;;
 
   *)
