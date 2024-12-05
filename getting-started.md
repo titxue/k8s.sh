@@ -19,8 +19,8 @@
    也可以使用脚本参数 `./k8s.sh print-join-command` 生成
 
 5. `集群模式` 并不是 `高可用模式`，`高可用模式` 需要 `VIP`（`虚拟 IP`）
-   - 只有 `高可用模式`，才能将后续节点加入集群时，设置为 `控制节点`（`控制平面`）
-   - `高可用模式` 相关参数：[control-plane-endpoint](config.md#control-plane-endpoint)
+    - 只有 `高可用模式`，才能将后续节点加入集群时，设置为 `控制节点`（`控制平面`）
+    - `高可用模式` 相关参数：[control-plane-endpoint](config.md#control-plane-endpoint)
 
 :::
 
@@ -99,15 +99,15 @@ const sources = [
     label: 'k8s-sh.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/2.0.0/k8s.sh',
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.1/k8s.sh',
     label: 'gitlab.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/2.0.0/k8s.sh',
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.1/k8s.sh',
     label: 'gitee.com',
   },
   {
-    value: 'https://raw.githubusercontent.com/xuxiaowei-com-cn/k8s.sh/refs/heads/2.0.0/k8s.sh',
+    value: 'https://raw.githubusercontent.com/xuxiaowei-com-cn/k8s.sh/refs/heads/SNAPSHOT/2.0.1/k8s.sh',
     label: 'github.com',
   }
 ]

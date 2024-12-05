@@ -179,15 +179,15 @@ export default defineConfig({
     editLink: {
       text: '在 Gitee 上编辑此页面',
       pattern: ({ filePath }) => {
-        return `https://gitee.com/xuxiaowei-com-cn/k8s.sh/edit/2.0.0/${filePath}`
-        // return `https://framagit.org/xuxiaowei-com-cn/k8s.sh/-/edit/2.0.0/${filePath}`
-        // return `https://github.com/xuxiaowei-com-cn/k8s.sh/edit/2.0.0/${filePath}`
+        return `https://gitee.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.1/${filePath}`
+        // return `https://framagit.org/xuxiaowei-com-cn/k8s.sh/-/edit/SNAPSHOT/2.0.1/${filePath}`
+        // return `https://github.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.1/${filePath}`
       },
     },
 
     footer: {
       copyright: 'Copyright © 2023-present 徐晓伟 <a href="mailto:xuxiaowei@xuxiaowei.com.cn">xuxiaowei@xuxiaowei.com.cn</a>' +
-          '<br><a target="_blank" href="https://beian.miit.gov.cn">鲁ICP备19009036号-1</a>'
+        '<br><a target="_blank" href="https://beian.miit.gov.cn">鲁ICP备19009036号-1</a>'
     }
   }
 })
