@@ -1,8 +1,8 @@
 # 更新日志 {id=CHANGELOG}
 
-## SNAPSHOT/2.0.0 {id=SNAPSHOT/2.0.0}
+## 2.0.0 {id=2.0.0}
 
-### ⭐ New Features | 新功能 {id=SNAPSHOT/2.0.0-New-Features}
+### ⭐ New Features | 新功能 {id=2.0.0-New-Features}
 
 1. 支持安装的 Kubernetes 版本: 1.24/1.25/1.26/1.27/1.28/1.29/1.30/1.31
 2. 支持系统:

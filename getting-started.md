@@ -99,15 +99,15 @@ const sources = [
     label: 'k8s-sh.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.0/k8s.sh',
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/2.0.0/k8s.sh',
     label: 'gitlab.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.0/k8s.sh',
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/2.0.0/k8s.sh',
     label: 'gitee.com',
   },
   {
-    value: 'https://raw.githubusercontent.com/xuxiaowei-com-cn/k8s.sh/refs/heads/SNAPSHOT/2.0.0/k8s.sh',
+    value: 'https://raw.githubusercontent.com/xuxiaowei-com-cn/k8s.sh/refs/heads/2.0.0/k8s.sh',
     label: 'github.com',
   }
 ]

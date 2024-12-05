@@ -2,5 +2,9 @@
   {
     "value": "SNAPSHOT/2.0.0",
     "label": "SNAPSHOT/2.0.0"
+  },
+  {
+    "value": "2.0.0",
+    "label": "2.0.0"
   }
 ]
