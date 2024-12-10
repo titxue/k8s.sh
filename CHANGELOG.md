@@ -2,6 +2,11 @@
 
 ## SNAPSHOT/2.0.1 {id=SNAPSHOT/2.0.1}
 
+### 📔 Documentation | 文档 {id=SNAPSHOT/2.0.1-Documentation}
+
+1. 新增 历史版本 流水线 链接
+2. 新增 Kubernetes 发布日历
+
 ## 2.0.0 {id=2.0.0}
 
 ### ⭐ New Features | 新功能 {id=2.0.0-New-Features}
