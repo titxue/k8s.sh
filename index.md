@@ -14,6 +14,9 @@ hero:
       text: 简介
       link: /README
     - theme: alt
+      text: 视频
+      link: /feature/videos
+    - theme: alt
       text: 参数说明
       link: /config
     - theme: alt
