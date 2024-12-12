@@ -57,7 +57,6 @@ include:
   - .gitlab/ci/anolis-7.7-kubernetes-v1.29.yml
   - .gitlab/ci/anolis-7.7-kubernetes-v1.30.yml
   - .gitlab/ci/anolis-7.7-kubernetes-v1.31.yml
-  - .gitlab/ci/anolis-7.7-kubernetes-v1.32.yml
   - .gitlab/ci/anolis-7.9.yml
   - .gitlab/ci/anolis-7.9-custom-docker-repo-type-private.yml
   - .gitlab/ci/anolis-7.9-custom-k8s-images.yml
@@ -68,6 +67,7 @@ include:
   - .gitlab/ci/anolis-7.9-kubernetes-dashboard.yml
   - .gitlab/ci/anolis-7.9-kubernetes-v1.24.yml
   - .gitlab/ci/anolis-8.2.yml
+  - .gitlab/ci/anolis-8.2-kubernetes-v1.32.yml
   - .gitlab/ci/anolis-8.4.yml
   - .gitlab/ci/anolis-8.6.yml
   - .gitlab/ci/anolis-8.8.yml

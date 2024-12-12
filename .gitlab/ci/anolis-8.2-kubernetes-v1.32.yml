@@ -1,14 +1,14 @@
-anolis-7.7:env:kubernetes:1.32:
+anolis-8.2:env:kubernetes:1.32:
   stage: env:kubernetes:1.32
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
-    QEMU_ID: $ANOLISOS_7_7_QEMU_ID
-    SNAPSHOT: $ANOLISOS_7_7_SNAPSHOT
+    QEMU_ID: $ANOLISOS_8_2_QEMU_ID
+    SNAPSHOT: $ANOLISOS_8_2_SNAPSHOT
   before_script:
     - echo $PVE_ADDRESS
-    - echo $ANOLISOS_7_7_QEMU_ID
+    - echo $ANOLISOS_8_2_QEMU_ID
     - echo $QEMU_ID
-    - echo $ANOLISOS_7_7_SNAPSHOT
+    - echo $ANOLISOS_8_2_SNAPSHOT
     - echo $SNAPSHOT
   script:
     # 获取凭证
@@ -45,16 +45,16 @@ anolis-7.7:env:kubernetes:1.32:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/anolis-7.7-kubernetes-v1.32.yml
+          - .gitlab/ci/anolis-8.2-kubernetes-v1.32.yml
           - k8s.sh
   tags:
     - g150s-docker
   when: manual
 
-anolis-7.7:install:kubernetes:1.32:
+anolis-8.2:install:kubernetes:1.32:
   stage: install:kubernetes:1.32
   needs:
-    - anolis-7.7:env:kubernetes:1.32
+    - anolis-8.2:env:kubernetes:1.32
   variables:
     KUBERNETES_VERSION: v1.32.0
     KUBERNETES_REPO_TYPE: http://172.25.25.14:48081/repository/kubernetes-new-yum
@@ -62,17 +62,17 @@ anolis-7.7:install:kubernetes:1.32:
   hooks:
     pre_get_sources_script:
       - echo $ANOLIS_URL
-      - cat /etc/yum.repos.d/AnolisOS-os.repo
-      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-os.repo
-      - cat /etc/yum.repos.d/AnolisOS-os.repo
-      - cat /etc/yum.repos.d/AnolisOS-extras.repo
-      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-extras.repo
-      - cat /etc/yum.repos.d/AnolisOS-extras.repo
-      - cat /etc/yum.repos.d/AnolisOS-updates.repo
-      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-updates.repo
-      - cat /etc/yum.repos.d/AnolisOS-updates.repo
+      - cat /etc/yum.repos.d/AnolisOS-AppStream.repo
+      - sed -i "s#http://mirrors.openanolis.org/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-AppStream.repo
+      - cat /etc/yum.repos.d/AnolisOS-AppStream.repo
+      - cat /etc/yum.repos.d/AnolisOS-BaseOS.repo
+      - sed -i "s#http://mirrors.openanolis.org/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-BaseOS.repo
+      - cat /etc/yum.repos.d/AnolisOS-BaseOS.repo
+      - cat /etc/yum.repos.d/AnolisOS-PowerTools.repo
+      - sed -i "s#http://mirrors.openanolis.org/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-PowerTools.repo
+      - cat /etc/yum.repos.d/AnolisOS-PowerTools.repo
       - yum clean all
-      - yum makecache all
+      - yum makecache
       - yum install -y git
       - git config --global http.sslVerify false
   before_script:
@@ -89,7 +89,7 @@ anolis-7.7:install:kubernetes:1.32:
         exit 1;
       fi
     - |
-      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "7.7" ]] ; then
+      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "8.2" ]] ; then
         echo "系统版本正确";
       else
         echo "系统版本不正确";
@@ -166,8 +166,8 @@ anolis-7.7:install:kubernetes:1.32:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/anolis-7.7-kubernetes-v1.32.yml
+          - .gitlab/ci/anolis-8.2-kubernetes-v1.32.yml
           - k8s.sh
   tags:
-    - GitLab-CICD-AnolisOS-7.7
+    - GitLab-CICD-AnolisOS-8.2
   environment: kubernetes/v1.32
