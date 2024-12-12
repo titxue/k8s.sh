@@ -19,6 +19,7 @@
 1. 新增 [历史版本](history.md) 流水线 链接
 2. 新增 [Kubernetes 发布日历](question/k8s-release-cal.md)
 3. 新增 [视频](feature/videos.md) 链接
+4. 新增 kubernetes 1.32.x 支持范围
 
 ## 2.0.0 {id=2.0.0}
 
