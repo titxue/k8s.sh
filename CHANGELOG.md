@@ -4,9 +4,9 @@
 
 ### 📔 Documentation | 文档 {id=SNAPSHOT/2.0.1-Documentation}
 
-1. 新增 历史版本 流水线 链接
-2. 新增 Kubernetes 发布日历
-3. 新增 视频 链接
+1. 新增 [历史版本](history.md) 流水线 链接
+2. 新增 [Kubernetes 发布日历](question/k8s-release-cal.md)
+3. 新增 [视频](feature/videos.md) 链接
 
 ## 2.0.0 {id=2.0.0}
 
