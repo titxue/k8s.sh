@@ -56,7 +56,7 @@ anolis-7.7:install:kubernetes:1.30:
   needs:
     - anolis-7.7:env:kubernetes:1.30
   variables:
-    KUBERNETES_VERSION: v1.30.7
+    KUBERNETES_VERSION: v1.30.8
     KUBERNETES_REPO_TYPE: http://172.25.25.14:48081/repository/kubernetes-new-yum
     DOCKER_REPO_TYPE: http://172.25.25.14:48081/repository/docker-yum
   hooks:
@@ -171,3 +171,4 @@ anolis-7.7:install:kubernetes:1.30:
   tags:
     - GitLab-CICD-AnolisOS-7.7
   environment: kubernetes/v1.30
+  when: manual

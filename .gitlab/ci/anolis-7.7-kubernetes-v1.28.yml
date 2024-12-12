@@ -171,3 +171,4 @@ anolis-7.7:install:kubernetes:1.28:
   tags:
     - GitLab-CICD-AnolisOS-7.7
   environment: kubernetes/v1.28
+  when: manual

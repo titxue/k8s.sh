@@ -112,8 +112,8 @@
 
 ## 国内镜像支持的范围
 
-1. `Kubernetes` 从 `1.24.0` 到 `最新版`，一共 `108` 个版本及 `国内镜像`
-    1. 截止 `2024-12-05`，`Kubernetes` 最高版是 `v1.31.2`
+1. `Kubernetes` 从 `1.24.0` 到 `最新版`，一共 `112` 个版本及 `国内镜像`
+    1. 截止 `2024-12-12`，`Kubernetes` 最高版是 `v1.32.0`
     2. 具体支持的版本及 `国内镜像` 参见：
        [kubernetes-version.json](https://gitee.com/xuxiaowei-com-cn/k8s.sh/blob/SNAPSHOT/2.0.1/.vitepress/components/json/kubernetes-version.json)
 2. `calico` 一共 `24` 个版本及 `国内镜像`

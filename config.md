@@ -256,8 +256,8 @@
 - 类型：`String`
 - 说明：安装 `Kubernetes` 版本
 - 用途：自定义安装 `Kubernetes` 的版本
-- 默认值：`v1.31.1`
-- 可选值：`v1.24.0` 到 `v1.31.2`
+- 默认值：`v1.31.4`
+- 可选值：`v1.24.0` 到 `v1.32.0`
 
 ### kubernetes-version-suffix {id=kubernetes-version-suffix}
 

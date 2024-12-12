@@ -3,6 +3,8 @@ stages:
   - install
   - env:custom
   - install:custom
+  - env:kubernetes:1.32
+  - install:kubernetes:1.32
   - env:kubernetes:1.31
   - install:kubernetes:1.31
   - env:kubernetes:1.30
@@ -55,6 +57,7 @@ include:
   - .gitlab/ci/anolis-7.7-kubernetes-v1.29.yml
   - .gitlab/ci/anolis-7.7-kubernetes-v1.30.yml
   - .gitlab/ci/anolis-7.7-kubernetes-v1.31.yml
+  - .gitlab/ci/anolis-7.7-kubernetes-v1.32.yml
   - .gitlab/ci/anolis-7.9.yml
   - .gitlab/ci/anolis-7.9-custom-docker-repo-type-private.yml
   - .gitlab/ci/anolis-7.9-custom-k8s-images.yml

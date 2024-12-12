@@ -2,6 +2,18 @@
 
 ## SNAPSHOT/2.0.1 {id=SNAPSHOT/2.0.1}
 
+### 🔨 Dependency Upgrades | 依赖项升级 {id=SNAPSHOT/2.0.1-Dependency}
+
+1. kubernetes 默认版本从 1.31.1 升级到 1.31.4
+2. kubernetes 1.29.x 流水线从 1.29.11 升级到 1.29.12
+3. kubernetes 1.30.x 流水线从 1.30.7 升级到 1.30.8
+4. kubernetes 1.31.x 流水线从 1.31.3 升级到 1.31.4
+
+### ⭐ New Features | 新功能 {id=SNAPSHOT/2.0.1-New-Features}
+
+1. 新增 kubernetes 1.32.0/1.31.4/1.30.8/1.29.12 镜像
+2. 新增 kubernetes 1.32.x 流水线
+
 ### 📔 Documentation | 文档 {id=SNAPSHOT/2.0.1-Documentation}
 
 1. 新增 [历史版本](history.md) 流水线 链接

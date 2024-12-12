@@ -96,7 +96,7 @@ fi
 dpkg_lock_timeout=120
 
 # Kubernetes 具体版本，包含: 主版本号、次版本号、修正版本号
-kubernetes_version=v1.31.1
+kubernetes_version=v1.31.4
 # Kubernetes 具体版本后缀
 kubernetes_version_suffix=1.1
 # Kubernetes 仓库

@@ -1,5 +1,5 @@
-anolis-7.7:env:kubernetes:1.31:
-  stage: env:kubernetes:1.31
+anolis-7.7:env:kubernetes:1.32:
+  stage: env:kubernetes:1.32
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
     QEMU_ID: $ANOLISOS_7_7_QEMU_ID
@@ -45,18 +45,18 @@ anolis-7.7:env:kubernetes:1.31:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/anolis-7.7-kubernetes-v1.31.yml
+          - .gitlab/ci/anolis-7.7-kubernetes-v1.32.yml
           - k8s.sh
   tags:
     - g150s-docker
   when: manual
 
-anolis-7.7:install:kubernetes:1.31:
-  stage: install:kubernetes:1.31
+anolis-7.7:install:kubernetes:1.32:
+  stage: install:kubernetes:1.32
   needs:
-    - anolis-7.7:env:kubernetes:1.31
+    - anolis-7.7:env:kubernetes:1.32
   variables:
-    KUBERNETES_VERSION: v1.31.4
+    KUBERNETES_VERSION: v1.32.0
     KUBERNETES_REPO_TYPE: http://172.25.25.14:48081/repository/kubernetes-new-yum
     DOCKER_REPO_TYPE: http://172.25.25.14:48081/repository/docker-yum
   hooks:
@@ -166,9 +166,9 @@ anolis-7.7:install:kubernetes:1.31:
   rules:
     - changes:
         paths:
-          - .gitlab/ci/anolis-7.7-kubernetes-v1.31.yml
+          - .gitlab/ci/anolis-7.7-kubernetes-v1.32.yml
           - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-7.7
-  environment: kubernetes/v1.31
+  environment: kubernetes/v1.32
   when: manual
