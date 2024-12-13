@@ -14,6 +14,10 @@
 1. 新增 kubernetes 1.32.0/1.31.4/1.30.8/1.29.12 镜像
 2. 新增 kubernetes 1.32.x 流水线
 
+### 🐞 Bug Fixes | 漏洞修补 {id=SNAPSHOT/2.0.1-Bug-Fixes}
+
+1. 修正 apt 安装 tar 命令
+
 ### 📔 Documentation | 文档 {id=SNAPSHOT/2.0.1-Documentation}
 
 1. 新增 [历史版本](history.md) 流水线 链接

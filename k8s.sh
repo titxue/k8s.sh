@@ -958,7 +958,7 @@ _helm_install() {
     elif [[ $package_type == 'apt' ]]; then
       echo -e "${COLOR_BLUE}tar 未安装，正在安装...${COLOR_RESET}"
       apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
-      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y apt
+      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y tar
       echo -e "${COLOR_BLUE}tar 安装完成${COLOR_RESET}"
     fi
   fi
