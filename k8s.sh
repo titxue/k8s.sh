@@ -173,6 +173,10 @@ kubernetes_dashboard_kong_image=${kubernetes_dashboard_kong_images[0]}
 kubernetes_dashboard_ingress_enabled=true
 kubernetes_dashboard_ingress_host=kubernetes.dashboard.xuxiaowei.com.cn
 
+etcd_version=v3.5.17
+etcd_mirrors=("https://mirrors.huaweicloud.com/etcd" "https://storage.googleapis.com/etcd" "https://github.com/etcd-io/etcd/releases/download")
+etcd_url=${etcd_mirrors[0]}/${etcd_version}/etcd-${etcd_version}-linux-amd64.tar.gz
+
 # 包管理类型
 package_type=
 case "$os_type" in
@@ -927,6 +931,21 @@ _metrics_server_install() {
   kubectl get pod -A -o wide
 }
 
+_tar_install() {
+  if ! command -v 'tar' &>/dev/null; then
+    if [[ $package_type == 'yum' ]]; then
+      echo -e "${COLOR_BLUE}tar 未安装，正在安装...${COLOR_RESET}"
+      sudo yum install -y tar
+      echo -e "${COLOR_BLUE}tar 安装完成${COLOR_RESET}"
+    elif [[ $package_type == 'apt' ]]; then
+      echo -e "${COLOR_BLUE}tar 未安装，正在安装...${COLOR_RESET}"
+      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
+      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y tar
+      echo -e "${COLOR_BLUE}tar 安装完成${COLOR_RESET}"
+    fi
+  fi
+}
+
 _helm_install() {
 
   if ! [[ $helm_url ]]; then
@@ -950,18 +969,7 @@ _helm_install() {
     helm_local_path=$helm_url
   fi
 
-  if ! command -v 'tar' &>/dev/null; then
-    if [[ $package_type == 'yum' ]]; then
-      echo -e "${COLOR_BLUE}tar 未安装，正在安装...${COLOR_RESET}"
-      sudo yum install -y tar
-      echo -e "${COLOR_BLUE}tar 安装完成${COLOR_RESET}"
-    elif [[ $package_type == 'apt' ]]; then
-      echo -e "${COLOR_BLUE}tar 未安装，正在安装...${COLOR_RESET}"
-      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
-      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y tar
-      echo -e "${COLOR_BLUE}tar 安装完成${COLOR_RESET}"
-    fi
-  fi
+  _tar_install
 
   mkdir -p $helm_local_folder
   tar -zxvf $helm_local_path --strip-components=1 -C $helm_local_folder
@@ -1083,6 +1091,184 @@ _selinux_disabled() {
     sudo sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
     cat /etc/selinux/config
   fi
+}
+
+_etcd_binary_install() {
+
+  mkdir -p /root/.ssh
+
+  if ! [[ $etcd_current_ip ]]; then
+    etcd_current_ip=$(hostname -I | awk '{print $1}')
+  fi
+
+  if ! [[ "${etcd_ips[*]}" =~ ${etcd_current_ip} ]]; then
+    echo "当前机器的 IP: $etcd_current_ip 不在 etcd 集群 IP 列表中，终止 etcd 安装"
+    for etcd_ip in "${etcd_ips[@]}"; do
+      echo "$etcd_ip"
+    done
+    exit 1
+  fi
+
+  echo "当前 etcd 节点的 IP: $etcd_current_ip"
+  echo "etcd 集群配置:"
+  local etcd_num=0
+  etcd_initial_cluster=''
+  for etcd_ip in "${etcd_ips[@]}"; do
+    etcd_num=$(($etcd_num + 1))
+    echo "etcd$etcd_num: $etcd_ip:2379"
+    etcd_initial_cluster+=etcd$etcd_num=https://$etcd_ip:2380,
+  done
+  etcd_initial_cluster="${etcd_initial_cluster%,}"
+
+  _tar_install
+
+  echo "etcd_url=$etcd_url"
+
+  curl -L "${etcd_url}" -o etcd-${etcd_version}-linux-amd64.tar.gz
+  tar xzvf etcd-${etcd_version}-linux-amd64.tar.gz
+
+  etcd-${etcd_version}-linux-amd64/etcd --version
+  etcd-${etcd_version}-linux-amd64/etcdctl version
+  etcd-${etcd_version}-linux-amd64/etcdutl version
+
+  cp etcd-${etcd_version}-linux-amd64/etcd /usr/local/bin/
+  cp etcd-${etcd_version}-linux-amd64/etcdctl /usr/local/bin/
+  cp etcd-${etcd_version}-linux-amd64/etcdutl /usr/local/bin/
+
+  /usr/local/bin/etcd --version
+  /usr/local/bin/etcdctl version
+  /usr/local/bin/etcdutl version
+
+  if ! command -v 'openssl' &>/dev/null; then
+    if [[ $package_type == 'yum' ]]; then
+      echo -e "${COLOR_BLUE}openssl 未安装，正在安装...${COLOR_RESET}"
+      sudo yum install -y openssl
+      echo -e "${COLOR_BLUE}openssl 安装完成${COLOR_RESET}"
+    elif [[ $package_type == 'apt' ]]; then
+      echo -e "${COLOR_BLUE}openssl 未安装，正在安装...${COLOR_RESET}"
+      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
+      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y openssl
+      echo -e "${COLOR_BLUE}openssl 安装完成${COLOR_RESET}"
+    fi
+  fi
+
+  openssl genrsa -out etcd-ca.key 2048
+  openssl req -x509 -new -nodes -key etcd-ca.key -subj "/CN=$etcd_current_ip" -days 36500 -out etcd-ca.crt
+
+  mkdir -p /etc/kubernetes/pki/etcd
+  cp etcd-ca.key /etc/kubernetes/pki/etcd/ca.key
+  cp etcd-ca.crt /etc/kubernetes/pki/etcd/ca.crt
+  ls -lh /etc/kubernetes/pki/etcd/ca.key
+  ls -lh /etc/kubernetes/pki/etcd/ca.crt
+
+cat > etcd_ssl.cnf << EOF
+[ req ]
+req_extensions = v3_req
+distinguished_name = req_distinguished_name
+
+[ req_distinguished_name ]
+
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+
+[ alt_names ]
+
+EOF
+
+  cat etcd_ssl.cnf
+
+  local etcd_num=1
+  echo "IP.$etcd_num = $etcd_current_ip" >> etcd_ssl.cnf
+  for etcd_ip in "${etcd_ips[@]}"; do
+    etcd_num=$(($etcd_num + 1))
+    echo "IP.$etcd_num = $etcd_ip" >> etcd_ssl.cnf
+  done
+
+  cat etcd_ssl.cnf
+
+  mkdir -p /etc/etcd/pki/
+
+  # 创建 etcd 服务端 CA 证书
+  openssl genrsa -out etcd_server.key 2048
+  openssl req -new -key etcd_server.key -config etcd_ssl.cnf -subj "/CN=etcd-server" -out etcd_server.csr
+  openssl x509 -req -in etcd_server.csr -CA /etc/kubernetes/pki/etcd/ca.crt -CAkey /etc/kubernetes/pki/etcd/ca.key -CAcreateserial -days 36500 -extensions v3_req -extfile etcd_ssl.cnf -out etcd_server.crt
+  cp etcd_server.crt /etc/etcd/pki/
+  cp etcd_server.key /etc/etcd/pki/
+  ls -lh /etc/etcd/pki/etcd_server.crt
+  ls -lh /etc/etcd/pki/etcd_server.key
+
+  # 创建 etcd 客户端 CA 证书
+  openssl genrsa -out etcd_client.key 2048
+  openssl req -new -key etcd_client.key -config etcd_ssl.cnf -subj "/CN=etcd-client" -out etcd_client.csr
+  openssl x509 -req -in etcd_client.csr -CA /etc/kubernetes/pki/etcd/ca.crt -CAkey /etc/kubernetes/pki/etcd/ca.key -CAcreateserial -days 36500 -extensions v3_req -extfile etcd_ssl.cnf -out etcd_client.crt
+  cp etcd_client.crt /etc/etcd/pki/
+  cp etcd_client.key /etc/etcd/pki/
+  ls -lh /etc/etcd/pki/etcd_client.crt
+  ls -lh /etc/etcd/pki/etcd_client.key
+
+cat > /etc/etcd/etcd.conf << EOF
+# 节点名称，每个节点不同
+ETCD_NAME=etcd1
+# 数据目录
+ETCD_DATA_DIR=/etc/etcd/data
+
+# etcd 服务端CA证书-crt
+ETCD_CERT_FILE=/etc/etcd/pki/etcd_server.crt
+# etcd 服务端CA证书-key
+ETCD_KEY_FILE=/etc/etcd/pki/etcd_server.key
+ETCD_TRUSTED_CA_FILE=/etc/kubernetes/pki/etcd/ca.crt
+# 是否启用客户端证书认证
+ETCD_CLIENT_CERT_AUTH=true
+# 客户端提供的服务监听URL地址
+ETCD_LISTEN_CLIENT_URLS=https://$etcd_current_ip:2379
+ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_current_ip:2379
+
+# 集群各节点相互认证使用的CA证书-crt
+ETCD_PEER_CERT_FILE=/etc/etcd/pki/etcd_server.crt
+# 集群各节点相互认证使用的CA证书-key
+ETCD_PEER_KEY_FILE=/etc/etcd/pki/etcd_server.key
+# CA 根证书
+ETCD_PEER_TRUSTED_CA_FILE=/etc/kubernetes/pki/etcd/ca.crt
+# 为本集群其他节点提供的服务监听URL地址
+ETCD_LISTEN_PEER_URLS=https://$etcd_current_ip:2380
+ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_current_ip:2380
+
+# 集群名称
+ETCD_INITIAL_CLUSTER_TOKEN=etcd-cluster
+# 集群各节点endpoint列表
+ETCD_INITIAL_CLUSTER="$etcd_initial_cluster"
+# 初始集群状态
+ETCD_INITIAL_CLUSTER_STATE=new
+
+EOF
+
+  cat /etc/etcd/etcd.conf
+
+cat > /usr/lib/systemd/system/etcd.service << EOF
+[Unit]
+Description=etcd key-value store
+Documentation=https://github.com/etcd-io/etcd
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/etcd/etcd.conf
+ExecStart=/usr/local/bin/etcd
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+
+  cat /usr/lib/systemd/system/etcd.service
+
+  systemctl daemon-reload
+  systemctl enable etcd.service
+  systemctl restart etcd.service
+  systemctl status etcd.service -l --no-pager
 }
 
 while [[ $# -gt 0 ]]; do
@@ -1438,6 +1624,22 @@ while [[ $# -gt 0 ]]; do
     kubernetes_dashboard_ingress_host="${1#*=}"
     ;;
 
+  etcd-binary-install | -etcd-binary-install | --etcd-binary-install)
+    etcd_binary_install=true
+    ;;
+
+  etcd-ips=* | -etcd-ips=* | --etcd-ips=*)
+    etcd_ips+=("${1#*=}")
+    ;;
+
+  etcd-url=* | -etcd-url=* | --etcd-url=*)
+    etcd_url="${1#*=}"
+    ;;
+
+  etcd-current-ip=* | -etcd-current-ip=* | --etcd-current-ip=*)
+    etcd_current_ip="${1#*=}"
+    ;;
+
   *)
     echo -e "${COLOR_RED}无效参数: $1，退出程序${COLOR_RESET}"
     echo -e "${COLOR_RED}请阅读文档，查看参数配置: ${COLOR_GREEN}$DOCS_CONFIG_LINK${COLOR_RESET}"
@@ -1657,6 +1859,10 @@ else
 
   if [[ $helm_install_kubernetes_dashboard == true ]]; then
     _helm_install_kubernetes_dashboard
+  fi
+
+  if [[ $etcd_binary_install == true ]]; then
+    _etcd_binary_install
   fi
 
 fi

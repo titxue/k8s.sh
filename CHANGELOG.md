@@ -13,6 +13,7 @@
 
 1. 新增 kubernetes 1.32.0/1.31.4/1.30.8/1.29.12 镜像
 2. 新增 kubernetes 1.32.x 流水线
+3. etcd 集群二进制安装：第一台机器安装 [#53](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/issues/53)
 
 ### 🐞 Bug Fixes | 漏洞修补 {id=SNAPSHOT/2.0.1-Bug-Fixes}
 
