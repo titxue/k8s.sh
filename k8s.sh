@@ -239,6 +239,8 @@ EOF
 
   elif [[ $package_type == 'apt' ]]; then
 
+    sudo mkdir -p /etc/apt/sources.list.d
+
     sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
     sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y ca-certificates curl
 
@@ -487,6 +489,8 @@ gpgkey=$kubernetes_baseurl/$kubernetes_repo_version/rpm/repodata/repomd.xml.key
 EOF
 
   elif [[ $package_type == 'apt' ]]; then
+
+    sudo mkdir -p /etc/apt/sources.list.d
 
     case "$kubernetes_repo_type" in
     "" | aliyun | tsinghua | kubernetes)
