@@ -68,6 +68,7 @@ include:
   - .gitlab/ci/anolis-7.9-kubernetes-dashboard.yml
   - .gitlab/ci/anolis-7.9-kubernetes-v1.24.yml
   - .gitlab/ci/anolis-8.2.yml
+  - .gitlab/ci/anolis-8.2-etcd-init.yml
   - .gitlab/ci/anolis-8.4.yml
   - .gitlab/ci/anolis-8.6.yml
   - .gitlab/ci/anolis-8.6-kubernetes-v1.32.yml

@@ -176,6 +176,7 @@ kubernetes_dashboard_ingress_host=kubernetes.dashboard.xuxiaowei.com.cn
 etcd_version=v3.5.17
 etcd_mirrors=("https://mirrors.huaweicloud.com/etcd" "https://storage.googleapis.com/etcd" "https://github.com/etcd-io/etcd/releases/download")
 etcd_url=${etcd_mirrors[0]}/${etcd_version}/etcd-${etcd_version}-linux-amd64.tar.gz
+etcd_join_port=22
 
 # 包管理类型
 package_type=
@@ -1332,6 +1333,96 @@ EOF
   fi
 }
 
+_etcd_binary_join() {
+
+  _firewalld_stop
+
+  if ! [[ $etcd_current_ip ]]; then
+    etcd_current_ip=$(hostname -I | awk '{print $1}')
+  fi
+
+  if [[ -f /root/.ssh/id_rsa ]]; then
+    mv /root/.ssh/id_rsa /root/.ssh/id_rsa.$(date +%Y%m%d%H%M%S)
+  fi
+  if [[ -f /root/.ssh/id_rsa.pub ]]; then
+    mv /root/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub.$(date +%Y%m%d%H%M%S)
+  fi
+
+  ssh-keygen -t rsa -f /root/.ssh/id_rsa -N '' -q
+
+  if [[ $etcd_join_password ]]; then
+    if ! command -v 'sshpass' &>/dev/null; then
+      if [[ $package_type == 'yum' ]]; then
+        sudo yum install -y sshpass
+      else
+        apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y sshpass
+      fi
+    fi
+
+    sshpass -p $etcd_join_password scp -P $etcd_join_port /root/.ssh/id_rsa.pub root@$etcd_join_ip:/root/.ssh/authorized_keys
+  else
+
+    scp -P $etcd_join_port /root/.ssh/id_rsa.pub root@$etcd_join_ip:/root/.ssh/authorized_keys
+  fi
+
+  mkdir -p /etc/kubernetes/pki/etcd
+  mkdir -p /etc/etcd/pki/
+
+  scp -P $etcd_join_port root@$etcd_join_ip:/usr/local/bin/etcd /usr/local/bin/
+  scp -P $etcd_join_port root@$etcd_join_ip:/usr/local/bin/etcdctl /usr/local/bin/
+  scp -P $etcd_join_port root@$etcd_join_ip:/usr/local/bin/etcdutl /usr/local/bin/
+
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/kubernetes/pki/etcd/ca.key /etc/kubernetes/pki/etcd/
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/kubernetes/pki/etcd/ca.crt /etc/kubernetes/pki/etcd/
+
+  scp -P $etcd_join_port root@$etcd_join_ip:/usr/lib/systemd/system/etcd.service /usr/lib/systemd/system/
+
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/etcd_server.crt /etc/etcd/pki/
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/etcd_server.key /etc/etcd/pki/
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/etcd_client.crt /etc/etcd/pki/
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/etcd_client.key /etc/etcd/pki/
+
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/etcd.conf /etc/etcd/
+
+  source /etc/etcd/etcd.conf
+
+  echo $ETCD_INITIAL_CLUSTER
+
+  etcd_from_name=$ETCD_NAME
+  echo $etcd_from_name
+
+  etcd_current_ip=$(hostname -I | awk '{print $1}')
+  echo $etcd_current_ip
+
+  IFS=',' read -ra etcd_nodes <<<"$ETCD_INITIAL_CLUSTER"
+  for etcd_node in "${etcd_nodes[@]}"; do
+    echo $etcd_node
+    if [[ $etcd_node =~ $etcd_current_ip ]]; then
+      node_name=$(echo $etcd_node | awk -F'=' '{print $1}')
+      break
+    fi
+  done
+
+  echo $node_name
+
+  sudo sed -i "s#ETCD_NAME=$etcd_from_name#ETCD_NAME=$node_name#g" /etc/etcd/etcd.conf
+
+  sudo sed -i "s#ETCD_LISTEN_CLIENT_URLS=https://$etcd_join_ip:2379#ETCD_LISTEN_CLIENT_URLS=https://$etcd_current_ip:2379#g" /etc/etcd/etcd.conf
+  sudo sed -i "s#ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_join_ip:2379#ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_current_ip:2379#g" /etc/etcd/etcd.conf
+
+  sudo sed -i "s#ETCD_LISTEN_PEER_URLS=https://$etcd_join_ip:2380#ETCD_LISTEN_PEER_URLS=https://$etcd_current_ip:2380#g" /etc/etcd/etcd.conf
+  sudo sed -i "s#ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_join_ip:2380#ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_current_ip:2380#g" /etc/etcd/etcd.conf
+
+  /usr/local/bin/etcd --version
+  /usr/local/bin/etcdctl version
+  /usr/local/bin/etcdutl version
+
+  systemctl daemon-reload
+  systemctl enable etcd.service
+  systemctl restart etcd.service
+  systemctl status etcd.service -l --no-pager
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
 
@@ -1701,6 +1792,18 @@ while [[ $# -gt 0 ]]; do
     etcd_current_ip="${1#*=}"
     ;;
 
+  etcd-binary-join | -etcd-binary-join | --etcd-binary-join)
+    etcd_binary_join=true
+    ;;
+
+  etcd-join-ip=* | -etcd-join-ip=* | --etcd-join-ip=*)
+    etcd_join_ip="${1#*=}"
+    ;;
+
+  etcd-join-port=* | -etcd-join-port=* | --etcd-join-port=*)
+    etcd_join_port="${1#*=}"
+    ;;
+
   *)
     echo -e "${COLOR_RED}无效参数: $1，退出程序${COLOR_RESET}"
     echo -e "${COLOR_RED}请阅读文档，查看参数配置: ${COLOR_GREEN}$DOCS_CONFIG_LINK${COLOR_RESET}"
@@ -1924,6 +2027,10 @@ else
 
   if [[ $etcd_binary_install == true ]]; then
     _etcd_binary_install
+  fi
+
+  if [[ $etcd_binary_join == true ]]; then
+    _etcd_binary_join
   fi
 
 fi
