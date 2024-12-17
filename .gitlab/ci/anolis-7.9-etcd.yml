@@ -96,40 +96,40 @@ anolis-7.9:install:etcd:
     - ./k8s.sh etcd-binary-install
     - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
     - source /etc/etcd/etcd.conf
-    - echo $ETCD_INITIAL_CLUSTER
+    - echo $ETCD_NAME
     - |
-      if [[ $ETCD_INITIAL_CLUSTER == "etcd-1=https://$etcd_current_ip:2380" ]] ; then
-        echo "ETCD INITIAL_CLUSTER 正确";
+      if [[ $ETCD_NAME == "etcd-1" ]] ; then
+        echo "ETCD_NAME 正确";
       else
-        echo "ETCD INITIAL_CLUSTER 不正确";
+        echo "ETCD_NAME 不正确";
         exit 1;
       fi
     - systemctl stop etcd
     - echo "单机 ETCD 测试（多网卡情况下，自定义 ETCD 使用的 IP）："
     - ./k8s.sh etcd-binary-install etcd-ips=$etcd_current_ip
     - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
-    - unset ETCD_INITIAL_CLUSTER
+    - unset ETCD_NAME
     - source /etc/etcd/etcd.conf
-    - echo $ETCD_INITIAL_CLUSTER
+    - echo $ETCD_NAME
     - |
-      if [[ $ETCD_INITIAL_CLUSTER == "etcd-1=https://$etcd_current_ip:2380" ]] ; then
-        echo "ETCD INITIAL_CLUSTER 正确";
+      if [[ $ETCD_NAME == "etcd-1" ]] ; then
+        echo "ETCD_NAME 正确";
       else
-        echo "ETCD INITIAL_CLUSTER 不正确";
+        echo "ETCD_NAME 不正确";
         exit 1;
       fi
     - systemctl stop etcd
     - echo "单机 ETCD 测试（自定义 ETCD 节点名称）："
     - ./k8s.sh etcd-binary-install etcd-ips=$etcd_current_ip@etcd-node-1
     - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
-    - unset ETCD_INITIAL_CLUSTER
+    - unset ETCD_NAME
     - source /etc/etcd/etcd.conf
-    - echo $ETCD_INITIAL_CLUSTER
+    - echo $ETCD_NAME
     - |
-      if [[ $ETCD_INITIAL_CLUSTER == "etcd-node-1=https://$etcd_current_ip:2380" ]] ; then
-        echo "ETCD INITIAL_CLUSTER 正确";
+      if [[ $ETCD_NAME == "etcd-node-1" ]] ; then
+        echo "ETCD_NAME 正确";
       else
-        echo "ETCD INITIAL_CLUSTER 不正确";
+        echo "ETCD_NAME 不正确";
         exit 1;
       fi
     - shutdown -h -t 1
