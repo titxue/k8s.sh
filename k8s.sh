@@ -1099,6 +1099,8 @@ _selinux_disabled() {
 
 _etcd_binary_install() {
 
+  _firewalld_stop
+
   mkdir -p /root/.ssh
 
   if ! [[ $etcd_current_ip ]]; then
