@@ -96,7 +96,7 @@ anolis-8.4:install:etcd-join:
   script:
     - chmod +x k8s.sh
     - echo "etcd_join_password=$ETCD_JOIN_PASSWORD" > a.conf
-    - ./k8s.sh etcd-join-ip=$ETCD_JOIN_IP config=a.conf
+    - ./k8s.sh etcd-binary-join etcd-join-ip=$ETCD_JOIN_IP config=a.conf
   rules:
     - changes:
         paths:
