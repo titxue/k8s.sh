@@ -72,6 +72,7 @@ include:
   - .gitlab/ci/anolis-8.4.yml
   - .gitlab/ci/anolis-8.4-etcd-join.yml
   - .gitlab/ci/anolis-8.6.yml
+  - .gitlab/ci/anolis-8.6-etcd-join.yml
   - .gitlab/ci/anolis-8.6-kubernetes-v1.32.yml
   - .gitlab/ci/anolis-8.8.yml
   - .gitlab/ci/anolis-8.9.yml

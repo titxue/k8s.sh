@@ -1,14 +1,14 @@
-anolis-8.2:env:etcd-init:
+anolis-8.6:env:etcd-join:
   stage: env:custom
   image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
   variables:
-    QEMU_ID: $ANOLISOS_8_2_QEMU_ID
-    SNAPSHOT: $ANOLISOS_8_2_SNAPSHOT
+    QEMU_ID: $ANOLISOS_8_6_QEMU_ID
+    SNAPSHOT: $ANOLISOS_8_6_SNAPSHOT
   before_script:
     - echo $PVE_ADDRESS
-    - echo $ANOLISOS_8_2_QEMU_ID
+    - echo $ANOLISOS_8_6_QEMU_ID
     - echo $QEMU_ID
-    - echo $ANOLISOS_8_2_SNAPSHOT
+    - echo $ANOLISOS_8_6_SNAPSHOT
     - echo $SNAPSHOT
   script:
     # 获取凭证
@@ -53,26 +53,27 @@ anolis-8.2:env:etcd-init:
     - g150s-docker
   when: manual
 
-anolis-8.2:install:etcd-init:
+anolis-8.6:install:etcd-join:
   stage: install:custom
   needs:
-    - anolis-8.2:env:etcd-init
+    - anolis-8.6:env:etcd-join
+    - anolis-8.2:install:etcd-init
   variables:
-    ETCD_IPS_ARGS: >-
-      etcd-ips=172.25.25.53
-      etcd-ips=172.25.25.54
-      etcd-ips=172.25.25.55
+    ETCD_JOIN_IP: 172.25.25.53
   hooks:
     pre_get_sources_script:
       - echo $ANOLIS_URL
       - cat /etc/yum.repos.d/AnolisOS-AppStream.repo
-      - sed -i "s#http://mirrors.openanolis.org/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-AppStream.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-AppStream.repo
       - cat /etc/yum.repos.d/AnolisOS-AppStream.repo
       - cat /etc/yum.repos.d/AnolisOS-BaseOS.repo
-      - sed -i "s#http://mirrors.openanolis.org/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-BaseOS.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-BaseOS.repo
       - cat /etc/yum.repos.d/AnolisOS-BaseOS.repo
+      - cat /etc/yum.repos.d/AnolisOS-Extras.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-Extras.repo
+      - cat /etc/yum.repos.d/AnolisOS-Extras.repo
       - cat /etc/yum.repos.d/AnolisOS-PowerTools.repo
-      - sed -i "s#http://mirrors.openanolis.org/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-PowerTools.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-PowerTools.repo
       - cat /etc/yum.repos.d/AnolisOS-PowerTools.repo
       - yum clean all
       - yum makecache
@@ -81,7 +82,7 @@ anolis-8.2:install:etcd-init:
   before_script:
     - cat /etc/os-release
     - ip addr | grep 'inet '
-    - echo "$ETCD_IPS_ARGS"
+    - echo "$ETCD_JOIN_IP"
     - |
       if [[ $(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "anolis" ]] ; then
         echo "系统正确";
@@ -90,7 +91,7 @@ anolis-8.2:install:etcd-init:
         exit 1;
       fi
     - |
-      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "8.2" ]] ; then
+      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "8.6" ]] ; then
         echo "系统版本正确";
       else
         echo "系统版本不正确";
@@ -98,7 +99,8 @@ anolis-8.2:install:etcd-init:
       fi
   script:
     - chmod +x k8s.sh
-    - ./k8s.sh etcd-binary-install $ETCD_IPS_ARGS
+    - echo "etcd_join_password=$ETCD_JOIN_PASSWORD" > a.conf
+    - ./k8s.sh etcd-binary-join etcd-join-ip=$ETCD_JOIN_IP config=a.conf
   rules:
     - changes:
         paths:
@@ -107,5 +109,5 @@ anolis-8.2:install:etcd-init:
           - .gitlab/ci/anolis-8.6-etcd-join.yml
           - k8s.sh
   tags:
-    - GitLab-CICD-AnolisOS-8.2
+    - GitLab-CICD-AnolisOS-8.6
   environment: etcd
