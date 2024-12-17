@@ -1105,13 +1105,45 @@ _etcd_binary_install() {
     etcd_current_ip=$(hostname -I | awk '{print $1}')
   fi
 
-  if ! [[ "${etcd_ips[*]}" =~ ${etcd_current_ip} ]]; then
-    echo "当前机器的 IP: $etcd_current_ip 不在 etcd 集群 IP 列表中，终止 etcd 安装"
-    for etcd_ip in "${etcd_ips[@]}"; do
-      echo "$etcd_ip"
-    done
+  # 当存在 etcd_ips 参数时，当前机器的 IP 必须在 etcd_ips 参数内
+  if [[ $etcd_ips ]]; then
+    if ! [[ "${etcd_ips[*]}" =~ ${etcd_current_ip} ]]; then
+      echo "当前机器的 IP: $etcd_current_ip 不在 etcd 集群 IP 列表中，终止 etcd 安装"
+      for etcd_ip in "${etcd_ips[@]}"; do
+        echo "$etcd_ip"
+      done
+      exit 1
+    fi
+  fi
+
+  # etcd_ips 参数的个数
+  etcd_ips_length=${#etcd_ips[@]}
+  # etcd_ips 参数中 @ 的数量
+  etcd_ips_at_num=0
+  # etcd_ips 参数中，自定义的 ETCD 节点 名称
+  etcd_ips_names=()
+  # etcd_ips 参数中，自定义的 ETCD 节点 IP
+  etcd_ips_tmp=()
+  for etcd_ip in "${etcd_ips[@]}"; do
+    etcd_ip_tmp=$(echo $etcd_ip | awk -F'@' '{print $1}')
+    etcd_ip_name_tmp=$(echo $etcd_ip | awk -F'@' '{print $2}')
+
+    if [[ $etcd_ip_name_tmp ]]; then
+      etcd_ips_names+=("$etcd_ip_name_tmp")
+      etcd_ips_at_num=$(($etcd_ips_at_num + 1))
+    fi
+
+    etcd_ips_tmp+=("$etcd_ip_tmp")
+  done
+
+  if [[ $etcd_ips_at_num != 0 && "$etcd_ips_at_num" != "$etcd_ips_length" ]]; then
+    echo "ETCD 名称配置错误：只能全部忽略名称或全部自定义名称"
+    echo "etcd_ips: ${etcd_ips[*]}"
     exit 1
   fi
+
+  etcd_ips=("${etcd_ips_tmp[@]}")
+  etcd_ips_names_length=${#etcd_ips_names[@]}
 
   echo "当前 etcd 节点的 IP: $etcd_current_ip"
   echo "etcd 集群配置:"
@@ -1119,8 +1151,14 @@ _etcd_binary_install() {
   etcd_initial_cluster=''
   for etcd_ip in "${etcd_ips[@]}"; do
     etcd_num=$(($etcd_num + 1))
-    echo "etcd$etcd_num: $etcd_ip:2379"
-    etcd_initial_cluster+=etcd$etcd_num=https://$etcd_ip:2380,
+    if [[ $etcd_ips_names_length == 0 ]]; then
+      etcd_name="etcd-$etcd_num"
+    else
+      etcd_name="${etcd_ips_names[$etcd_num - 1]}"
+    fi
+
+    echo "$etcd_name: $etcd_ip:2379"
+    etcd_initial_cluster+=$etcd_name=https://$etcd_ip:2380,
   done
   etcd_initial_cluster="${etcd_initial_cluster%,}"
 
@@ -1165,7 +1203,7 @@ _etcd_binary_install() {
   ls -lh /etc/kubernetes/pki/etcd/ca.key
   ls -lh /etc/kubernetes/pki/etcd/ca.crt
 
-cat > etcd_ssl.cnf << EOF
+  cat >etcd_ssl.cnf <<EOF
 [ req ]
 req_extensions = v3_req
 distinguished_name = req_distinguished_name
@@ -1184,10 +1222,10 @@ EOF
   cat etcd_ssl.cnf
 
   local etcd_num=1
-  echo "IP.$etcd_num = $etcd_current_ip" >> etcd_ssl.cnf
+  echo "IP.$etcd_num = $etcd_current_ip" >>etcd_ssl.cnf
   for etcd_ip in "${etcd_ips[@]}"; do
     etcd_num=$(($etcd_num + 1))
-    echo "IP.$etcd_num = $etcd_ip" >> etcd_ssl.cnf
+    echo "IP.$etcd_num = $etcd_ip" >>etcd_ssl.cnf
   done
 
   cat etcd_ssl.cnf
@@ -1212,7 +1250,7 @@ EOF
   ls -lh /etc/etcd/pki/etcd_client.crt
   ls -lh /etc/etcd/pki/etcd_client.key
 
-cat > /etc/etcd/etcd.conf << EOF
+  cat >/etc/etcd/etcd.conf <<EOF
 # 节点名称，每个节点不同
 ETCD_NAME=etcd1
 # 数据目录
@@ -1250,7 +1288,7 @@ EOF
 
   cat /etc/etcd/etcd.conf
 
-cat > /usr/lib/systemd/system/etcd.service << EOF
+  cat >/usr/lib/systemd/system/etcd.service <<EOF
 [Unit]
 Description=etcd key-value store
 Documentation=https://github.com/etcd-io/etcd
@@ -1273,6 +1311,17 @@ EOF
   systemctl enable etcd.service
   systemctl restart etcd.service
   systemctl status etcd.service -l --no-pager
+
+  local test_etcd
+  if ! [[ $etcd_ips ]]; then
+    test_etcd=true
+  fi
+  if [[ $etcd_ips_length == 1 ]]; then
+    test_etcd=true
+  fi
+  if [[ $test_etcd == true ]]; then
+    etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
+  fi
 }
 
 while [[ $# -gt 0 ]]; do

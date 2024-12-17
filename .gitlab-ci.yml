@@ -64,6 +64,7 @@ include:
   - .gitlab/ci/anolis-7.9-custom-k8s-repo-type-private.yml
   - .gitlab/ci/anolis-7.9-custom-k8s-version.yml
   - .gitlab/ci/anolis-7.9-custom-pause-image.yml
+  - .gitlab/ci/anolis-7.9-etcd.yml
   - .gitlab/ci/anolis-7.9-kubernetes-dashboard.yml
   - .gitlab/ci/anolis-7.9-kubernetes-v1.24.yml
   - .gitlab/ci/anolis-8.2.yml

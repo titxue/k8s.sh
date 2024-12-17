@@ -1,0 +1,143 @@
+anolis-7.9:env:etcd:
+  stage: env:custom
+  image: registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/debian:curl-jq
+  variables:
+    QEMU_ID: $ANOLISOS_7_9_QEMU_ID
+    SNAPSHOT: $ANOLISOS_7_9_SNAPSHOT
+  before_script:
+    - echo $PVE_ADDRESS
+    - echo $ANOLISOS_7_9_QEMU_ID
+    - echo $QEMU_ID
+    - echo $ANOLISOS_7_9_SNAPSHOT
+    - echo $SNAPSHOT
+  script:
+    # 获取凭证
+    - |
+      response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/access/ticket" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode "username=$PVE_USERNAME" --data-urlencode "password=$PVE_PASSWORD" --data-urlencode 'realm=pam' --data-urlencode 'new-format=1')
+    - echo $response | jq -r '.success'
+    # 解析凭证
+    - token=$(echo $response | jq -r '.data.CSRFPreventionToken')
+    - ticket=$(echo $response | jq -r '.data.ticket')
+    # 还原服务器快照
+    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/snapshot/$SNAPSHOT/rollback" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+    - echo $response | jq -r '.success'
+    # 休眠一段时间，等待服务器还原快照
+    - sleep 30
+    # 开机
+    - response=$(curl -k -s --request POST --url "$PVE_ADDRESS/api2/extjs/nodes/pve/qemu/$QEMU_ID/status/start" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+    - echo $response | jq -r '.success'
+    - |
+      while true; do
+        # 查看状态
+        response=$(curl -k --request GET --url "$PVE_ADDRESS/api2/json/nodes/pve/qemu/$QEMU_ID/status/current" --header "Cookie:PVEAuthCookie=$ticket" --header "CSRFPreventionToken:$token")
+        status=$(echo "$response" | jq -r '.data.status')
+        if [ "$status" = "running" ]; then
+          echo "服务器已运行";
+          break
+        else
+          echo '等待服务器运行';
+          sleep 1;
+        fi
+      done
+    - echo '等待一段时间，待服务器完全启动'
+    - sleep 30
+  timeout: 180s
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/anolis-7.9-etcd.yml
+          - k8s.sh
+  tags:
+    - g150s-docker
+  when: manual
+
+anolis-7.9:install:etcd:
+  stage: install:custom
+  needs:
+    - anolis-7.9:env:etcd
+  hooks:
+    pre_get_sources_script:
+      - echo $ANOLIS_URL
+      - cat /etc/yum.repos.d/AnolisOS-os.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-os.repo
+      - cat /etc/yum.repos.d/AnolisOS-os.repo
+      - cat /etc/yum.repos.d/AnolisOS-extras.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-extras.repo
+      - cat /etc/yum.repos.d/AnolisOS-extras.repo
+      - cat /etc/yum.repos.d/AnolisOS-updates.repo
+      - sed -i "s#http://mirrors.openanolis.cn/anolis#$ANOLIS_URL#" /etc/yum.repos.d/AnolisOS-updates.repo
+      - cat /etc/yum.repos.d/AnolisOS-updates.repo
+      - yum clean all
+      - yum makecache all
+      - yum install -y git
+      - git config --global http.sslVerify false
+  before_script:
+    - cat /etc/os-release
+    - ip addr | grep 'inet '
+    - |
+      if [[ $(grep -w "ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "anolis" ]] ; then
+        echo "系统正确";
+      else
+        echo "系统不正确";
+        exit 1;
+      fi
+    - |
+      if [[ $(grep -w "VERSION_ID" /etc/os-release | cut -d'=' -f2 | tr -d '"') == "7.9" ]] ; then
+        echo "系统版本正确";
+      else
+        echo "系统版本不正确";
+        exit 1;
+      fi
+  script:
+    - chmod +x k8s.sh
+    - export etcd_current_ip=$(hostname -I | awk '{print $1}')
+    - echo $etcd_current_ip
+    - echo "单机 ETCD 测试："
+    - ./k8s.sh etcd-binary-install
+    - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
+    - source /etc/etcd/etcd.conf
+    - echo $ETCD_INITIAL_CLUSTER
+    - |
+      if [[ $ETCD_INITIAL_CLUSTER == "etcd-1=https://$etcd_current_ip:2380" ]] ; then
+        echo "ETCD INITIAL_CLUSTER 正确";
+      else
+        echo "ETCD INITIAL_CLUSTER 不正确";
+        exit 1;
+      fi
+    - systemctl stop etcd
+    - echo "单机 ETCD 测试（多网卡情况下，自定义 ETCD 使用的 IP）："
+    - ./k8s.sh etcd-binary-install etcd-ips=$etcd_current_ip
+    - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
+    - unset ETCD_INITIAL_CLUSTER
+    - source /etc/etcd/etcd.conf
+    - echo $ETCD_INITIAL_CLUSTER
+    - |
+      if [[ $ETCD_INITIAL_CLUSTER == "etcd-1=https://$etcd_current_ip:2380" ]] ; then
+        echo "ETCD INITIAL_CLUSTER 正确";
+      else
+        echo "ETCD INITIAL_CLUSTER 不正确";
+        exit 1;
+      fi
+    - systemctl stop etcd
+    - echo "单机 ETCD 测试（自定义 ETCD 节点名称）："
+    - ./k8s.sh etcd-binary-install etcd-ips=$etcd_current_ip@etcd-node-1
+    - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
+    - unset ETCD_INITIAL_CLUSTER
+    - source /etc/etcd/etcd.conf
+    - echo $ETCD_INITIAL_CLUSTER
+    - |
+      if [[ $ETCD_INITIAL_CLUSTER == "etcd-node-1=https://$etcd_current_ip:2380" ]] ; then
+        echo "ETCD INITIAL_CLUSTER 正确";
+      else
+        echo "ETCD INITIAL_CLUSTER 不正确";
+        exit 1;
+      fi
+    - shutdown -h -t 1
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/anolis-7.9-etcd.yml
+          - k8s.sh
+  tags:
+    - GitLab-CICD-AnolisOS-7.9
+  environment: etcd
