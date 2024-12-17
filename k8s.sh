@@ -1349,6 +1349,7 @@ _etcd_binary_join() {
   fi
 
   ssh-keygen -t rsa -f /root/.ssh/id_rsa -N '' -q
+  ssh-keyscan -H $etcd_join_ip -P $etcd_join_port >> /root/.ssh/known_hosts
 
   if [[ $etcd_join_password ]]; then
     if ! command -v 'sshpass' &>/dev/null; then
