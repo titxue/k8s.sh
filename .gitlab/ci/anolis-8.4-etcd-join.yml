@@ -45,6 +45,7 @@ anolis-8.4:env:etcd-join:
   rules:
     - changes:
         paths:
+          - .gitlab/ci/anolis-8.2-etcd-init.yml
           - .gitlab/ci/anolis-8.4-etcd-join.yml
           - k8s.sh
   tags:
@@ -99,6 +100,7 @@ anolis-8.4:install:etcd-join:
   rules:
     - changes:
         paths:
+          - .gitlab/ci/anolis-8.2-etcd-init.yml
           - .gitlab/ci/anolis-8.4-etcd-join.yml
           - k8s.sh
   tags:

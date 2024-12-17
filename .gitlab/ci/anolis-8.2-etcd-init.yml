@@ -46,6 +46,7 @@ anolis-8.2:env:etcd-init:
     - changes:
         paths:
           - .gitlab/ci/anolis-8.2-etcd-init.yml
+          - .gitlab/ci/anolis-8.4-etcd-join.yml
           - k8s.sh
   tags:
     - g150s-docker
@@ -101,6 +102,7 @@ anolis-8.2:install:etcd-init:
     - changes:
         paths:
           - .gitlab/ci/anolis-8.2-etcd-init.yml
+          - .gitlab/ci/anolis-8.4-etcd-join.yml
           - k8s.sh
   tags:
     - GitLab-CICD-AnolisOS-8.2
