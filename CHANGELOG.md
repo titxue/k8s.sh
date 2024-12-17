@@ -18,6 +18,7 @@
 ### 🐞 Bug Fixes | 漏洞修补 {id=SNAPSHOT/2.0.1-Bug-Fixes}
 
 1. 修正 apt 安装 tar 命令
+2. 解决部分系统无 /etc/apt/sources.list.d 目录异常 [#16](https://github.com/xuxiaowei-com-cn/k8s.sh/issues/16)
 
 ### 📔 Documentation | 文档 {id=SNAPSHOT/2.0.1-Documentation}
 
