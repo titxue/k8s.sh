@@ -109,6 +109,7 @@ anolis-7.9:install:etcd:
     - ./k8s.sh etcd-binary-install etcd-ips=$etcd_current_ip
     - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
     - unset ETCD_INITIAL_CLUSTER
+    - echo $ETCD_INITIAL_CLUSTER
     - source /etc/etcd/etcd.conf
     - echo $ETCD_INITIAL_CLUSTER
     - |
@@ -123,6 +124,7 @@ anolis-7.9:install:etcd:
     - ./k8s.sh etcd-binary-install etcd-ips=$etcd_current_ip@etcd-node-1
     - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
     - unset ETCD_INITIAL_CLUSTER
+    - echo $ETCD_INITIAL_CLUSTER
     - source /etc/etcd/etcd.conf
     - echo $ETCD_INITIAL_CLUSTER
     - |
