@@ -111,3 +111,27 @@ anolis-8.6:install:etcd-join:
   tags:
     - GitLab-CICD-AnolisOS-8.6
   environment: etcd
+
+anolis-8.6:install:etcd-test:
+  stage: install:custom
+  needs:
+    - anolis-8.4:install:etcd-join
+    - anolis-8.6:install:etcd-join
+  variables:
+    ETCD_ENDPOINTS: https://172.25.25.53:2379,https://172.25.25.54:2379,https://172.25.25.55:2379
+  before_script:
+    - cat /etc/os-release
+    - ip addr | grep 'inet '
+    - echo "$ETCD_ENDPOINTS"
+  script:
+    - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=$ETCD_ENDPOINTS endpoint health
+  rules:
+    - changes:
+        paths:
+          - .gitlab/ci/anolis-8.2-etcd-init.yml
+          - .gitlab/ci/anolis-8.4-etcd-join.yml
+          - .gitlab/ci/anolis-8.6-etcd-join.yml
+          - k8s.sh
+  tags:
+    - GitLab-CICD-AnolisOS-8.6
+  environment: etcd
