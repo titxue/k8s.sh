@@ -1250,9 +1250,15 @@ EOF
   ls -lh /etc/etcd/pki/etcd_client.crt
   ls -lh /etc/etcd/pki/etcd_client.key
 
+  etcd_ips_names_length=${#etcd_ips_names[@]}
+  etcd_init_name=etcd-1
+  if [[ $etcd_ips_names_length != 0 ]]; then
+    etcd_init_name=${etcd_ips_names[0]}
+  fi
+
   cat >/etc/etcd/etcd.conf <<EOF
 # 节点名称，每个节点不同
-ETCD_NAME=etcd1
+ETCD_NAME=$etcd_init_name
 # 数据目录
 ETCD_DATA_DIR=/etc/etcd/data
 
