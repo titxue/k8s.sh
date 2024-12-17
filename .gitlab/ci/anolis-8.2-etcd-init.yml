@@ -95,8 +95,8 @@ anolis-8.2:install:etcd-init:
         exit 1;
       fi
   script:
-    - chmod +x k8s.sh etcd-binary-install $ETCD_IPS_ARGS
-    - ./k8s.sh
+    - chmod +x k8s.sh
+    - ./k8s.sh etcd-binary-install $ETCD_IPS_ARGS
     - shutdown -h -t 1
   rules:
     - changes:
