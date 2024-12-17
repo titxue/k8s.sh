@@ -1114,8 +1114,6 @@ _etcd_binary_install() {
       done
       exit 1
     fi
-  else
-    etcd_ips=("$etcd_current_ip")
   fi
 
   # etcd_ips 参数的个数
