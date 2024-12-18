@@ -744,6 +744,11 @@
 - `后续节点` `加入集群` 时，请使用 `etcd-binary-join` 参数
 - 此配置用于独立安装 `二进制` `etcd`
 - 支持 `单节点`
+- `多节点` 安装时，请在所有节点完成安装后，执行
+  `etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=$ETCD_ENDPOINTS endpoint health`
+  进行测试，其中 `ETCD_ENDPOINTS` 示例 `https://172.25.25.53:2379,https://172.25.25.54:2379,https://172.25.25.55:2379`，
+  多个节点使用 `,` 分隔
+- 单节点会自动测试
 
 :::
 
