@@ -26,6 +26,7 @@
 2. 新增 [Kubernetes 发布日历](question/k8s-release-cal.md)
 3. 新增 [视频](feature/videos.md) 链接
 4. 新增 kubernetes 1.32.x 支持范围
+5. 新增 kubernetes 1.31.x 国内中文文档地址
 
 ## 2.0.0 {id=2.0.0}
 

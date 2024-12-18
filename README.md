@@ -105,6 +105,7 @@
 
 - [GitLab/Kubernetes 知识库](https://gitlab-k8s.xuxiaowei.com.cn)
 - [Kubernetes 中文文档国内镜像-最新版](https://kubernetes.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.31](https://kubernetes-v1-31.xuxiaowei.com.cn/zh-cn/)
 - [Kubernetes 中文文档国内镜像-v1.30](https://kubernetes-v1-30.xuxiaowei.com.cn/zh-cn/)
 - [Kubernetes 中文文档国内镜像-v1.29](https://kubernetes-v1-29.xuxiaowei.com.cn/zh-cn/)
 - [Kubernetes 中文文档国内镜像-v1.28](https://kubernetes-v1-28.xuxiaowei.com.cn/zh-cn/)
