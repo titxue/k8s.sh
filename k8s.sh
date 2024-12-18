@@ -175,7 +175,7 @@ kubernetes_dashboard_ingress_host=kubernetes.dashboard.xuxiaowei.com.cn
 
 etcd_version=v3.5.17
 etcd_mirrors=("https://mirrors.huaweicloud.com/etcd" "https://storage.googleapis.com/etcd" "https://github.com/etcd-io/etcd/releases/download")
-etcd_url=${etcd_mirrors[0]}/${etcd_version}/etcd-${etcd_version}-linux-amd64.tar.gz
+etcd_mirror=${etcd_mirrors[0]}
 etcd_join_port=22
 
 # 包管理类型
@@ -1167,6 +1167,10 @@ _etcd_binary_install() {
 
   _tar_install
 
+  if ! [[ $etcd_url ]]; then
+    etcd_url=$etcd_mirror/$etcd_version/etcd-$etcd_version-linux-amd64.tar.gz
+  fi
+
   echo "etcd_url=$etcd_url"
 
   curl -L "${etcd_url}" -o etcd-${etcd_version}-linux-amd64.tar.gz
@@ -1349,7 +1353,7 @@ _etcd_binary_join() {
   fi
 
   ssh-keygen -t rsa -f /root/.ssh/id_rsa -N '' -q
-  ssh-keyscan -H $etcd_join_ip -P $etcd_join_port >> /root/.ssh/known_hosts
+  ssh-keyscan -H $etcd_join_ip -P $etcd_join_port >>/root/.ssh/known_hosts
 
   if [[ $etcd_join_password ]]; then
     if ! command -v 'sshpass' &>/dev/null; then
@@ -1787,6 +1791,10 @@ while [[ $# -gt 0 ]]; do
 
   etcd-url=* | -etcd-url=* | --etcd-url=*)
     etcd_url="${1#*=}"
+    ;;
+
+  etcd-version=* | -etcd-version=* | --etcd-version=*)
+    etcd_version="${1#*=}"
     ;;
 
   etcd-current-ip=* | -etcd-current-ip=* | --etcd-current-ip=*)

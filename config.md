@@ -445,7 +445,7 @@
 - 说明：`calico` 安装（初始化）时，拼接生成 `calico-url`，
   拼接规则：`calico_url=$calico_mirror/$calico_version/manifests/calico.yaml`
 - 默认值：https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico
-- 可选择：
+- 可选值：
     1. https://k8s-sh.xuxiaowei.com.cn/mirrors/projectcalico/calico
     2. https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/raw
     3. https://raw.githubusercontent.com/projectcalico/calico/refs/tags
@@ -484,7 +484,7 @@
 - 说明：`calico` 安装（初始化）时，拼接生成 `calico-url`，
   拼接规则：`calico_url=$calico_mirror/$calico_version/manifests/calico.yaml`
 - 默认值：`v3.29.0`
-- 可选择：
+- 可选值：
     - 查看 https://gitlab.xuxiaowei.com.cn/mirrors/github.com/projectcalico/calico/-/tags 中的标签
     - 查看 https://github.com/projectcalico/calico/tags 中的标签
 - 相关：优先级低于 `calico-url`
@@ -519,9 +519,10 @@
 
 - 类型：`String`
 - 说明：`Ingress Nginx` 安装时，拼接生成 `ingress-nginx-url`，
-  拼接规则：`ingress_nginx_url=$ingress_nginx_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml`
+  拼接规则：
+  `ingress_nginx_url=$ingress_nginx_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml`
 - 默认值：`v1.11.3`
-- 可选择：
+- 可选值：
     - 查看 https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/tags?search=controller
       中名称包含 `controller` 的标签
     - 查看 https://github.com/kubernetes/ingress-nginx/tags 中名称包含 `controller` 的标签
@@ -538,9 +539,10 @@
 
 - 类型：`String`
 - 说明：`Ingress Nginx` 安装时，拼接生成 `ingress-nginx-url`，
-  拼接规则：`ingress_nginx_url=$ingress_nginx_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml`
+  拼接规则：
+  `ingress_nginx_url=$ingress_nginx_mirror/controller-$ingress_nginx_version/deploy/static/provider/cloud/deploy.yaml`
 - 默认值：https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw
-- 可选择：
+- 可选值：
     1. https://gitlab.xuxiaowei.com.cn/mirrors/github.com/kubernetes/ingress-nginx/-/raw
     2. https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/tags
 - 相关：优先级低于 `ingress-nginx-url`
@@ -664,7 +666,7 @@
 - 类型：`String`
 - 说明：`Kubernetes Dashboard` `chart` 仓库地址
 - 默认值：`http://k8s-sh.xuxiaowei.com.cn/charts/kubernetes/dashboard`
-- 可选择：
+- 可选值：
     - http://k8s-sh.xuxiaowei.com.cn/charts/kubernetes/dashboard
     - https://kubernetes.github.io/dashboard
 
@@ -679,7 +681,7 @@
 - 类型：`String`
 - 说明：`Kubernetes Dashboard` 所需镜像
 - 默认值：`registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-auth`
-- 可选择：
+- 可选值：
     - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-auth`
     - `docker.io/kubernetesui/dashboard-auth`
 
@@ -688,7 +690,7 @@
 - 类型：`String`
 - 说明：`Kubernetes Dashboard` 所需镜像
 - 默认值：`registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-api`
-- 可选择：
+- 可选值：
     - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-api`
     - `docker.io/kubernetesui/dashboard-api`
 
@@ -697,7 +699,7 @@
 - 类型：`String`
 - 说明：`Kubernetes Dashboard` 所需镜像
 - 默认值：`registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-web`
-- 可选择：
+- 可选值：
     - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-web`
     - `docker.io/kubernetesui/dashboard-web`
 
@@ -706,7 +708,7 @@
 - 类型：`String`
 - 说明：`Kubernetes Dashboard` 所需镜像
 - 默认值：`registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-metrics-scraper`
-- 可选择：
+- 可选值：
     - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kubernetesui-dashboard-metrics-scraper`
     - `docker.io/kubernetesui/dashboard-metrics-scraper`
 
@@ -715,7 +717,7 @@
 - 类型：`String`
 - 说明：`Kubernetes Dashboard` 所需镜像
 - 默认值：`registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kong`
-- 可选择：
+- 可选值：
     - `registry.cn-qingdao.aliyuncs.com/xuxiaoweicomcn/kong`
     - `docker.io/library/kong`
 
@@ -724,7 +726,7 @@
 - 类型：`String`
 - 说明：`Kubernetes Dashboard` 是否启用 `ingress`
 - 默认值：`true`
-- 可选择：
+- 可选值：
     - `true`
     - `false`
 
@@ -733,3 +735,105 @@
 - 类型：`String`
 - 说明：`Kubernetes Dashboard` `ingress` 所需域名
 - 默认值：`kubernetes.dashboard.xuxiaowei.com.cn`
+
+### etcd-binary-install
+
+::: warning 警告
+
+- 仅在 `首台` `初始化集群` 的节点中使用
+- `后续节点` `加入集群` 时，请使用 `etcd-binary-join` 参数
+- 此配置用于独立安装 `二进制` `etcd`
+- 支持 `单节点`
+
+:::
+
+- 类型：`Boolean`
+- 说明：启用 `etcd` `二进制` 初始化集群
+
+### etcd-ips
+
+::: warning 警告
+
+- 仅在 `首台` `初始化集群` 的节点中使用
+- `后续节点` `加入集群` 时，无需配置（脚本会根据已有的配置，分析并自动配置后续节点的配置）
+- `后续节点` 的 IP 必须在此配置中
+
+:::
+
+- 说明：`etcd` `二进制` `初始化集群` 时，集群内各节点的 `IP` 及 `节点名称`
+- 默认值：空
+- 示例：
+    - `etcd-ips=172.25.25.53 etcd-ips=172.25.25.54 etcd-ips=172.25.25.55`
+        1. etcd 集群中存在三个节点，IP 分别是：`172.25.25.53`、`172.25.25.54`、`172.25.25.55`
+        2. etcd 每个节点的名称分别是：`etcd-1`、`etcd-2`、`etcd-3`
+            - 脚本会根据读取到的 `etcd-ips` 的顺序，分配 etcd 节点名称，名称前缀 `etcd-`，后缀为读取到的顺序，从 `1` 开始
+    - `etcd-ips=172.25.25.53@etcd-node-1 etcd-ips=172.25.25.54@etcd-node-2 etcd-ips=172.25.25.55@etcd-node-3`
+        1. etcd 集群中存在三个节点，IP 分别是：`172.25.25.53`、`172.25.25.54`、`172.25.25.55`
+        2. etcd 每个节点的名称分别是：`etcd-node-1`、`etcd-node-2`、`etcd-node-3`
+        3. 如果要设置节点名称，请使用 `@` 分隔
+        4. 如果要设置节点名称，请将所有 IP 设置节点名称
+           （只允许 `全部忽略名称` 或 `全部设置名称` 两种情况，如果出现部分 IP 设置了名称，程序将终止运行）
+
+### etcd-url
+
+- 类型：`String`
+- 说明：`etcd` `二进制` 安装时，下载二进制压缩包的地址，仅在 `首台` `初始化集群` 的节点中使用
+- 默认值：空
+- 相关：优先级高于 `etcd-mirror`、`etcd-version`
+
+### etcd-mirror
+
+- 类型：`String`
+- 说明：`etcd` `二进制` 安装时，用于拼接生成 `etcd-url`，仅在 `首台` `初始化集群` 的节点中使用
+- 默认值：https://mirrors.huaweicloud.com/etcd
+- 可选值：
+    1. https://mirrors.huaweicloud.com/etcd
+    2. https://storage.googleapis.com/etcd
+    3. https://github.com/etcd-io/etcd/releases/download
+
+### etcd-version
+
+- 类型：`String`
+- 说明：`etcd` `二进制` 安装时，下载 `etcd` 的版本，用于拼接 `etcd-url`，
+  拼接规则：`etcd_url=$etcd_mirror/$etcd_version/etcd-$etcd_version-linux-amd64.tar.gz`
+  仅在 `首台` `初始化集群` 的节点中使用
+- 默认值：v3.5.17
+
+### etcd-current-ip
+
+- 类型：`String`
+- 说明：`etcd` `初始化集群`、`加入集群` 时，当前机器的 IP
+- 默认值：使用 `$(hostname -I | awk '{print $1}')` 自动获取
+- 注意：
+    1. 此配置可为空，为空时使用 `$(hostname -I | awk '{print $1}')` 获取
+    2. 如果当前执行命令的宿主机存在多个网卡，请配置此选项，否则自动获取的 IP 可能不满足要求
+    3. 如果是安装 `etcd` 集群，此配置必须在 `etcd-ips` 列表中，否则将终止安装
+
+### etcd-binary-join
+
+- 类型：`Boolean`
+- 说明：启用 `etcd` `后续节点` `加入集群`
+
+### etcd-join-ip
+
+- 类型：`String`
+
+### etcd-join-port
+
+- 类型：`Number`
+- 说明：`etcd` `后续节点` `加入集群` 时，首台初始化的 `etcd` 节点 `SSH` `端口`
+- 默认值：`22`
+
+### etcd_join_password
+
+::: warning 警告
+
+- `etcd_join_password` 属于配置文件中的配置，不属于 `参数`，仅能在 `config` 参数指定的 `配置文件` 中使用
+- 如果要使用，请在配置文件中使用键值对表示
+- 解释：在参数中使用，存在密码泄露风险
+
+:::
+
+- 类型：`String`
+- 说明：`etcd` `后续节点` `加入集群` 时，首台初始化的 `etcd` 节点 `SSH` `密码`
+- 默认值：空，为空时需要在提示中手动设置密码
