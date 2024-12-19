@@ -727,18 +727,37 @@ _kubernetes_init() {
   fi
 
   if [[ $control_plane_endpoint ]]; then
-    control_plane_endpoint="--control-plane-endpoint=$control_plane_endpoint"
+    control_plane_endpoint="controlPlaneEndpoint: $control_plane_endpoint"
   fi
 
   if [[ $service_cidr ]]; then
-    service_cidr="--service-cidr=$service_cidr"
+    service_cidr="serviceSubnet: $service_cidr"
   fi
 
   if [[ $pod_network_cidr ]]; then
-    pod_network_cidr="--pod-network-cidr=$pod_network_cidr"
+    pod_network_cidr="podSubnet: $pod_network_cidr"
   fi
 
-  kubeadm init --image-repository=$kubernetes_images $control_plane_endpoint $kubernetes_init_node_name $service_cidr $pod_network_cidr --kubernetes-version=$kubernetes_version
+  kubeadm_apiVersion=$(kubeadm config print init-defaults | head -n 1)
+
+  cat <<EOF | sudo tee kubeadm-config.yaml
+$kubeadm_apiVersion
+kind: ClusterConfiguration
+kubernetesVersion: $kubernetes_version
+$control_plane_endpoint
+# 证书有效期：100年（此配置仅支持 kubernetes 1.31.0+）
+caCertificateValidityPeriod: 876000h0m0s
+# 证书有效期：100年（此配置仅支持 kubernetes 1.31.0+）
+certificateValidityPeriod: 876000h0m0s
+imageRepository: $kubernetes_images
+networking:
+  dnsDomain: cluster.local
+  $service_cidr
+  $pod_network_cidr
+
+EOF
+
+  kubeadm init $kubernetes_init_node_name --config=kubeadm-config.yaml
 
   KUBECONFIG=$(grep -w "KUBECONFIG" /etc/profile | cut -d'=' -f2)
   if [[ $KUBECONFIG != '/etc/kubernetes/admin.conf' ]]; then
