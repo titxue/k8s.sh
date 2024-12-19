@@ -1103,6 +1103,7 @@ _etcd_binary_install() {
   _firewalld_stop
 
   mkdir -p /root/.ssh
+  mkdir -p /etc/etcd/pki
 
   if ! [[ $etcd_current_ip ]]; then
     etcd_current_ip=$(hostname -I | awk '{print $1}')
@@ -1204,11 +1205,10 @@ _etcd_binary_install() {
   openssl genrsa -out etcd-ca.key 2048
   openssl req -x509 -new -nodes -key etcd-ca.key -subj "/CN=$etcd_current_ip" -days 36500 -out etcd-ca.crt
 
-  mkdir -p /etc/kubernetes/pki/etcd
-  cp etcd-ca.key /etc/kubernetes/pki/etcd/ca.key
-  cp etcd-ca.crt /etc/kubernetes/pki/etcd/ca.crt
-  ls -lh /etc/kubernetes/pki/etcd/ca.key
-  ls -lh /etc/kubernetes/pki/etcd/ca.crt
+  cp etcd-ca.key /etc/etcd/pki/ca.key
+  cp etcd-ca.crt /etc/etcd/pki/ca.crt
+  ls -lh /etc/etcd/pki/ca.key
+  ls -lh /etc/etcd/pki/ca.crt
 
   cat >etcd_ssl.cnf <<EOF
 [ req ]
@@ -1237,12 +1237,10 @@ EOF
 
   cat etcd_ssl.cnf
 
-  mkdir -p /etc/etcd/pki/
-
   # 创建 etcd 服务端 CA 证书
   openssl genrsa -out etcd_server.key 2048
   openssl req -new -key etcd_server.key -config etcd_ssl.cnf -subj "/CN=etcd-server" -out etcd_server.csr
-  openssl x509 -req -in etcd_server.csr -CA /etc/kubernetes/pki/etcd/ca.crt -CAkey /etc/kubernetes/pki/etcd/ca.key -CAcreateserial -days 36500 -extensions v3_req -extfile etcd_ssl.cnf -out etcd_server.crt
+  openssl x509 -req -in etcd_server.csr -CA /etc/etcd/pki/ca.crt -CAkey /etc/etcd/pki/ca.key -CAcreateserial -days 36500 -extensions v3_req -extfile etcd_ssl.cnf -out etcd_server.crt
   cp etcd_server.crt /etc/etcd/pki/
   cp etcd_server.key /etc/etcd/pki/
   ls -lh /etc/etcd/pki/etcd_server.crt
@@ -1251,7 +1249,7 @@ EOF
   # 创建 etcd 客户端 CA 证书
   openssl genrsa -out etcd_client.key 2048
   openssl req -new -key etcd_client.key -config etcd_ssl.cnf -subj "/CN=etcd-client" -out etcd_client.csr
-  openssl x509 -req -in etcd_client.csr -CA /etc/kubernetes/pki/etcd/ca.crt -CAkey /etc/kubernetes/pki/etcd/ca.key -CAcreateserial -days 36500 -extensions v3_req -extfile etcd_ssl.cnf -out etcd_client.crt
+  openssl x509 -req -in etcd_client.csr -CA /etc/etcd/pki/ca.crt -CAkey /etc/etcd/pki/ca.key -CAcreateserial -days 36500 -extensions v3_req -extfile etcd_ssl.cnf -out etcd_client.crt
   cp etcd_client.crt /etc/etcd/pki/
   cp etcd_client.key /etc/etcd/pki/
   ls -lh /etc/etcd/pki/etcd_client.crt
@@ -1273,7 +1271,7 @@ ETCD_DATA_DIR=/etc/etcd/data
 ETCD_CERT_FILE=/etc/etcd/pki/etcd_server.crt
 # etcd 服务端CA证书-key
 ETCD_KEY_FILE=/etc/etcd/pki/etcd_server.key
-ETCD_TRUSTED_CA_FILE=/etc/kubernetes/pki/etcd/ca.crt
+ETCD_TRUSTED_CA_FILE=/etc/etcd/pki/ca.crt
 # 是否启用客户端证书认证
 ETCD_CLIENT_CERT_AUTH=true
 # 客户端提供的服务监听URL地址
@@ -1285,7 +1283,7 @@ ETCD_PEER_CERT_FILE=/etc/etcd/pki/etcd_server.crt
 # 集群各节点相互认证使用的CA证书-key
 ETCD_PEER_KEY_FILE=/etc/etcd/pki/etcd_server.key
 # CA 根证书
-ETCD_PEER_TRUSTED_CA_FILE=/etc/kubernetes/pki/etcd/ca.crt
+ETCD_PEER_TRUSTED_CA_FILE=/etc/etcd/pki/ca.crt
 # 为本集群其他节点提供的服务监听URL地址
 ETCD_LISTEN_PEER_URLS=https://$etcd_current_ip:2380
 ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_current_ip:2380
@@ -1333,7 +1331,7 @@ EOF
     test_etcd=true
   fi
   if [[ $test_etcd == true ]]; then
-    etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
+    etcdctl --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
   fi
 }
 
@@ -1370,15 +1368,14 @@ _etcd_binary_join() {
     scp -P $etcd_join_port /root/.ssh/id_rsa.pub root@$etcd_join_ip:/root/.ssh/authorized_keys
   fi
 
-  mkdir -p /etc/kubernetes/pki/etcd
-  mkdir -p /etc/etcd/pki/
+  mkdir -p /etc/etcd/pki
 
   scp -P $etcd_join_port root@$etcd_join_ip:/usr/local/bin/etcd /usr/local/bin/
   scp -P $etcd_join_port root@$etcd_join_ip:/usr/local/bin/etcdctl /usr/local/bin/
   scp -P $etcd_join_port root@$etcd_join_ip:/usr/local/bin/etcdutl /usr/local/bin/
 
-  scp -P $etcd_join_port root@$etcd_join_ip:/etc/kubernetes/pki/etcd/ca.key /etc/kubernetes/pki/etcd/
-  scp -P $etcd_join_port root@$etcd_join_ip:/etc/kubernetes/pki/etcd/ca.crt /etc/kubernetes/pki/etcd/
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/ca.key /etc/etcd/pki/
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/ca.crt /etc/etcd/pki/
 
   scp -P $etcd_join_port root@$etcd_join_ip:/usr/lib/systemd/system/etcd.service /usr/lib/systemd/system/
 
