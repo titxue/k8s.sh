@@ -19,6 +19,10 @@
     - 关于 `apiserver-advertise-address` 和 `ControlPlaneEndpoint` 的注意事项：
         1. [官方中文文档](https://kubernetes.io/zh-cn/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#considerations-about-apiserver-advertise-address-and-controlplaneendpoint)
         2. [作者国内镜像中文文档](https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#considerations-about-apiserver-advertise-address-and-controlplaneendpoint)
+    - [利用 kubeadm 创建高可用集群](https://kubernetes.xuxiaowei.com.cn/zh-cn/docs/setup/production-environment/tools/kubeadm/high-availability/)
+        - 当使用 `--upload-certs` 调用 `kubeadm init` 时，主控制平面的证书被加密并上传到 `kubeadm-certs` Secret 中。
+        - `kubeadm-certs` Secret 和解密密钥会在两个小时后失效。
+        - 默认情况下，`--certificate-key` 中的解密秘钥会在两个小时后过期。
 
 :::
 
