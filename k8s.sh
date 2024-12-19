@@ -980,7 +980,7 @@ _helm_install() {
   tar -zxvf $helm_local_path --strip-components=1 -C $helm_local_folder
 
   $helm_local_folder/helm version
-  mv $helm_local_folder/helm /usr/local/bin/helm
+  cp $helm_local_folder/helm /usr/local/bin/helm
   /usr/local/bin/helm version
   /usr/local/bin/helm ls -A
 }
