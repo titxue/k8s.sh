@@ -176,6 +176,8 @@ kubernetes_dashboard_ingress_host=kubernetes.dashboard.xuxiaowei.com.cn
 etcd_version=v3.5.17
 etcd_mirrors=("https://mirrors.huaweicloud.com/etcd" "https://storage.googleapis.com/etcd" "https://github.com/etcd-io/etcd/releases/download")
 etcd_mirror=${etcd_mirrors[0]}
+etcd_client_port_2379=2379
+etcd_peer_port_2380=2380
 etcd_join_port=22
 
 # 包管理类型
@@ -1180,8 +1182,8 @@ _etcd_binary_install() {
       etcd_name="${etcd_ips_names[$etcd_num - 1]}"
     fi
 
-    echo "$etcd_name: $etcd_ip:2379"
-    etcd_initial_cluster+=$etcd_name=https://$etcd_ip:2380,
+    echo "$etcd_name: $etcd_ip:$etcd_client_port_2379"
+    etcd_initial_cluster+=$etcd_name=https://$etcd_ip:$etcd_peer_port_2380,
   done
   etcd_initial_cluster="${etcd_initial_cluster%,}"
 
@@ -1294,8 +1296,8 @@ ETCD_TRUSTED_CA_FILE=/etc/etcd/pki/ca.crt
 # 是否启用客户端证书认证
 ETCD_CLIENT_CERT_AUTH=true
 # 客户端提供的服务监听URL地址
-ETCD_LISTEN_CLIENT_URLS=https://$etcd_current_ip:2379
-ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_current_ip:2379
+ETCD_LISTEN_CLIENT_URLS=https://$etcd_current_ip:$etcd_client_port_2379
+ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_current_ip:$etcd_client_port_2379
 
 # 集群各节点相互认证使用的CA证书-crt
 ETCD_PEER_CERT_FILE=/etc/etcd/pki/etcd_server.crt
@@ -1304,8 +1306,8 @@ ETCD_PEER_KEY_FILE=/etc/etcd/pki/etcd_server.key
 # CA 根证书
 ETCD_PEER_TRUSTED_CA_FILE=/etc/etcd/pki/ca.crt
 # 为本集群其他节点提供的服务监听URL地址
-ETCD_LISTEN_PEER_URLS=https://$etcd_current_ip:2380
-ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_current_ip:2380
+ETCD_LISTEN_PEER_URLS=https://$etcd_current_ip:$etcd_peer_port_2380
+ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_current_ip:$etcd_peer_port_2380
 
 # 集群名称
 ETCD_INITIAL_CLUSTER_TOKEN=etcd-cluster
@@ -1350,7 +1352,7 @@ EOF
     test_etcd=true
   fi
   if [[ $test_etcd == true ]]; then
-    etcdctl --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
+    etcdctl --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":$etcd_client_port_2379 endpoint health
   fi
 }
 
@@ -1428,11 +1430,11 @@ _etcd_binary_join() {
 
   sudo sed -i "s#ETCD_NAME=$etcd_from_name#ETCD_NAME=$node_name#g" /etc/etcd/etcd.conf
 
-  sudo sed -i "s#ETCD_LISTEN_CLIENT_URLS=https://$etcd_join_ip:2379#ETCD_LISTEN_CLIENT_URLS=https://$etcd_current_ip:2379#g" /etc/etcd/etcd.conf
-  sudo sed -i "s#ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_join_ip:2379#ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_current_ip:2379#g" /etc/etcd/etcd.conf
+  sudo sed -i "s#ETCD_LISTEN_CLIENT_URLS=https://$etcd_join_ip:$etcd_client_port_2379#ETCD_LISTEN_CLIENT_URLS=https://$etcd_current_ip:$etcd_client_port_2379#g" /etc/etcd/etcd.conf
+  sudo sed -i "s#ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_join_ip:$etcd_client_port_2379#ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_current_ip:$etcd_client_port_2379#g" /etc/etcd/etcd.conf
 
-  sudo sed -i "s#ETCD_LISTEN_PEER_URLS=https://$etcd_join_ip:2380#ETCD_LISTEN_PEER_URLS=https://$etcd_current_ip:2380#g" /etc/etcd/etcd.conf
-  sudo sed -i "s#ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_join_ip:2380#ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_current_ip:2380#g" /etc/etcd/etcd.conf
+  sudo sed -i "s#ETCD_LISTEN_PEER_URLS=https://$etcd_join_ip:$etcd_peer_port_2380#ETCD_LISTEN_PEER_URLS=https://$etcd_current_ip:$etcd_peer_port_2380#g" /etc/etcd/etcd.conf
+  sudo sed -i "s#ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_join_ip:$etcd_peer_port_2380#ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_current_ip:$etcd_peer_port_2380#g" /etc/etcd/etcd.conf
 
   /usr/local/bin/etcd --version
   /usr/local/bin/etcdctl version
@@ -1803,6 +1805,14 @@ while [[ $# -gt 0 ]]; do
 
   etcd-ips=* | -etcd-ips=* | --etcd-ips=*)
     etcd_ips+=("${1#*=}")
+    ;;
+
+  etcd-client-port-2379=* | -etcd-client-port-2379=* | --etcd-client-port-2379=*)
+    etcd_client_port_2379="${1#*=}"
+    ;;
+
+  etcd-peer-port-2380=* | -etcd-peer-port-2380=* | --etcd-peer-port-2380=*)
+    etcd_peer_port_2380="${1#*=}"
     ;;
 
   etcd-url=* | -etcd-url=* | --etcd-url=*)
