@@ -124,7 +124,7 @@ anolis-8.6:install:etcd-test:
     - ip addr | grep 'inet '
     - echo "$ETCD_ENDPOINTS"
   script:
-    - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=$ETCD_ENDPOINTS endpoint health
+    - etcdctl --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=$ETCD_ENDPOINTS endpoint health
   rules:
     - changes:
         paths:

@@ -94,7 +94,7 @@ anolis-7.9:install:etcd:
     - echo $etcd_current_ip
     - echo "单机 ETCD 测试："
     - ./k8s.sh etcd-binary-install
-    - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
+    - etcdctl --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
     - source /etc/etcd/etcd.conf
     - echo $ETCD_NAME
     - |
@@ -107,7 +107,7 @@ anolis-7.9:install:etcd:
     - systemctl stop etcd
     - echo "单机 ETCD 测试（多网卡情况下，自定义 ETCD 使用的 IP）："
     - ./k8s.sh etcd-binary-install etcd-ips=$etcd_current_ip
-    - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
+    - etcdctl --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
     - unset ETCD_NAME
     - echo $ETCD_NAME
     - source /etc/etcd/etcd.conf
@@ -122,7 +122,7 @@ anolis-7.9:install:etcd:
     - systemctl stop etcd
     - echo "单机 ETCD 测试（自定义 ETCD 节点名称）："
     - ./k8s.sh etcd-binary-install etcd-ips=$etcd_current_ip@etcd-node-1
-    - etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
+    - etcdctl --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":2379 endpoint health
     - unset ETCD_NAME
     - echo $ETCD_NAME
     - source /etc/etcd/etcd.conf
