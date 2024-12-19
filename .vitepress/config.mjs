@@ -131,7 +131,7 @@ export default defineConfig({
           // 由于此处链接使用了其他域名，所以上方不能使用基础地址
           { text: '联系我们', link: 'https://docs.xuxiaowei.cloud/spring-cloud-xuxiaowei/guide/contact-us.html' },
           { text: '赞助', link: 'https://docs.xuxiaowei.cloud/spring-cloud-xuxiaowei/guide/contributes.html' },
-          { text: '视频', link: 'https://docs.xuxiaowei.cloud/spring-cloud-xuxiaowei/guide/video.html' },
+          { text: '视频', link: '/videos' },
         ]
       },
       {
@@ -139,7 +139,6 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: '源码', link: '/feature/source' },
-          { text: '视频', link: '/feature/videos' },
           { text: '镜像 文件', link: '/mirrors' },
           { text: '镜像 charts', link: '/charts' },
           { text: '命令', link: '/feature/command' },

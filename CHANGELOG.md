@@ -24,7 +24,7 @@
 
 1. 新增 [历史版本](history.md) 流水线 链接
 2. 新增 [Kubernetes 发布日历](question/k8s-release-cal.md)
-3. 新增 [视频](feature/videos.md) 链接
+3. 新增 [视频](videos.md) 链接
 4. 新增 kubernetes 1.32.x 支持范围
 5. 新增 kubernetes 1.31.x 国内中文文档地址
 6. 新增 etcd 二进制安装文档：支持单机版、集群版 [#53](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/issues/53)
