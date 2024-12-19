@@ -45,7 +45,7 @@ jobs:
           sed -i "s#base:\\ '/',#base:\\ '/k8s.sh',#g" .vitepress/config.mjs
           cat .vitepress/config.mjs;
           sed -i 's#在 Gitee 上编辑此页面#在 GitHub 上编辑#g' .vitepress/config.mjs;
-          sed -i 's#https://gitee.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.0/#https://github.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.0/#g' .vitepress/config.mjs;
+          sed -i 's#https://gitee.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.1/#https://github.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.1/#g' .vitepress/config.mjs;
           cat .vitepress/config.mjs
 
       - name: Build

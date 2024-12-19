@@ -3,6 +3,8 @@ stages:
   - install
   - env:custom
   - install:custom
+  - env:kubernetes:1.32
+  - install:kubernetes:1.32
   - env:kubernetes:1.31
   - install:kubernetes:1.31
   - env:kubernetes:1.30
@@ -62,11 +64,16 @@ include:
   - .gitlab/ci/anolis-7.9-custom-k8s-repo-type-private.yml
   - .gitlab/ci/anolis-7.9-custom-k8s-version.yml
   - .gitlab/ci/anolis-7.9-custom-pause-image.yml
+  - .gitlab/ci/anolis-7.9-etcd.yml
   - .gitlab/ci/anolis-7.9-kubernetes-dashboard.yml
   - .gitlab/ci/anolis-7.9-kubernetes-v1.24.yml
   - .gitlab/ci/anolis-8.2.yml
+  - .gitlab/ci/anolis-8.2-etcd-init.yml
   - .gitlab/ci/anolis-8.4.yml
+  - .gitlab/ci/anolis-8.4-etcd-join.yml
   - .gitlab/ci/anolis-8.6.yml
+  - .gitlab/ci/anolis-8.6-etcd-join.yml
+  - .gitlab/ci/anolis-8.6-kubernetes-v1.32.yml
   - .gitlab/ci/anolis-8.8.yml
   - .gitlab/ci/anolis-8.9.yml
   - .gitlab/ci/anolis-23.0.yml

@@ -56,7 +56,7 @@ anolis-7.7:install:kubernetes:1.29:
   needs:
     - anolis-7.7:env:kubernetes:1.29
   variables:
-    KUBERNETES_VERSION: v1.29.11
+    KUBERNETES_VERSION: v1.29.12
     KUBERNETES_REPO_TYPE: http://172.25.25.14:48081/repository/kubernetes-new-yum
     DOCKER_REPO_TYPE: http://172.25.25.14:48081/repository/docker-yum
   hooks:

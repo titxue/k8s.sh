@@ -68,11 +68,11 @@ const dashboardOptions = [
     label: 'k8s-sh.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.0/mirrors/kubernetes/dashboard',
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.1/mirrors/kubernetes/dashboard',
     label: 'gitlab.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.0/mirrors/kubernetes/dashboard',
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.1/mirrors/kubernetes/dashboard',
     label: 'gitee.com',
   },
   {
@@ -87,11 +87,11 @@ const ingressNginxOptions = [
     label: 'k8s-sh.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.0/mirrors/kubernetes/ingress-nginx',
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.1/mirrors/kubernetes/ingress-nginx',
     label: 'gitlab.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.0/mirrors/kubernetes/ingress-nginx',
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.1/mirrors/kubernetes/ingress-nginx',
     label: 'gitee.com',
   },
   {
@@ -137,11 +137,11 @@ const metricsServerOptions = [
     label: 'k8s-sh.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.0/mirrors/kubernetes-sigs/metrics-server',
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.1/mirrors/kubernetes-sigs/metrics-server',
     label: 'gitlab.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.0/mirrors/kubernetes-sigs/metrics-server',
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.1/mirrors/kubernetes-sigs/metrics-server',
     label: 'gitee.com',
   },
   {
@@ -156,11 +156,11 @@ const calicoOptions = [
     label: 'k8s-sh.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.0/mirrors/projectcalico/calico',
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.1/mirrors/projectcalico/calico',
     label: 'gitlab.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.0/mirrors/projectcalico/calico',
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.1/mirrors/projectcalico/calico',
     label: 'gitee.com',
   },
   {
@@ -175,11 +175,11 @@ const kubePrometheusOptions = [
     label: 'k8s-sh.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.0/mirrors/prometheus-operator/kube-prometheus',
+    value: 'https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/raw/SNAPSHOT/2.0.1/mirrors/prometheus-operator/kube-prometheus',
     label: 'gitlab.xuxiaowei.com.cn',
   },
   {
-    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.0/mirrors/prometheus-operator/kube-prometheus',
+    value: 'https://gitee.com/xuxiaowei-com-cn/k8s.sh/raw/SNAPSHOT/2.0.1/mirrors/prometheus-operator/kube-prometheus',
     label: 'gitee.com',
   },
   {

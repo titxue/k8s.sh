@@ -17,58 +17,66 @@
 - 如果要支持其他操作系统，请提交议题，建议提供 `系统下载的原始地址`，节省查找时间
     1. [Gitee](https://gitee.com/xuxiaowei-com-cn/k8s.sh/issues)
     2. [GitHub](https://github.com/xuxiaowei-com-cn/k8s.sh/issues)
+- Kubernetes 安装要求
+    - `1.32.x`
+        1. 不支持内核 `3.x` 版本
+        2. 支持内核 `4.x` 版本，推荐使用 `4.19` `LTS` 版本
+        3. 支持内核 `5.x` 版本
+        4. 支持内核 `6.x` 版本
+        5. 对于 `cgroups` `v2` 支持，内核最低版本为 `4.15`，建议版本为 `5.8+`
 - 按照名称排序、按照版本倒叙
 
-| Linux/Kubernetes                | 1.31 | 1.30 | 1.29 | 1.28 | 1.27 | 1.26 | 1.25 | 1.24 |
-|---------------------------------|------|------|------|------|------|------|------|------|
-| AlmaLinux 8.10 Cerulean Leopard | ✅    |      |      |      |      |      |      |      |
-| AlmaLinux 9.4 Seafoam Ocelot    | ✅    |      |      |      |      |      |      | ✅    |
-| AlmaLinux 9.5 Teal Serval       | ✅    |      |      |      |      |      |      |      |
-| 龙蜥 AnolisOS 7.7                 | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    |
-| 龙蜥 AnolisOS 7.9                 | ✅    |      |      |      |      |      |      | ✅    |
-| 龙蜥 AnolisOS 8.2                 | ✅    |      |      |      |      |      |      |      |
-| 龙蜥 AnolisOS 8.4                 | ✅    |      |      |      |      |      |      |      |
-| 龙蜥 AnolisOS 8.6                 | ✅    |      |      |      |      |      |      |      |
-| 龙蜥 AnolisOS 8.8                 | ✅    |      |      |      |      |      |      |      |
-| 龙蜥 AnolisOS 8.9                 | ✅    |      |      |      |      |      |      |      |
-| 龙蜥 AnolisOS 23.0                | ✅    |      |      |      |      |      |      |      |
-| 龙蜥 AnolisOS 23.1                | ✅    |      |      |      |      |      |      |      |
-| CentOS 7.9.2009                 | ✅    |      |      |      |      |      |      |      |
-| CentOS 7.9.2207                 | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.1.1911                 | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.2.2004                 | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.3.2011                 | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.4.2105                 | ✅    |      |      |      |      |      |      |      |
-| CentOS 8.5.2111                 | ✅    |      |      |      |      |      |      |      |
-| CentOS 9-20241028.0             | ✅    |      |      |      |      |      |      | ✅    |
-| Debian 10.10.0 buster           | ✅    |      |      |      |      |      |      | ✅    |
-| Debian 11.7.0 bullseye          | ✅    |      |      |      |      |      |      |      |
-| Debian 12.4.0 bookworm          | ✅    |      |      |      |      |      |      |      |
-| Debian 12.7.0 bookworm          | ✅    |      |      |      |      |      |      |      |
-| 深度 Deepin 20.9 apricot          | ✅    |      |      |      |      |      |      |      |
-| 银河麒麟 Kylin v10 sp1 2303         | ✅    |      |      |      |      |      |      |      |
-| 银河麒麟 Kylin v10 sp1 2403         | ✅    |      |      |      |      |      |      |      |
-| 欧拉 OpenEuler 20.03              | ✅    |      |      |      |      |      |      |      |
-| 欧拉 OpenEuler 22.03              | ✅    |      |      |      |      |      |      |      |
-| 欧拉 OpenEuler 24.03              | ✅    |      |      |      |      |      |      |      |
-| 开放麒麟 OpenKylin 1.0 yangtze      | ✅    |      |      |      |      |      |      |      |
-| 开放麒麟 OpenKylin 1.0.1 yangtze    | ✅    |      |      |      |      |      |      |      |
-| 开放麒麟 OpenKylin 1.0.2 yangtze    | ✅    |      |      |      |      |      |      |      |
-| 开放麒麟 OpenKylin 2.0 nile         | ✅    |      |      |      |      |      |      |      |
-| Rocky 8.10 Green Obsidian       | ✅    |      |      |      |      |      |      |      |
-| Rocky 9.4 Blue Onyx             | ✅    |      |      |      |      |      |      |      |
-| Rocky 9.5 Blue Onyx             | ✅    |      |      |      |      |      |      |      |
-| 乌班图 Ubuntu 18.04 bionic         | ✅    |      |      |      |      |      |      |      |
-| 乌班图 Ubuntu 20.04 focal          | ✅    |      |      |      |      |      |      |      |
-| 乌班图 Ubuntu 22.04 jammy          | ✅    |      |      |      |      |      |      |      |
-| 乌班图 Ubuntu 24.04 noble          | ✅    |      |      |      |      |      |      | ✅    |
-| 优麒麟 Ubuntu Kylin 18.04.5 bionic | ✅    |      |      |      |      |      |      |      |
-| 优麒麟 Ubuntu Kylin 20.04.6 focal  | ✅    |      |      |      |      |      |      |      |
-| 优麒麟 Ubuntu Kylin 22.04.5 jammy  | ✅    |      |      |      |      |      |      |      |
-| 优麒麟 Ubuntu Kylin 24.04.1 noble  | ✅    |      |      |      |      |      |      |      |
+| Linux/Kubernetes                | 1.32 | 1.31 | 1.30 | 1.29 | 1.28 | 1.27 | 1.26 | 1.25 | 1.24 |
+|---------------------------------|------|------|------|------|------|------|------|------|------|
+| AlmaLinux 8.10 Cerulean Leopard | ❌    | ✅    |      |      |      |      |      |      |      |
+| AlmaLinux 9.4 Seafoam Ocelot    |      | ✅    |      |      |      |      |      |      | ✅    |
+| AlmaLinux 9.5 Teal Serval       |      | ✅    |      |      |      |      |      |      |      |
+| 龙蜥 AnolisOS 7.7                 | ❌    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    | ✅    |
+| 龙蜥 AnolisOS 7.9                 | ❌    | ✅    |      |      |      |      |      |      | ✅    |
+| 龙蜥 AnolisOS 8.2                 | ❌    | ✅    |      |      |      |      |      |      |      |
+| 龙蜥 AnolisOS 8.4                 | ❌    | ✅    |      |      |      |      |      |      |      |
+| 龙蜥 AnolisOS 8.6                 | ✅    | ✅    |      |      |      |      |      |      |      |
+| 龙蜥 AnolisOS 8.8                 |      | ✅    |      |      |      |      |      |      |      |
+| 龙蜥 AnolisOS 8.9                 |      | ✅    |      |      |      |      |      |      |      |
+| 龙蜥 AnolisOS 23.0                |      | ✅    |      |      |      |      |      |      |      |
+| 龙蜥 AnolisOS 23.1                |      | ✅    |      |      |      |      |      |      |      |
+| CentOS 7.9.2009                 | ❌    | ✅    |      |      |      |      |      |      |      |
+| CentOS 7.9.2207                 | ❌    | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.1.1911                 | ❌    | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.2.2004                 | ❌    | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.3.2011                 | ❌    | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.4.2105                 | ❌    | ✅    |      |      |      |      |      |      |      |
+| CentOS 8.5.2111                 | ❌    | ✅    |      |      |      |      |      |      |      |
+| CentOS 9-20241028.0             |      | ✅    |      |      |      |      |      |      | ✅    |
+| Debian 10.10.0 buster           |      | ✅    |      |      |      |      |      |      | ✅    |
+| Debian 11.7.0 bullseye          |      | ✅    |      |      |      |      |      |      |      |
+| Debian 12.4.0 bookworm          |      | ✅    |      |      |      |      |      |      |      |
+| Debian 12.7.0 bookworm          |      | ✅    |      |      |      |      |      |      |      |
+| 深度 Deepin 20.9 apricot          |      | ✅    |      |      |      |      |      |      |      |
+| 银河麒麟 Kylin v10 sp1 2303         |      | ✅    |      |      |      |      |      |      |      |
+| 银河麒麟 Kylin v10 sp1 2403         |      | ✅    |      |      |      |      |      |      |      |
+| 欧拉 OpenEuler 20.03              |      | ✅    |      |      |      |      |      |      |      |
+| 欧拉 OpenEuler 22.03              |      | ✅    |      |      |      |      |      |      |      |
+| 欧拉 OpenEuler 24.03              |      | ✅    |      |      |      |      |      |      |      |
+| 开放麒麟 OpenKylin 1.0 yangtze      |      | ✅    |      |      |      |      |      |      |      |
+| 开放麒麟 OpenKylin 1.0.1 yangtze    |      | ✅    |      |      |      |      |      |      |      |
+| 开放麒麟 OpenKylin 1.0.2 yangtze    |      | ✅    |      |      |      |      |      |      |      |
+| 开放麒麟 OpenKylin 2.0 nile         |      | ✅    |      |      |      |      |      |      |      |
+| Rocky 8.10 Green Obsidian       | ❌    | ✅    |      |      |      |      |      |      |      |
+| Rocky 9.4 Blue Onyx             |      | ✅    |      |      |      |      |      |      |      |
+| Rocky 9.5 Blue Onyx             |      | ✅    |      |      |      |      |      |      |      |
+| 乌班图 Ubuntu 18.04 bionic         | ❌    | ✅    |      |      |      |      |      |      |      |
+| 乌班图 Ubuntu 20.04 focal          |      | ✅    |      |      |      |      |      |      |      |
+| 乌班图 Ubuntu 22.04 jammy          |      | ✅    |      |      |      |      |      |      |      |
+| 乌班图 Ubuntu 24.04 noble          |      | ✅    |      |      |      |      |      |      | ✅    |
+| 优麒麟 Ubuntu Kylin 18.04.5 bionic |      | ✅    |      |      |      |      |      |      |      |
+| 优麒麟 Ubuntu Kylin 20.04.6 focal  |      | ✅    |      |      |      |      |      |      |      |
+| 优麒麟 Ubuntu Kylin 22.04.5 jammy  |      | ✅    |      |      |      |      |      |      |      |
+| 优麒麟 Ubuntu Kylin 24.04.1 noble  |      | ✅    |      |      |      |      |      |      |      |
 
 | kubernetes 版本 | 流水线环境                                                                                                                |
 |---------------|----------------------------------------------------------------------------------------------------------------------|
+| 1.32          | [kubernetes/v1.32](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/44?tab=deployment-history) |
 | 1.31          | [kubernetes/v1.31](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/43?tab=deployment-history) |
 | 1.30          | [kubernetes/v1.30](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/36?tab=deployment-history) |
 | 1.29          | [kubernetes/v1.29](https://gitlab.xuxiaowei.com.cn/xuxiaowei-com-cn/k8s.sh/-/environments/37?tab=deployment-history) |
@@ -97,6 +105,7 @@
 
 - [GitLab/Kubernetes 知识库](https://gitlab-k8s.xuxiaowei.com.cn)
 - [Kubernetes 中文文档国内镜像-最新版](https://kubernetes.xuxiaowei.com.cn/zh-cn/)
+- [Kubernetes 中文文档国内镜像-v1.31](https://kubernetes-v1-31.xuxiaowei.com.cn/zh-cn/)
 - [Kubernetes 中文文档国内镜像-v1.30](https://kubernetes-v1-30.xuxiaowei.com.cn/zh-cn/)
 - [Kubernetes 中文文档国内镜像-v1.29](https://kubernetes-v1-29.xuxiaowei.com.cn/zh-cn/)
 - [Kubernetes 中文文档国内镜像-v1.28](https://kubernetes-v1-28.xuxiaowei.com.cn/zh-cn/)
@@ -112,17 +121,17 @@
 
 ## 国内镜像支持的范围
 
-1. `Kubernetes` 从 `1.24.0` 到 `最新版`，一共 105 个版本及 `国内镜像`
-    1. 截止 `2024-10-30`，`Kubernetes` 最高版是 `v1.31.2`
+1. `Kubernetes` 从 `1.24.0` 到 `最新版`，一共 `112` 个版本及 `国内镜像`
+    1. 截止 `2024-12-12`，`Kubernetes` 最高版是 `v1.32.0`
     2. 具体支持的版本及 `国内镜像` 参见：
-       [kubernetes-version.json](https://gitee.com/xuxiaowei-com-cn/k8s.sh/blob/SNAPSHOT/2.0.0/.vitepress/components/json/kubernetes-version.json)
+       [kubernetes-version.json](https://gitee.com/xuxiaowei-com-cn/k8s.sh/blob/SNAPSHOT/2.0.1/.vitepress/components/json/kubernetes-version.json)
 2. `calico` 一共 `24` 个版本及 `国内镜像`
-    1. 截止 `2024-10-30`
+    1. 截止 `2024-12-05`
     2. 具体支持的版本及 `国内镜像` 参见：
-       [calico-version.json](https://gitee.com/xuxiaowei-com-cn/k8s.sh/blob/SNAPSHOT/2.0.0/.vitepress/components/json/calico-version.json)
+       [calico-version.json](https://gitee.com/xuxiaowei-com-cn/k8s.sh/blob/SNAPSHOT/2.0.1/.vitepress/components/json/calico-version.json)
 3. `ingress nginx` 一共 `24` 个版本及 `国内镜像`
-    1. 截止 `2024-10-30`
+    1. 截止 `2024-12-05`
     2. 具体支持的版本及 `国内镜像` 参见：
-       [ingress-nginx-version.json](https://gitee.com/xuxiaowei-com-cn/k8s.sh/blob/SNAPSHOT/2.0.0/.vitepress/components/json/ingress-nginx-version.json)
+       [ingress-nginx-version.json](https://gitee.com/xuxiaowei-com-cn/k8s.sh/blob/SNAPSHOT/2.0.1/.vitepress/components/json/ingress-nginx-version.json)
 
 ## [赞助](https://docs.xuxiaowei.cloud/spring-cloud-xuxiaowei/guide/contributes.html)

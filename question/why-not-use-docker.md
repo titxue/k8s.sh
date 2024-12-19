@@ -7,5 +7,5 @@
 
 ## 说明 {id=description}
 
-1. 本项目仅提供 `Kubernetes` 从 `1.24` 到 `1.31`（2024-11-13 最新版）的安装配置方案
+1. 本项目仅提供 `Kubernetes` 从 `1.24` 到 `1.32`（2024-12-12 最新版）的安装配置方案
 2. 根据上述的文档可知，从 `Kubernetes` 从 `1.24` 起，`Kubernetes` 放弃了 `Docker`，使用 `Containerd`

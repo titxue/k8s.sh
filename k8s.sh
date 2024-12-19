@@ -96,7 +96,7 @@ fi
 dpkg_lock_timeout=120
 
 # Kubernetes 具体版本，包含: 主版本号、次版本号、修正版本号
-kubernetes_version=v1.31.1
+kubernetes_version=v1.31.4
 # Kubernetes 具体版本后缀
 kubernetes_version_suffix=1.1
 # Kubernetes 仓库
@@ -173,6 +173,13 @@ kubernetes_dashboard_kong_image=${kubernetes_dashboard_kong_images[0]}
 kubernetes_dashboard_ingress_enabled=true
 kubernetes_dashboard_ingress_host=kubernetes.dashboard.xuxiaowei.com.cn
 
+etcd_version=v3.5.17
+etcd_mirrors=("https://mirrors.huaweicloud.com/etcd" "https://storage.googleapis.com/etcd" "https://github.com/etcd-io/etcd/releases/download")
+etcd_mirror=${etcd_mirrors[0]}
+etcd_client_port_2379=2379
+etcd_peer_port_2380=2380
+etcd_join_port=22
+
 # 包管理类型
 package_type=
 case "$os_type" in
@@ -234,6 +241,8 @@ EOF
     fi
 
   elif [[ $package_type == 'apt' ]]; then
+
+    sudo mkdir -p /etc/apt/sources.list.d
 
     sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
     sudo apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y ca-certificates curl
@@ -484,6 +493,8 @@ EOF
 
   elif [[ $package_type == 'apt' ]]; then
 
+    sudo mkdir -p /etc/apt/sources.list.d
+
     case "$kubernetes_repo_type" in
     "" | aliyun | tsinghua | kubernetes)
 
@@ -712,34 +723,84 @@ _kubernetes_init_congrats() {
   echo
 }
 
+_k8s_init_pre_config_etcd() {
+  etcd_external_num=0
+  if [[ $etcd_ips ]]; then
+    etcd_external_num=$(($etcd_external_num + 1))
+  fi
+
+  if [[ $etcd_cafile ]]; then
+    etcd_external_num=$(($etcd_external_num + 1))
+  fi
+
+  if [[ $etcd_certfile ]]; then
+    etcd_external_num=$(($etcd_external_num + 1))
+  fi
+
+  if [[ $etcd_keyfile ]]; then
+    etcd_external_num=$(($etcd_external_num + 1))
+  fi
+
+  if [[ $etcd_external_num -gt 0 && $etcd_external_num -lt 4 ]]; then
+    echo -e "${COLOR_RED}kubernetes 初始化 使用外部 ETCD 时，etcd 参数不完整${COLOR_RESET}"
+    echo -e "${COLOR_RED}kubernetes 使用外部 ETCD 完整参数至少包含：${COLOR_GREEN}etcd-ips${COLOR_RESET}、${COLOR_GREEN}etcd-cafile${COLOR_RESET}、${COLOR_GREEN}etcd-certfile${COLOR_RESET}、${COLOR_GREEN}etcd-keyfile${COLOR_RESET}"
+    echo -e "${COLOR_RED}kubernetes 不使用外部 ETCD 时，请不要包含下列参数：${COLOR_GREEN}etcd-ips${COLOR_RESET}、${COLOR_GREEN}etcd-cafile${COLOR_RESET}、${COLOR_GREEN}etcd-certfile${COLOR_RESET}、${COLOR_GREEN}etcd-keyfile${COLOR_RESET}"
+    echo -e "${COLOR_RED}请阅读文档，查看配置: ${COLOR_GREEN}${DOCS_CONFIG_LINK}${COLOR_RESET}"
+    exit 1
+  elif [ $etcd_external_num == 4 ]; then
+    echo "etcd:" >>kubeadm-config.yaml
+    echo "  external:" >>kubeadm-config.yaml
+    echo "    caFile: $etcd_cafile" >>kubeadm-config.yaml
+    echo "    certFile: $etcd_certfile" >>kubeadm-config.yaml
+    echo "    keyFile: $etcd_keyfile" >>kubeadm-config.yaml
+    echo "    endpoints:" >>kubeadm-config.yaml
+
+    for etcd_ip in "${etcd_ips[@]}"; do
+      echo "     - https://$etcd_ip:$etcd_client_port_2379" >>kubeadm-config.yaml
+    done
+  fi
+}
+
 _kubernetes_init() {
-  local kubeadm_args=("--kubernetes-version=$kubernetes_version")
+  if [[ $kubernetes_init_node_name ]]; then
+    kubernetes_init_node_name="--node-name=$kubernetes_init_node_name"
+  fi
 
   if [[ $control_plane_endpoint ]]; then
-    kubeadm_args+=("--control-plane-endpoint=$control_plane_endpoint")
+    control_plane_endpoint="controlPlaneEndpoint: $control_plane_endpoint"
   fi
 
   if [[ $service_cidr ]]; then
-    kubeadm_args+=("--service-cidr=$service_cidr")
+    service_cidr="serviceSubnet: $service_cidr"
   fi
 
   if [[ $pod_network_cidr ]]; then
-    kubeadm_args+=("--pod-network-cidr=$pod_network_cidr")
+    pod_network_cidr="podSubnet: $pod_network_cidr"
   fi
 
-  if [[ $kubernetes_init_node_name ]]; then
-    kubeadm_args+=("--node-name=$kubernetes_init_node_name")
-  fi
+  kubeadm_apiVersion=$(kubeadm config print init-defaults | head -n 1)
 
-  # 如果启用了 etcd 配置，则生成配置文件并指定
-  if [[ $etcd_endpoints && $etcd_cafile && $etcd_certfile && $etcd_keyfile ]]; then
-    _generate_etcd_config
-    kubeadm_args+=("--config=/tmp/kubeadm-etcd-config.yaml")
-  fi
+  cat <<EOF | sudo tee kubeadm-config.yaml
+$kubeadm_apiVersion
+kind: ClusterConfiguration
+kubernetesVersion: $kubernetes_version
+$control_plane_endpoint
+# 证书有效期：100年（此配置仅支持 kubernetes 1.31.0+）
+caCertificateValidityPeriod: 876000h0m0s
+# 证书有效期：100年（此配置仅支持 kubernetes 1.31.0+）
+certificateValidityPeriod: 876000h0m0s
+imageRepository: $kubernetes_images
+networking:
+  dnsDomain: cluster.local
+  $service_cidr
+  $pod_network_cidr
 
-  # 执行 kubeadm init
-  kubeadm init "${kubeadm_args[@]}"
-  
+EOF
+
+  _k8s_init_pre_config_etcd
+
+  kubeadm init $kubernetes_init_node_name --config=kubeadm-config.yaml
+
   KUBECONFIG=$(grep -w "KUBECONFIG" /etc/profile | cut -d'=' -f2)
   if [[ $KUBECONFIG != '/etc/kubernetes/admin.conf' ]]; then
     sudo sed -i 's/.*KUBECONFIG.*/#&/' /etc/profile
@@ -936,6 +997,21 @@ _metrics_server_install() {
   kubectl get pod -A -o wide
 }
 
+_tar_install() {
+  if ! command -v 'tar' &>/dev/null; then
+    if [[ $package_type == 'yum' ]]; then
+      echo -e "${COLOR_BLUE}tar 未安装，正在安装...${COLOR_RESET}"
+      sudo yum install -y tar
+      echo -e "${COLOR_BLUE}tar 安装完成${COLOR_RESET}"
+    elif [[ $package_type == 'apt' ]]; then
+      echo -e "${COLOR_BLUE}tar 未安装，正在安装...${COLOR_RESET}"
+      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
+      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y tar
+      echo -e "${COLOR_BLUE}tar 安装完成${COLOR_RESET}"
+    fi
+  fi
+}
+
 _helm_install() {
 
   if ! [[ $helm_url ]]; then
@@ -959,24 +1035,13 @@ _helm_install() {
     helm_local_path=$helm_url
   fi
 
-  if ! command -v 'tar' &>/dev/null; then
-    if [[ $package_type == 'yum' ]]; then
-      echo -e "${COLOR_BLUE}tar 未安装，正在安装...${COLOR_RESET}"
-      sudo yum install -y tar
-      echo -e "${COLOR_BLUE}tar 安装完成${COLOR_RESET}"
-    elif [[ $package_type == 'apt' ]]; then
-      echo -e "${COLOR_BLUE}tar 未安装，正在安装...${COLOR_RESET}"
-      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
-      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y apt
-      echo -e "${COLOR_BLUE}tar 安装完成${COLOR_RESET}"
-    fi
-  fi
+  _tar_install
 
   mkdir -p $helm_local_folder
   tar -zxvf $helm_local_path --strip-components=1 -C $helm_local_folder
 
   $helm_local_folder/helm version
-  mv $helm_local_folder/helm /usr/local/bin/helm
+  cp $helm_local_folder/helm /usr/local/bin/helm
   /usr/local/bin/helm version
   /usr/local/bin/helm ls -A
 }
@@ -1094,31 +1159,331 @@ _selinux_disabled() {
   fi
 }
 
-_generate_etcd_config() {
-  local etcd_config_file="/tmp/kubeadm-etcd-config.yaml"
+_etcd_binary_install() {
 
-  cat <<EOF >$etcd_config_file
-apiVersion: kubeadm.k8s.io/v1beta3
-kind: ClusterConfiguration
-etcd:
-  external:
-    endpoints:
-EOF
+  _firewalld_stop
 
-  # 添加 etcd endpoints
-  for endpoint in ${etcd_endpoints//,/ }; do
-    echo "    - $endpoint" >>$etcd_config_file
+  mkdir -p /root/.ssh
+  mkdir -p /etc/etcd/pki
+
+  if ! [[ $etcd_current_ip ]]; then
+    etcd_current_ip=$(hostname -I | awk '{print $1}')
+  fi
+
+  # 当存在 etcd_ips 参数时，当前机器的 IP 必须在 etcd_ips 参数内
+  if [[ $etcd_ips ]]; then
+    if ! [[ "${etcd_ips[*]}" =~ ${etcd_current_ip} ]]; then
+      echo "当前机器的 IP: $etcd_current_ip 不在 etcd 集群 IP 列表中，终止 etcd 安装"
+      for etcd_ip in "${etcd_ips[@]}"; do
+        echo "$etcd_ip"
+      done
+      exit 1
+    fi
+  fi
+
+  # etcd_ips 参数的个数
+  etcd_ips_length=${#etcd_ips[@]}
+  # etcd_ips 参数中 @ 的数量
+  etcd_ips_at_num=0
+  # etcd_ips 参数中，自定义的 ETCD 节点 名称
+  etcd_ips_names=()
+  # etcd_ips 参数中，自定义的 ETCD 节点 IP
+  etcd_ips_tmp=()
+  for etcd_ip in "${etcd_ips[@]}"; do
+    etcd_ip_tmp=$(echo $etcd_ip | awk -F'@' '{print $1}')
+    etcd_ip_name_tmp=$(echo $etcd_ip | awk -F'@' '{print $2}')
+
+    if [[ $etcd_ip_name_tmp ]]; then
+      etcd_ips_names+=("$etcd_ip_name_tmp")
+      etcd_ips_at_num=$(($etcd_ips_at_num + 1))
+    fi
+
+    etcd_ips_tmp+=("$etcd_ip_tmp")
   done
 
-  # 添加 etcd 证书路径
-  cat <<EOF >>$etcd_config_file
-    caFile: "$etcd_cafile"
-    certFile: "$etcd_certfile"
-    keyFile: "$etcd_keyfile"
+  if [[ $etcd_ips_at_num != 0 && "$etcd_ips_at_num" != "$etcd_ips_length" ]]; then
+    echo "ETCD 名称配置错误：只能全部忽略名称或全部自定义名称"
+    echo "etcd_ips: ${etcd_ips[*]}"
+    exit 1
+  fi
+
+  etcd_ips=("${etcd_ips_tmp[@]}")
+  etcd_ips_names_length=${#etcd_ips_names[@]}
+
+  echo "当前 etcd 节点的 IP: $etcd_current_ip"
+  echo "etcd 集群配置:"
+  local etcd_num=0
+  etcd_initial_cluster=''
+  for etcd_ip in "${etcd_ips[@]}"; do
+    etcd_num=$(($etcd_num + 1))
+    if [[ $etcd_ips_names_length == 0 ]]; then
+      etcd_name="etcd-$etcd_num"
+    else
+      etcd_name="${etcd_ips_names[$etcd_num - 1]}"
+    fi
+
+    echo "$etcd_name: $etcd_ip:$etcd_client_port_2379"
+    etcd_initial_cluster+=$etcd_name=https://$etcd_ip:$etcd_peer_port_2380,
+  done
+  etcd_initial_cluster="${etcd_initial_cluster%,}"
+
+  _tar_install
+
+  if ! [[ $etcd_url ]]; then
+    etcd_url=$etcd_mirror/$etcd_version/etcd-$etcd_version-linux-amd64.tar.gz
+  fi
+
+  echo "etcd_url=$etcd_url"
+
+  curl -L "${etcd_url}" -o etcd-${etcd_version}-linux-amd64.tar.gz
+  tar xzvf etcd-${etcd_version}-linux-amd64.tar.gz
+
+  etcd-${etcd_version}-linux-amd64/etcd --version
+  etcd-${etcd_version}-linux-amd64/etcdctl version
+  etcd-${etcd_version}-linux-amd64/etcdutl version
+
+  cp etcd-${etcd_version}-linux-amd64/etcd /usr/local/bin/
+  cp etcd-${etcd_version}-linux-amd64/etcdctl /usr/local/bin/
+  cp etcd-${etcd_version}-linux-amd64/etcdutl /usr/local/bin/
+
+  /usr/local/bin/etcd --version
+  /usr/local/bin/etcdctl version
+  /usr/local/bin/etcdutl version
+
+  if ! command -v 'openssl' &>/dev/null; then
+    if [[ $package_type == 'yum' ]]; then
+      echo -e "${COLOR_BLUE}openssl 未安装，正在安装...${COLOR_RESET}"
+      sudo yum install -y openssl
+      echo -e "${COLOR_BLUE}openssl 安装完成${COLOR_RESET}"
+    elif [[ $package_type == 'apt' ]]; then
+      echo -e "${COLOR_BLUE}openssl 未安装，正在安装...${COLOR_RESET}"
+      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout update
+      apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y openssl
+      echo -e "${COLOR_BLUE}openssl 安装完成${COLOR_RESET}"
+    fi
+  fi
+
+  openssl genrsa -out etcd-ca.key 2048
+  openssl req -x509 -new -nodes -key etcd-ca.key -subj "/CN=$etcd_current_ip" -days 36500 -out etcd-ca.crt
+
+  cp etcd-ca.key /etc/etcd/pki/ca.key
+  cp etcd-ca.crt /etc/etcd/pki/ca.crt
+  ls -lh /etc/etcd/pki/ca.key
+  ls -lh /etc/etcd/pki/ca.crt
+
+  cat >etcd_ssl.cnf <<EOF
+[ req ]
+req_extensions = v3_req
+distinguished_name = req_distinguished_name
+
+[ req_distinguished_name ]
+
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+
+[ alt_names ]
+
 EOF
 
-  echo -e "${COLOR_BLUE}生成的 etcd 配置文件: ${COLOR_GREEN}$etcd_config_file${COLOR_RESET}"
-  cat $etcd_config_file
+  cat etcd_ssl.cnf
+
+  local etcd_num=1
+  echo "IP.$etcd_num = $etcd_current_ip" >>etcd_ssl.cnf
+  for etcd_ip in "${etcd_ips[@]}"; do
+    etcd_num=$(($etcd_num + 1))
+    echo "IP.$etcd_num = $etcd_ip" >>etcd_ssl.cnf
+  done
+
+  cat etcd_ssl.cnf
+
+  # 创建 etcd 服务端 CA 证书
+  openssl genrsa -out etcd_server.key 2048
+  openssl req -new -key etcd_server.key -config etcd_ssl.cnf -subj "/CN=etcd-server" -out etcd_server.csr
+  openssl x509 -req -in etcd_server.csr -CA /etc/etcd/pki/ca.crt -CAkey /etc/etcd/pki/ca.key -CAcreateserial -days 36500 -extensions v3_req -extfile etcd_ssl.cnf -out etcd_server.crt
+  cp etcd_server.crt /etc/etcd/pki/
+  cp etcd_server.key /etc/etcd/pki/
+  ls -lh /etc/etcd/pki/etcd_server.crt
+  ls -lh /etc/etcd/pki/etcd_server.key
+
+  # 创建 etcd 客户端 CA 证书
+  openssl genrsa -out etcd_client.key 2048
+  openssl req -new -key etcd_client.key -config etcd_ssl.cnf -subj "/CN=etcd-client" -out etcd_client.csr
+  openssl x509 -req -in etcd_client.csr -CA /etc/etcd/pki/ca.crt -CAkey /etc/etcd/pki/ca.key -CAcreateserial -days 36500 -extensions v3_req -extfile etcd_ssl.cnf -out etcd_client.crt
+  cp etcd_client.crt /etc/etcd/pki/
+  cp etcd_client.key /etc/etcd/pki/
+  ls -lh /etc/etcd/pki/etcd_client.crt
+  ls -lh /etc/etcd/pki/etcd_client.key
+
+  etcd_ips_names_length=${#etcd_ips_names[@]}
+  etcd_init_name=etcd-1
+  if [[ $etcd_ips_names_length != 0 ]]; then
+    etcd_init_name=${etcd_ips_names[0]}
+  fi
+
+  cat >/etc/etcd/etcd.conf <<EOF
+# 节点名称，每个节点不同
+ETCD_NAME=$etcd_init_name
+# 数据目录
+ETCD_DATA_DIR=/etc/etcd/data
+
+# etcd 服务端CA证书-crt
+ETCD_CERT_FILE=/etc/etcd/pki/etcd_server.crt
+# etcd 服务端CA证书-key
+ETCD_KEY_FILE=/etc/etcd/pki/etcd_server.key
+ETCD_TRUSTED_CA_FILE=/etc/etcd/pki/ca.crt
+# 是否启用客户端证书认证
+ETCD_CLIENT_CERT_AUTH=true
+# 客户端提供的服务监听URL地址
+ETCD_LISTEN_CLIENT_URLS=https://$etcd_current_ip:$etcd_client_port_2379
+ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_current_ip:$etcd_client_port_2379
+
+# 集群各节点相互认证使用的CA证书-crt
+ETCD_PEER_CERT_FILE=/etc/etcd/pki/etcd_server.crt
+# 集群各节点相互认证使用的CA证书-key
+ETCD_PEER_KEY_FILE=/etc/etcd/pki/etcd_server.key
+# CA 根证书
+ETCD_PEER_TRUSTED_CA_FILE=/etc/etcd/pki/ca.crt
+# 为本集群其他节点提供的服务监听URL地址
+ETCD_LISTEN_PEER_URLS=https://$etcd_current_ip:$etcd_peer_port_2380
+ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_current_ip:$etcd_peer_port_2380
+
+# 集群名称
+ETCD_INITIAL_CLUSTER_TOKEN=etcd-cluster
+# 集群各节点endpoint列表
+ETCD_INITIAL_CLUSTER="$etcd_initial_cluster"
+# 初始集群状态
+ETCD_INITIAL_CLUSTER_STATE=new
+
+EOF
+
+  cat /etc/etcd/etcd.conf
+
+  cat >/usr/lib/systemd/system/etcd.service <<EOF
+[Unit]
+Description=etcd key-value store
+Documentation=https://github.com/etcd-io/etcd
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/etcd/etcd.conf
+ExecStart=/usr/local/bin/etcd
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+
+  cat /usr/lib/systemd/system/etcd.service
+
+  systemctl daemon-reload
+  systemctl enable etcd.service
+  systemctl restart etcd.service
+  systemctl status etcd.service -l --no-pager
+
+  local test_etcd
+  if ! [[ $etcd_ips ]]; then
+    test_etcd=true
+  fi
+  if [[ $etcd_ips_length == 1 ]]; then
+    test_etcd=true
+  fi
+  if [[ $test_etcd == true ]]; then
+    etcdctl --cacert=/etc/etcd/pki/ca.crt --cert=/etc/etcd/pki/etcd_client.crt --key=/etc/etcd/pki/etcd_client.key --endpoints=https://"$etcd_current_ip":$etcd_client_port_2379 endpoint health
+  fi
+}
+
+_etcd_binary_join() {
+
+  _firewalld_stop
+
+  if ! [[ $etcd_current_ip ]]; then
+    etcd_current_ip=$(hostname -I | awk '{print $1}')
+  fi
+
+  if [[ -f /root/.ssh/id_rsa ]]; then
+    mv /root/.ssh/id_rsa /root/.ssh/id_rsa.$(date +%Y%m%d%H%M%S)
+  fi
+  if [[ -f /root/.ssh/id_rsa.pub ]]; then
+    mv /root/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub.$(date +%Y%m%d%H%M%S)
+  fi
+
+  ssh-keygen -t rsa -f /root/.ssh/id_rsa -N '' -q
+  ssh-keyscan -H $etcd_join_ip -P $etcd_join_port >>/root/.ssh/known_hosts
+
+  if [[ $etcd_join_password ]]; then
+    if ! command -v 'sshpass' &>/dev/null; then
+      if [[ $package_type == 'yum' ]]; then
+        sudo yum install -y sshpass
+      else
+        apt-get -o Dpkg::Lock::Timeout=$dpkg_lock_timeout install -y sshpass
+      fi
+    fi
+
+    sshpass -p $etcd_join_password scp -P $etcd_join_port /root/.ssh/id_rsa.pub root@$etcd_join_ip:/root/.ssh/authorized_keys
+  else
+
+    scp -P $etcd_join_port /root/.ssh/id_rsa.pub root@$etcd_join_ip:/root/.ssh/authorized_keys
+  fi
+
+  mkdir -p /etc/etcd/pki
+
+  scp -P $etcd_join_port root@$etcd_join_ip:/usr/local/bin/etcd /usr/local/bin/
+  scp -P $etcd_join_port root@$etcd_join_ip:/usr/local/bin/etcdctl /usr/local/bin/
+  scp -P $etcd_join_port root@$etcd_join_ip:/usr/local/bin/etcdutl /usr/local/bin/
+
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/ca.key /etc/etcd/pki/
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/ca.crt /etc/etcd/pki/
+
+  scp -P $etcd_join_port root@$etcd_join_ip:/usr/lib/systemd/system/etcd.service /usr/lib/systemd/system/
+
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/etcd_server.crt /etc/etcd/pki/
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/etcd_server.key /etc/etcd/pki/
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/etcd_client.crt /etc/etcd/pki/
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/pki/etcd_client.key /etc/etcd/pki/
+
+  scp -P $etcd_join_port root@$etcd_join_ip:/etc/etcd/etcd.conf /etc/etcd/
+
+  source /etc/etcd/etcd.conf
+
+  echo $ETCD_INITIAL_CLUSTER
+
+  etcd_from_name=$ETCD_NAME
+  echo $etcd_from_name
+
+  etcd_current_ip=$(hostname -I | awk '{print $1}')
+  echo $etcd_current_ip
+
+  IFS=',' read -ra etcd_nodes <<<"$ETCD_INITIAL_CLUSTER"
+  for etcd_node in "${etcd_nodes[@]}"; do
+    echo $etcd_node
+    if [[ $etcd_node =~ $etcd_current_ip ]]; then
+      node_name=$(echo $etcd_node | awk -F'=' '{print $1}')
+      break
+    fi
+  done
+
+  echo $node_name
+
+  sudo sed -i "s#ETCD_NAME=$etcd_from_name#ETCD_NAME=$node_name#g" /etc/etcd/etcd.conf
+
+  sudo sed -i "s#ETCD_LISTEN_CLIENT_URLS=https://$etcd_join_ip:$etcd_client_port_2379#ETCD_LISTEN_CLIENT_URLS=https://$etcd_current_ip:$etcd_client_port_2379#g" /etc/etcd/etcd.conf
+  sudo sed -i "s#ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_join_ip:$etcd_client_port_2379#ETCD_ADVERTISE_CLIENT_URLS=https://$etcd_current_ip:$etcd_client_port_2379#g" /etc/etcd/etcd.conf
+
+  sudo sed -i "s#ETCD_LISTEN_PEER_URLS=https://$etcd_join_ip:$etcd_peer_port_2380#ETCD_LISTEN_PEER_URLS=https://$etcd_current_ip:$etcd_peer_port_2380#g" /etc/etcd/etcd.conf
+  sudo sed -i "s#ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_join_ip:$etcd_peer_port_2380#ETCD_INITIAL_ADVERTISE_PEER_URLS=https://$etcd_current_ip:$etcd_peer_port_2380#g" /etc/etcd/etcd.conf
+
+  /usr/local/bin/etcd --version
+  /usr/local/bin/etcdctl version
+  /usr/local/bin/etcdutl version
+
+  systemctl daemon-reload
+  systemctl enable etcd.service
+  systemctl restart etcd.service
+  systemctl status etcd.service -l --no-pager
 }
 
 while [[ $# -gt 0 ]]; do
@@ -1473,9 +1838,45 @@ while [[ $# -gt 0 ]]; do
   kubernetes-dashboard-ingress-host=* | -kubernetes-dashboard-ingress-host=* | --kubernetes-dashboard-ingress-host=*)
     kubernetes_dashboard_ingress_host="${1#*=}"
     ;;
-    
-  etcd-endpoints=* | -etcd-endpoints=* | --etcd-endpoints=*)
-    etcd_endpoints="${1#*=}"
+
+  etcd-binary-install | -etcd-binary-install | --etcd-binary-install)
+    etcd_binary_install=true
+    ;;
+
+  etcd-ips=* | -etcd-ips=* | --etcd-ips=*)
+    etcd_ips+=("${1#*=}")
+    ;;
+
+  etcd-client-port-2379=* | -etcd-client-port-2379=* | --etcd-client-port-2379=*)
+    etcd_client_port_2379="${1#*=}"
+    ;;
+
+  etcd-peer-port-2380=* | -etcd-peer-port-2380=* | --etcd-peer-port-2380=*)
+    etcd_peer_port_2380="${1#*=}"
+    ;;
+
+  etcd-url=* | -etcd-url=* | --etcd-url=*)
+    etcd_url="${1#*=}"
+    ;;
+
+  etcd-version=* | -etcd-version=* | --etcd-version=*)
+    etcd_version="${1#*=}"
+    ;;
+
+  etcd-current-ip=* | -etcd-current-ip=* | --etcd-current-ip=*)
+    etcd_current_ip="${1#*=}"
+    ;;
+
+  etcd-binary-join | -etcd-binary-join | --etcd-binary-join)
+    etcd_binary_join=true
+    ;;
+
+  etcd-join-ip=* | -etcd-join-ip=* | --etcd-join-ip=*)
+    etcd_join_ip="${1#*=}"
+    ;;
+
+  etcd-join-port=* | -etcd-join-port=* | --etcd-join-port=*)
+    etcd_join_port="${1#*=}"
     ;;
 
   etcd-cafile=* | -etcd-cafile=* | --etcd-cafile=*)
@@ -1709,6 +2110,14 @@ else
 
   if [[ $helm_install_kubernetes_dashboard == true ]]; then
     _helm_install_kubernetes_dashboard
+  fi
+
+  if [[ $etcd_binary_install == true ]]; then
+    _etcd_binary_install
+  fi
+
+  if [[ $etcd_binary_join == true ]]; then
+    _etcd_binary_join
   fi
 
 fi

@@ -131,7 +131,7 @@ export default defineConfig({
           // 由于此处链接使用了其他域名，所以上方不能使用基础地址
           { text: '联系我们', link: 'https://docs.xuxiaowei.cloud/spring-cloud-xuxiaowei/guide/contact-us.html' },
           { text: '赞助', link: 'https://docs.xuxiaowei.cloud/spring-cloud-xuxiaowei/guide/contributes.html' },
-          { text: '视频', link: 'https://docs.xuxiaowei.cloud/spring-cloud-xuxiaowei/guide/video.html' },
+          { text: '视频', link: '/videos' },
         ]
       },
       {
@@ -161,6 +161,7 @@ export default defineConfig({
           { text: '为什么 流水线 跳过了？', link: '/question/why-skip-pipelines' },
           { text: '二进制安装路径', link: '/question/binary-install-path' },
           { text: '自建 Nexus 仓库配置', link: '/question/nexus-repository' },
+          { text: 'Kubernetes 发布日历', link: '/question/k8s-release-cal' },
         ]
       }
     ],
@@ -179,15 +180,15 @@ export default defineConfig({
     editLink: {
       text: '在 Gitee 上编辑此页面',
       pattern: ({ filePath }) => {
-        return `https://gitee.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.0/${filePath}`
-        // return `https://framagit.org/xuxiaowei-com-cn/k8s.sh/-/edit/SNAPSHOT/2.0.0/${filePath}`
-        // return `https://github.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.0/${filePath}`
+        return `https://gitee.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.1/${filePath}`
+        // return `https://framagit.org/xuxiaowei-com-cn/k8s.sh/-/edit/SNAPSHOT/2.0.1/${filePath}`
+        // return `https://github.com/xuxiaowei-com-cn/k8s.sh/edit/SNAPSHOT/2.0.1/${filePath}`
       },
     },
 
     footer: {
       copyright: 'Copyright © 2023-present 徐晓伟 <a href="mailto:xuxiaowei@xuxiaowei.com.cn">xuxiaowei@xuxiaowei.com.cn</a>' +
-          '<br><a target="_blank" href="https://beian.miit.gov.cn">鲁ICP备19009036号-1</a>'
+        '<br><a target="_blank" href="https://beian.miit.gov.cn">鲁ICP备19009036号-1</a>'
     }
   }
 })
